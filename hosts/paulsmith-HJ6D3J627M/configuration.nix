@@ -34,7 +34,7 @@ in
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   homebrew = {
-    enable = false;
+    enable = true;
     onActivation = {
       autoUpdate = true;
       upgrade = true;

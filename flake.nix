@@ -14,7 +14,10 @@
     };
   };
 
-  outputs = inputs@{ nixpkgs, darwin, home-manager, ... }: {
+  outputs = inputs@{ nixpkgs, darwin, home-manager, ... }: let
+    user = "paulsmith";
+  in
+  {
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#paulsmith-HJ6D3J627M
     darwinConfigurations."paulsmith-HJ6D3J627M" = darwin.lib.darwinSystem {
@@ -25,7 +28,7 @@
         {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.paulsmith = import ./users/paulsmith/home.nix;
+            home-manager.users.${user} = import ./users/${user}/home.nix;
         }
       ];
     };
