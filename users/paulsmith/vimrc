@@ -1,0 +1,70 @@
+filetype plugin on
+set autochdir
+set signcolumn=number
+set incsearch
+augroup incsearch-hlsearch
+    autocmd!
+    autocmd CmdlineEnter /,\? :set hlsearch
+    autocmd CmdlineLeave /,\? :set nohlsearch
+augroup END
+set backupdir=~/.vim/backup//
+set directory=~/.vim/swap//
+set undodir=~/.vim/undo//
+packadd! matchit
+let mapleader = ","
+syntax enable
+set colorcolumn=80,100
+highlight ColorColumn ctermbg=235
+set list
+set listchars=tab:>-,trail:.,extends:>,precedes:<
+highlight SpecialKey ctermfg=238
+highlight LineNr ctermfg=238
+highlight Search ctermfg=grey ctermbg=blue
+highlight NonText ctermfg=236
+highlight MatchParen cterm=bold ctermbg=blue ctermfg=white
+set winminheight=0
+nnoremap <C-j> <C-w>j<C-w>_
+nnoremap <C-k> <C-w>k<C-w>_
+nnoremap <leader><space> :nohl<CR>
+autocmd VimEnter * if exists(":Files") | nnoremap <leader>f :Files<cr> | endif
+autocmd VimEnter * if exists(":Buffers") | nnoremap <leader>b :Buffers<cr> | endif
+autocmd VimEnter * if exists(":Rg") | nnoremap <leader>r :Rg<cr> | endif
+autocmd VimEnter * if exists(":BLines") | nnoremap <leader>/ :BLines<cr> | endif
+autocmd VimEnter * if exists(":Lines") | nnoremap <leader>l :Lines<cr> | endif
+let g:LanguageClient_serverCommands = {
+            \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+            \ 'go': ['gopls'],
+            \ 'zig': ['zls'],
+            \ }
+nmap <silent>K <Plug>(lcn-hover)
+nmap <silent> gd <Plug>(lcn-definition)
+nmap <silent> <F2> <Plug>(lcn-rename)
+nmap <silent> <F3> <Plug>(lcn-menu)
+nmap <silent> <F4> <Plug>(lcn-references)
+map <F5> :make<CR>
+
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+
+" fzf ------------------------------------------------------
+
+" CTRL-A CTRL-Q to select all and build quickfix list
+
+function! s:build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+  copen
+  cc
+endfunction
+
+let g:fzf_action = {
+  \ 'ctrl-q': function('s:build_quickfix_list'),
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'
+
+if executable('rg')
+    set grepprg=rg\ --vimgrep
+    set grepformat=%f:%l:%c:%m
+endif
