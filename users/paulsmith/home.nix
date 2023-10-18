@@ -4,25 +4,43 @@
   home.stateVersion = "23.05";
 
   home.packages = with pkgs; [
+    aws-sam-cli
     awscli
+    bash
     bat
+    colima
+    curl
+    datasette
     direnv
     ffmpeg
     fx
     fzf
     gh
+    gifsicle
+    gifski
     git
+    guile
     helix
     htop
+    hugo
     imagemagick
     jq
+    magic-wormhole
     mosh
+    openssh
+    postgresql
     pv
+    python3
+    qemu
+    readline
     ripgrep
     rlwrap
     sqlite
     swig
     tree
+    wget
+    xz
+    zstd
   ];
 
   programs.home-manager.enable = true;
@@ -57,6 +75,11 @@ export PS1="\[\e[1;34m\]\W\[\e[0m\] \[\e[1;33m\]\$\[\e[0m\] "
 
   programs.dircolors.enable = true;
   programs.direnv.enable = true;
+
+  home.file.".sqliterc".text = ''
+    .header on
+    .mode column
+  '';
 
   imports = [
     ./vim.nix
