@@ -27,7 +27,6 @@
     jq
     magic-wormhole
     mosh
-    openssh
     postgresql
     pv
     python3
