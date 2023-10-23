@@ -14,10 +14,7 @@
     };
   };
 
-  outputs = inputs@{ nixpkgs, darwin, home-manager, ... }: let
-    user = "paulsmith";
-  in
-  {
+  outputs = inputs@{ nixpkgs, darwin, home-manager, ... }: {
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#paulsmith-HJ6D3J627M
     darwinConfigurations."paulsmith-HJ6D3J627M" = darwin.lib.darwinSystem {
@@ -28,7 +25,21 @@
         {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.${user} = import ./users/${user}/home.nix;
+            home-manager.users.paulsmith = import ./users/paulsmith/home.nix;
+        }
+      ];
+    };
+    # Build darwin flake using:
+    # $ darwin-rebuild build --flake .#venus
+    darwinConfigurations."venus" = darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
+      modules = [
+        ./hosts/venus/configuration.nix
+        home-manager.darwinModules.home-manager
+        {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.paul = import ./users/paul/home.nix;
         }
       ];
     };
