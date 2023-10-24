@@ -1,6 +1,7 @@
 { pkgs, ... }:
 let
-  user = "paul";
+  username = "paul";
+  hostname = "venus";
 in
 {
   # List packages installed in system profile. To search by name, run:
@@ -13,9 +14,11 @@ in
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
+  nix.package = pkgs.nix;
 
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes repl-flake";
+  nix.settings.trusted-users = [ username ];
 
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh.enable = true;  # default shell on catalina
@@ -31,6 +34,10 @@ in
   system.stateVersion = 4;
 
   system.defaults.dock.autohide = true;
+  system.defaults.smb.NetBIOSName = hostname;
+
+  networking.hostName = hostname;
+  networking.computerName = hostname;
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
@@ -43,19 +50,20 @@ in
     };
     casks = [
       "1password-cli"
-	  "avifquicklook"
-	  "blender"
+      "avifquicklook"
+      "blender"
       "docker"
       "inkscape"
+      "karabiner-elements"
       "ngrok"
-	  "qlmarkdown"
-	  "rar"
+      "qlmarkdown"
+      "rar"
     ];
   };
 
-  users.users.${user} = {
-    name = "${user}";
-    home = "/Users/${user}";
+  users.users.${username} = {
+    name = "${username}";
+    home = "/Users/${username}";
     shell = pkgs.bashInteractive;
   };
 }
