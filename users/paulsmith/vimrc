@@ -41,6 +41,7 @@ nmap <silent> gd <Plug>(lcn-definition)
 nmap <silent> <F2> <Plug>(lcn-rename)
 nmap <silent> <F3> <Plug>(lcn-menu)
 nmap <silent> <F4> <Plug>(lcn-references)
+nmap <leader>q vipJ:.!fmt -w 80<CR>
 map <F5> :make<CR>
 
 nnoremap <leader>n :NERDTreeFocus<CR>
