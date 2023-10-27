@@ -1,32 +1,9 @@
 { pkgs, ... }:
 let user = "paulsmith";
 in {
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
-  environment.systemPackages = [ pkgs.nixfmt ];
+  imports = [ ../../common/hosts/shared-host-config.nix ];
 
-  nix.package = pkgs.nixUnstable;
-
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-  nix.package = pkgs.nix;
-
-  nix.settings = {
-    experimental-features = "nix-command flakes";
-    trusted-users = [ "root" "${user}" ];
-  };
-
-  # Create /etc/zshrc that loads the nix-darwin environment.
-  programs.zsh.enable = true; # default shell on catalina
-
-  # Enable sudo authentication with Touch ID
-  security.pam.enableSudoTouchIdAuth = true;
-
-  # Used for backwards compatibility, please read the changelog before changing.
-  # $ darwin-rebuild changelog
-  system.stateVersion = 4;
-
-  system.defaults.dock.autohide = true;
+  nix.settings.trusted-users = [ "root" "${user}" ];
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";

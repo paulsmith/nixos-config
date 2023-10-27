@@ -1,7 +1,5 @@
 { pkgs, ... }: {
-  # The state version is required and should stay at the version you
-  # originally installed.
-  home.stateVersion = "23.05";
+  imports = [ ../../common/users/shared-user-config.nix ];
 
   home.packages = with pkgs; [
     autossh
@@ -50,20 +48,6 @@
     zstd
   ];
 
-  programs.home-manager.enable = true;
-
-  programs.bash = {
-    enable = true;
-    historyControl = [ "ignoredups" "ignorespace" ];
-    shellAliases = {
-      ls = "ls --color=auto";
-      ll = "ls -l";
-    };
-    initExtra = ''
-export PS1="\[\e[1;34m\]\W\[\e[0m\] \[\e[1;33m\]\$\[\e[0m\] "
-'';
-  };
-
   programs.git = {
     enable = true;
     userName = "Paul Smith";
@@ -79,16 +63,4 @@ export PS1="\[\e[1;34m\]\W\[\e[0m\] \[\e[1;33m\]\$\[\e[0m\] "
       push = { autoSetupRemote = true; };
     };
   };
-
-  programs.dircolors.enable = true;
-  programs.direnv.enable = true;
-
-  home.file.".sqliterc".text = ''
-    .header on
-    .mode column
-  '';
-
-  imports = [
-    ./vim.nix
-  ];
 }
