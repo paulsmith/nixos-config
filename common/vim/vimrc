@@ -47,6 +47,8 @@ map <F5> :make<CR>
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
 
+autocmd BufRead,BufNewFile *.md,*.txt setlocal spell
+
 " fzf ------------------------------------------------------
 
 " CTRL-A CTRL-Q to select all and build quickfix list
