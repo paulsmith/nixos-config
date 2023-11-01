@@ -1,5 +1,6 @@
 { pkgs, ... }:
 let
+  # FIXME this doesn't actually work the way I expected
   dev = pkgs.writeShellScriptBin "dev" ''
     set -eu
     nix flake init -t "github:DeterminateSystems/zero-to-nix#''${1}-dev"

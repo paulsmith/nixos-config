@@ -2,7 +2,6 @@
   imports = [ ../../common/users/shared-user-config.nix ];
 
   home.packages = with pkgs; [
-    dev
     aws-sam-cli
     awscli
     bash

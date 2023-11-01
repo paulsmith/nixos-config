@@ -15,6 +15,7 @@ in {
       upgrade = true;
     };
     casks = [ "1password-cli" "docker" "inkscape" "ngrok" ];
+    # masApps = { OneTab = 1540160809; };
   };
 
   users.users.${user} = {
