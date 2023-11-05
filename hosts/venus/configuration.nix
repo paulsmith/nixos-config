@@ -23,6 +23,7 @@ in
     };
     casks = [
       "1password-cli"
+      "audacity"
       "avifquicklook"
       "blender"
       "docker"
