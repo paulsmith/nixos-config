@@ -10,6 +10,7 @@
       nerdtree
       fzf-vim
       LanguageClient-neovim
+      emmet-vim
     ];
 
     settings = {

@@ -28,11 +28,18 @@ export PS1="\[\e[1;34m\]\W\[\e[0m\] \[\e[1;33m\]\$\[\e[0m\] "
 
   programs.dircolors.enable = true;
   programs.direnv.enable = true;
-  programs.starship.enable = true;
+  programs.starship.enable = false;
 
   home.file.".sqliterc".text = ''
     .header on
     .mode column
+  '';
+
+  programs.git.extraConfig."diff \"sqlite3\"".binary = true;
+  programs.git.extraConfig."diff \"sqlite3\"".textconv = "echo .dump | sqlite3";
+
+  home.file.".gitattributes".text = ''
+    *.sqlite diff=sqlite3
   '';
 
   imports = [ ../vim/default.nix ];
