@@ -4,7 +4,7 @@
   home.packages = with pkgs; [
     aws-sam-cli
     awscli
-    bash
+    bashInteractive
     bat
     colima
     curl

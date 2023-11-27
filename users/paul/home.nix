@@ -5,7 +5,7 @@
     autossh
     aws-sam-cli
     awscli
-    bash
+    bashInteractive
     bat
     colima
     curl
