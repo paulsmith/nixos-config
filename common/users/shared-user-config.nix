@@ -28,7 +28,6 @@ export PS1="\[\e[1;34m\]\W\[\e[0m\] \[\e[1;33m\]\$\[\e[0m\] "
 
   programs.dircolors.enable = true;
   programs.direnv.enable = true;
-  programs.starship.enable = false;
 
   home.file.".sqliterc".text = ''
     .header on

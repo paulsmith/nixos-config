@@ -10,6 +10,7 @@
     curl
     datasette
     direnv
+    fd
     ffmpeg
     fx
     fzf
@@ -55,4 +56,6 @@
       push.autoSetupRemote = true;
     };
   };
+
+  programs.starship.enable = true;
 }
