@@ -31,7 +31,7 @@
     };
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#venus
-    darwinConfigurations."venus" = darwin.lib.darwinSystem {
+    darwinConfigurations."venus" = darwin.lib.darwinSystem rec {
       system = "aarch64-darwin";
       modules = [
         ./hosts/venus/configuration.nix
@@ -39,7 +39,7 @@
         {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.paul = import ./users/paul/home.nix;
+            home-manager.users.paul = import ./users/paul/home.nix ({ unstable-pkgs = (import inputs.nixpkgs-unstable { inherit system; }); });
         }
       ];
     };

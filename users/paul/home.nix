@@ -1,3 +1,5 @@
+{ unstable-pkgs }:
+
 { pkgs, ... }: {
   imports = [ ../../common/users/shared-user-config.nix ];
 
@@ -9,12 +11,12 @@
     bat
     colima
     curl
-    datasette
     direnv
     dtach
     ffmpeg
     fx
     fzf
+    fd
     gh
     gifsicle
     gifski
@@ -23,6 +25,7 @@
     helix
     htop
     hugo
+    hyperfine
     imagemagick
     jq
 	# Try macvim after this is merged
@@ -36,16 +39,17 @@
     postgresql
     pv
     python3
-    qemu
     readline
     ripgrep
     rlwrap
     shellcheck
     sqlite
+    unstable-pkgs.sqlc
     swig
     tree
     wget
     xz
+    yt-dlp
     zstd
   ];
 

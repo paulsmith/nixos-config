@@ -21,6 +21,7 @@ in
       autoUpdate = true;
       upgrade = true;
     };
+    brews = [ "qemu" ];
     casks = [
       "1password-cli"
       "audacity"
@@ -29,6 +30,8 @@ in
       "docker"
       "inkscape"
       "karabiner-elements"
+      # Local Wordpress development
+      "local"
       "ngrok"
       "qlmarkdown"
       "rar"
