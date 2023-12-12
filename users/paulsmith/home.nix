@@ -33,6 +33,7 @@
     readline
     ripgrep
     rlwrap
+    shellcheck
     sqlite
     swig
     tree

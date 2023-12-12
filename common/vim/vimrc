@@ -36,7 +36,7 @@ let g:LanguageClient_serverCommands = {
             \ 'go': ['gopls'],
             \ 'zig': ['zls'],
             \ }
-nmap <silent>K <Plug>(lcn-hover)
+nmap <silent> K <Plug>(lcn-hover)
 nmap <silent> gd <Plug>(lcn-definition)
 nmap <silent> <F2> <Plug>(lcn-rename)
 nmap <silent> <F3> <Plug>(lcn-menu)
