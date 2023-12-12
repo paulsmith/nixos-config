@@ -15,6 +15,7 @@
   };
 
   outputs = inputs@{ nixpkgs, darwin, home-manager, ... }: {
+    nixpkgs.config.allowUnfree = true;
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#paulsmith-HJ6D3J627M
     darwinConfigurations."paulsmith-HJ6D3J627M" = darwin.lib.darwinSystem {
