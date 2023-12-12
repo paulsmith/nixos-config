@@ -41,5 +41,7 @@ export PS1="\[\e[1;34m\]\W\[\e[0m\] \[\e[1;33m\]\$\[\e[0m\] "
     *.sqlite diff=sqlite3
   '';
 
+  home.sessionPath = [ "$HOME/go/bin" ];
+
   imports = [ ../vim/default.nix ];
 }
