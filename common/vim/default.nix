@@ -11,6 +11,7 @@
       fzf-vim
       LanguageClient-neovim
       emmet-vim
+      copilot-vim
     ];
 
     settings = {

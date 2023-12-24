@@ -26,6 +26,7 @@
     jq
     magic-wormhole
     mosh
+    nixfmt
     postgresql
     pv
     python3
