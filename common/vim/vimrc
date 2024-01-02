@@ -49,6 +49,14 @@ nnoremap <C-t> :NERDTreeToggle<CR>
 
 autocmd BufRead,BufNewFile *.md,*.txt setlocal spell
 
+if executable("far")
+    set formatprg=far
+elseif executable("par")
+    set formatprg=par
+else
+    set formatprg=fmt
+endif
+
 " fzf ------------------------------------------------------
 
 " CTRL-A CTRL-Q to select all and build quickfix list

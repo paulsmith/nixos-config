@@ -36,6 +36,8 @@ export PS1="\[\e[1;34m\]\W\[\e[0m\] \[\e[1;33m\]\$\[\e[0m\] "
 
   programs.git.extraConfig."diff \"sqlite3\"".binary = true;
   programs.git.extraConfig."diff \"sqlite3\"".textconv = "echo .dump | sqlite3";
+  programs.git.extraConfig.diff.colormoved = "default";
+  programs.git.extraConfig.diff.colormovedws = "allow-indentation-change";
 
   home.file.".gitattributes".text = ''
     *.sqlite diff=sqlite3
