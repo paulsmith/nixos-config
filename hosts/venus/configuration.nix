@@ -2,6 +2,7 @@
 let
   username = "paul";
   hostname = "venus";
+  nextdnsProfile = "d3b8fa";
 in
 {
   imports = [ ../../common/hosts/shared-host-config.nix ];
@@ -48,5 +49,10 @@ in
     name = "${username}";
     home = "/Users/${username}";
     shell = pkgs.bashInteractive;
+  };
+
+  services.nextdns = {
+    enable = true;
+    arguments = [ "-profile ${nextdnsProfile}" ];
   };
 }
