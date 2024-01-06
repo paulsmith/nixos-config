@@ -1,14 +1,9 @@
-{ config, pkgs, ... }:
-let
-  username = "paul";
-  hostname = "venus";
-  nextdnsProfile = "d3b8fa";
-in
-{
+{ username, hostname, nextdnsProfile }:
+{ config, pkgs, ... }: {
   imports = [ ../../common/hosts/shared-host-config.nix ];
 
   nix.settings.trusted-users = [ "root" username ];
-  
+
   networking.hostName = hostname;
   networking.computerName = hostname;
   system.defaults.smb.NetBIOSName = hostname;

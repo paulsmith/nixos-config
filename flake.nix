@@ -34,11 +34,15 @@
     # $ darwin-rebuild build --flake .#venus
     darwinConfigurations."venus" = let
       username = "paul";
+      nextdnsProfile = "d3b8fa";
       system = "aarch64-darwin";
     in darwin.lib.darwinSystem {
       inherit system;
       modules = [
-        ./hosts/venus/configuration.nix
+        (import ./hosts/venus/configuration.nix {
+          inherit username nextdnsProfile;
+          hostname = "venus";
+        })
         home-manager.darwinModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
