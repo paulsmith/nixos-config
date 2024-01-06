@@ -24,23 +24,29 @@
         ./hosts/paulsmith-HJ6D3J627M/configuration.nix
         home-manager.darwinModules.home-manager
         {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.paulsmith = import ./users/paulsmith/home.nix;
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.paulsmith = import ./users/paulsmith/home.nix;
         }
       ];
     };
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#venus
-    darwinConfigurations."venus" = darwin.lib.darwinSystem rec {
+    darwinConfigurations."venus" = let
+      username = "paul";
       system = "aarch64-darwin";
+    in darwin.lib.darwinSystem {
+      inherit system;
       modules = [
         ./hosts/venus/configuration.nix
         home-manager.darwinModules.home-manager
         {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.paul = import ./users/paul/home.nix ({ unstable-pkgs = (import inputs.nixpkgs-unstable { inherit system; }); });
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.paul = import ./users/paul/home.nix ({
+            unstable-pkgs =
+              (import inputs.nixpkgs-unstable { inherit system; });
+          });
         }
       ];
     };
