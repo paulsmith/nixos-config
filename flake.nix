@@ -1,5 +1,5 @@
 {
-  description = "NixOS (and nix-darwin) configuration by paulsmith";
+  description = "NixOS (and nix-darwin) configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
@@ -18,7 +18,9 @@
     nixpkgs.config.allowUnfree = true;
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#paulsmith-HJ6D3J627M
-    darwinConfigurations."paulsmith-HJ6D3J627M" = darwin.lib.darwinSystem {
+    darwinConfigurations."paulsmith-HJ6D3J627M" = let
+      username = "paulsmith";
+    in darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
         ./hosts/paulsmith-HJ6D3J627M/configuration.nix
@@ -26,7 +28,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.paulsmith = import ./users/paulsmith/home.nix;
+          home-manager.users.${username} = import ./users/${username}/home.nix;
         }
       ];
     };
@@ -47,7 +49,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.paul = import ./users/paul/home.nix ({
+          home-manager.users.${username} = import ./users/${username}/home.nix ({
             unstable-pkgs =
               (import inputs.nixpkgs-unstable { inherit system; });
           });
