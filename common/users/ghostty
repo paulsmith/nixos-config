@@ -1,7 +1,6 @@
 font-family = Iosevka Term
 font-size = 16
 macos-option-as-alt = true
-mouse-hide-while-typing = true
 window-step-resize = true
-config-file = experimental.ghostty
+config-file = experimental
 copy-on-select = true

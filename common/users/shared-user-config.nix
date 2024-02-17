@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 let
   # FIXME this doesn't actually work the way I expected
   dev = pkgs.writeShellScriptBin "dev" ''
@@ -42,12 +42,28 @@ fi
   programs.git.extraConfig."diff \"sqlite3\"".textconv = "echo .dump | sqlite3";
   programs.git.extraConfig.diff.colormoved = "default";
   programs.git.extraConfig.diff.colormovedws = "allow-indentation-change";
+  programs.git.extraConfig.merge.conflictStyle = "zdiff3";
+  programs.git.extraConfig.diff.algorithm = "histogram";
+  programs.git.extraConfig.transfer.fsckobjects = true;
+  programs.git.extraConfig.fetch.fsckobjects = true;
+  programs.git.extraConfig.receive.fsckobjects = true;
+  programs.git.extraConfig.fetch.prune = true;
+  programs.git.extraConfig.fetch.prunetags = true;
+
+  home.file."${config.xdg.configHome}/git/ignore".text = ''
+  .DS_Store
+  .idea
+  '';
 
   home.file.".gitattributes".text = ''
     *.sqlite diff=sqlite3
   '';
 
   home.sessionPath = [ "$HOME/go/bin" "$HOME/bin" "$HOME/.local/bin" ];
+
+  home.file."${config.xdg.configHome}/ghostty/config" = {
+    source = ./ghostty;
+  };
 
   imports = [ ../vim/default.nix ];
 }

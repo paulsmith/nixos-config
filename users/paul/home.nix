@@ -1,6 +1,6 @@
 { unstable-pkgs }:
 
-{ pkgs, config, ... }: {
+{ pkgs, ... }: {
   imports = [ ../../common/users/shared-user-config.nix ];
 
   home.packages = with pkgs; [
@@ -67,9 +67,5 @@
       init = { defaultBranch = "main"; };
       push = { autoSetupRemote = true; };
     };
-  };
-
-  home.file."${config.xdg.configHome}/ghostty/config" = {
-    source = ./ghostty;
   };
 }
