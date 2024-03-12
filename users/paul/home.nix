@@ -13,6 +13,7 @@
     curl
     direnv
     dtach
+    entr
     ffmpeg
     fx
     fzf

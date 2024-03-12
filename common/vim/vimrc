@@ -10,6 +10,8 @@ augroup END
 set backupdir=~/.vim/backup//
 set directory=~/.vim/swap//
 set undodir=~/.vim/undo//
+set autowrite
+set hidden
 packadd! matchit
 let mapleader = ","
 syntax enable
@@ -31,18 +33,29 @@ autocmd VimEnter * if exists(":Buffers") | nnoremap <leader>b :Buffers<cr> | end
 autocmd VimEnter * if exists(":Rg") | nnoremap <leader>r :Rg<cr> | endif
 autocmd VimEnter * if exists(":BLines") | nnoremap <leader>/ :BLines<cr> | endif
 autocmd VimEnter * if exists(":Lines") | nnoremap <leader>l :Lines<cr> | endif
+
 let g:LanguageClient_serverCommands = {
             \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
             \ 'go': ['gopls'],
             \ 'zig': ['zls'],
             \ }
-nmap <silent> K <Plug>(lcn-hover)
-nmap <silent> gd <Plug>(lcn-definition)
-nmap <silent> <F2> <Plug>(lcn-rename)
-nmap <silent> <F3> <Plug>(lcn-menu)
-nmap <silent> <F4> <Plug>(lcn-references)
+function LC_maps()
+    if has_key(g:LanguageClient_serverCommands, &filetype)
+        nmap <buffer> <silent> K <Plug>(lcn-hover)
+        nmap <buffer> <silent> gd <Plug>(lcn-definition)
+        nmap <buffer> <silent> <F2> <Plug>(lcn-rename)
+        nmap <buffer> <silent> <F3> <Plug>(lcn-menu)
+        nmap <buffer> <silent> <F4> <Plug>(lcn-references)
+    endif
+endfunction
+autocmd FileType * call LC_maps()
+
 nmap <leader>q vip:j<CR>:.!fmt -w 80<CR>
 map <F5> :make<CR>
+
+" These conflict with language client K and gd
+let g:go_def_mapping_enabled = 0
+let g:go_doc_keywordprg_enabled = 0
 
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>

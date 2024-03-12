@@ -10,6 +10,7 @@
     curl
     datasette
     direnv
+    entr
     fd
     ffmpeg
     fx
