@@ -22,6 +22,7 @@
     gifsicle
     gifski
     git
+    unstable-pkgs.go
     guile
     helix
     htop
