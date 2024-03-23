@@ -12,6 +12,7 @@
     colima
     curl
     direnv
+    difftastic
     dtach
     entr
     ffmpeg
