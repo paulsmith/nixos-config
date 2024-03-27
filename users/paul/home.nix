@@ -24,6 +24,7 @@
     gifski
     git
     unstable-pkgs.go
+    graphviz
     guile
     helix
     htop
