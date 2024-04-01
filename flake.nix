@@ -20,15 +20,18 @@
     # $ darwin-rebuild build --flake .#paulsmith-HJ6D3J627M
     darwinConfigurations."paulsmith-HJ6D3J627M" = let
       username = "paulsmith";
-    in darwin.lib.darwinSystem {
       system = "aarch64-darwin";
+    in darwin.lib.darwinSystem {
       modules = [
         ./hosts/paulsmith-HJ6D3J627M/configuration.nix
         home-manager.darwinModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.${username} = import ./users/${username}/home.nix;
+          home-manager.users.${username} = import ./users/${username}/home.nix ({
+            unstable-pkgs =
+              (import inputs.nixpkgs-unstable { inherit system; });
+          });
         }
       ];
     };

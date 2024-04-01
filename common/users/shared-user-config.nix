@@ -49,6 +49,7 @@ fi
   programs.git.extraConfig.receive.fsckobjects = true;
   programs.git.extraConfig.fetch.prune = true;
   programs.git.extraConfig.fetch.prunetags = true;
+  programs.git.extraConfig.core.hooksPath = "${config.xdg.configHome}/git/hooks";
 
   home.file."${config.xdg.configHome}/git/ignore".text = ''
   .DS_Store

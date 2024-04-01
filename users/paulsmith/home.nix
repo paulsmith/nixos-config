@@ -1,3 +1,5 @@
+{ unstable-pkgs }:
+
 { pkgs, ... }: {
   imports = [ ../../common/users/shared-user-config.nix ];
 
@@ -19,6 +21,7 @@
     gifsicle
     gifski
     git
+    unstable-pkgs.go
     guile
     helix
     htop
@@ -29,6 +32,7 @@
     mosh
     nixfmt
     postgresql
+    pipx
     pv
     python3
     qemu
