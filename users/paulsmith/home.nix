@@ -39,6 +39,7 @@
     readline
     ripgrep
     rlwrap
+    unstable-pkgs.rye
     shellcheck
     sqlite
     swig
@@ -65,4 +66,6 @@
   };
 
   programs.starship.enable = true;
+
+  home.sessionPath = [ "$HOME/go/bin" "$HOME/bin" "$HOME/.local/bin" "$HOME/.rye/shims" ];
 }
