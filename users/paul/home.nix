@@ -1,6 +1,6 @@
 { unstable-pkgs }:
 
-{ pkgs, ... }: {
+{ pkgs, config, ... }: {
   imports = [ ../../common/users/shared-user-config.nix ];
 
   home.packages = with pkgs; [
@@ -32,15 +32,17 @@
     hyperfine
     imagemagick
     jq
-	# Try macvim after this is merged
-	# https://github.com/NixOS/nixpkgs/pull/260094
+    # Try macvim after this is merged
+    # https://github.com/NixOS/nixpkgs/pull/260094
     # macvim
     magic-wormhole
     mas
     mosh
     neovim
     nixfmt
+    unstable-pkgs.ollama
     postgresql
+    pstree
     pv
     python3
     readline
@@ -71,5 +73,14 @@
       init = { defaultBranch = "main"; };
       push = { autoSetupRemote = true; };
     };
+  };
+
+  home.file."${config.xdg.configHome}/sv" = {
+    source = ./runit-sv;
+    recursive = true;
+  };
+
+  home.sessionVariables = {
+    SVDIR = "$HOME/service"; # Runit service directory
   };
 }

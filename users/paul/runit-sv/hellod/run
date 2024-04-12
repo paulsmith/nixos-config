@@ -1,0 +1,4 @@
+#!/bin/sh
+exec 2>&1
+PATH=$PATH:/Users/paul/go/bin
+exec chpst -e ./env hellod

@@ -17,7 +17,7 @@
       autoUpdate = true;
       upgrade = true;
     };
-    brews = [ "qemu" ];
+    brews = [ "qemu" "runit" ];
     casks = [
       "1password-cli"
       "audacity"

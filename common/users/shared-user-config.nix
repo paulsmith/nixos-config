@@ -51,6 +51,19 @@ fi
   programs.git.extraConfig.fetch.prunetags = true;
   programs.git.extraConfig.core.hooksPath = "${config.xdg.configHome}/git/hooks";
 
+  programs.readline = {
+    bindings = {
+      "\\C-xP" = "print-last-kbd-macro";
+      "\\e\\C-f" = "dump-functions";
+      "\\e\\C-o" = "dabbrev-expand";
+    };
+    variables = {
+      colored-stats = true;
+      colored-completion-prefix = true;
+      keyseq-timeout = 1200;
+    };
+  };
+
   home.file."${config.xdg.configHome}/git/ignore".text = ''
   .DS_Store
   .idea
@@ -60,7 +73,7 @@ fi
     *.sqlite diff=sqlite3
   '';
 
-  home.sessionPath = [ "$HOME/go/bin" "$HOME/bin" "$HOME/.local/bin" ];
+  home.sessionPath = [ "$HOME/go/bin" "$HOME/bin" "$HOME/.local/bin" "/opt/homebrew/bin" ];
 
   home.file."${config.xdg.configHome}/ghostty/config" = {
     source = ./ghostty;
