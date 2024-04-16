@@ -61,7 +61,7 @@ let g:go_doc_keywordprg_enabled = 0
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
 
-autocmd BufRead,BufNewFile *.md,*.txt setlocal spell
+autocmd BufRead,BufNewFile *.md setlocal spell
 
 if executable("far")
     set formatprg=far
