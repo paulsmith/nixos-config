@@ -41,6 +41,7 @@
     neovim
     nixfmt
     unstable-pkgs.ollama
+    pipx
     postgresql
     pstree
     pv

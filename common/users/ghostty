@@ -4,3 +4,4 @@ macos-option-as-alt = true
 window-step-resize = true
 config-file = experimental
 copy-on-select = true
+shell-integration-features = sudo
