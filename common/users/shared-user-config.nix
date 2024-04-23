@@ -21,13 +21,6 @@ in {
       ls = "ls --color=auto";
       ll = "ls -l";
     };
-    initExtra = ''
-export PS1="\[\e[1;34m\]\W\[\e[0m\] \[\e[1;33m\]\$\[\e[0m\] "
-# Ghostty shell integration
-if [ -n "$GHOSTTY_RESOURCES_DIR" ]; then
-    builtin source "''${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
-fi
-'';
   };
 
   programs.dircolors.enable = true;
