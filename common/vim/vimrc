@@ -36,7 +36,7 @@ autocmd VimEnter * if exists(":Lines") | nnoremap <leader>l :Lines<cr> | endif
 
 let g:LanguageClient_serverCommands = {
             \ 'go': ['gopls'],
-            \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+            \ 'rust': ['rust-analyzer'],
             \ 'swift': ['xcrun', 'sourcekit-lsp'],
             \ 'zig': ['zls'],
             \ }
