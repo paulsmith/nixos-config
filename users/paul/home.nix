@@ -54,6 +54,7 @@
     unstable-pkgs.sqlc
     swig
     tree
+    ttyd
     wget
     xz
     yt-dlp
