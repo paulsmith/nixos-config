@@ -1,6 +1,8 @@
 { unstable-pkgs }:
 
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let iosevka-nerd = pkgs.callPackage ../../common/users/iosevka-nerd.nix { };
+in {
   imports = [ ../../common/users/shared-user-config.nix ];
 
   home.packages = with pkgs; [
@@ -27,11 +29,11 @@
     htop
     hugo
     imagemagick
+    iosevka-nerd
     jq
     magic-wormhole
     mosh
     neovim
-    nerdfonts
     nixfmt
     postgresql
     pipx
@@ -69,14 +71,15 @@
 
   programs.starship.enable = true;
 
-  home.sessionPath = [ "$HOME/go/bin" "$HOME/bin" "$HOME/.local/bin" "$HOME/.rye/shims" ];
+  home.sessionPath =
+    [ "$HOME/go/bin" "$HOME/bin" "$HOME/.local/bin" "$HOME/.rye/shims" ];
 
   programs.bash.initExtra = ''
-export PATH="$HOME/Downloads/google-cloud-sdk/bin:$PATH"
-export PS1="\[\e[1;34m\]\W\[\e[0m\] \[\e[1;33m\]\$\[\e[0m\] "
-# Ghostty shell integration
-if [ -n "$GHOSTTY_RESOURCES_DIR" ]; then
-    builtin source "''${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
-fi
-'';
+    export PATH="$HOME/Downloads/google-cloud-sdk/bin:$PATH"
+    export PS1="\[\e[1;34m\]\W\[\e[0m\] \[\e[1;33m\]\$\[\e[0m\] "
+    # Ghostty shell integration
+    if [ -n "$GHOSTTY_RESOURCES_DIR" ]; then
+        builtin source "''${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
+    fi
+  '';
 }
