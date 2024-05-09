@@ -30,6 +30,8 @@
     jq
     magic-wormhole
     mosh
+    neovim
+    nerdfonts
     nixfmt
     postgresql
     pipx

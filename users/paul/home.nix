@@ -39,6 +39,7 @@
     mas
     mosh
     neovim
+    nerdfonts
     nixfmt
     unstable-pkgs.ollama
     pipx
