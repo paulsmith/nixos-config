@@ -11,6 +11,7 @@ in {
     awscli
     bashInteractive
     bat
+    cmake
     colima
     curl
     direnv
