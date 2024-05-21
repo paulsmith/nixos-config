@@ -1,8 +1,11 @@
 all:
-	@echo "Usage: make <name-of-host>"
+	darwin-rebuild switch --flake .#`hostname`
 
 paulsmith-HJ6D3J627M:
 	darwin-rebuild switch --flake .#$@
 
 venus:
 	darwin-rebuild switch --flake .#$@
+
+update-unstable:
+	nix flake lock --update-input nixpkgs-unstable

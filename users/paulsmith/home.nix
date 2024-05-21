@@ -1,6 +1,6 @@
 { unstable-pkgs }:
 
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 let iosevka-nerd = pkgs.callPackage ../../common/users/iosevka-nerd.nix { };
 in {
   imports = [ ../../common/users/shared-user-config.nix ];
@@ -33,7 +33,7 @@ in {
     jq
     magic-wormhole
     mosh
-    neovim
+    unstable-pkgs.neovim
     nodejs_21
     nixfmt
     openssl_3_1
@@ -84,4 +84,8 @@ in {
         builtin source "''${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
     fi
   '';
+
+  home.file."${config.xdg.configHome}/nvim/init.lua" = {
+    source = ./init.lua;
+  };
 }
