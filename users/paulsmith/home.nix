@@ -34,7 +34,9 @@ in {
     magic-wormhole
     mosh
     neovim
+    nodejs_21
     nixfmt
+    openssl_3_1
     postgresql
     pipx
     pv

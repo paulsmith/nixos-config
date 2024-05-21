@@ -14,7 +14,7 @@ in {
       autoUpdate = true;
       upgrade = true;
     };
-    casks = [ "1password-cli" "docker" "inkscape" "ngrok" ];
+    casks = [ "1password-cli" "docker" "inkscape" "ngrok" "typora" ];
     # masApps = { OneTab = 1540160809; };
   };
 
