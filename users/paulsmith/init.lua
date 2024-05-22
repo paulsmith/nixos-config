@@ -34,12 +34,15 @@ vim.opt.autoindent = true
 vim.opt.cursorline = true
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
+vim.opt.tabstop = 4
 vim.opt.expandtab = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 9
 -- disable a warning
 vim.g.loaded_perl_provider = 0
+-- Don't like SQL ft mode's use of Ctrl-C
+vim.g.ftplugin_sql_omni_key = '<C-q>'
 
 require("lazy").setup({
     {
@@ -47,7 +50,11 @@ require("lazy").setup({
         lazy = false,
         priority = 1000,
         config = function()
-            vim.cmd[[colorscheme tokyonight-night]]
+            if vim.o.background == "dark" then
+                vim.cmd[[colorscheme tokyonight-night]]
+            else
+                vim.cmd[[colorscheme tokyonight]]
+            end
         end
     },
     {
@@ -86,6 +93,7 @@ require("lazy").setup({
             vim.keymap.set('n', '<F3>', vim.lsp.buf.code_action, {})
             vim.keymap.set('n', '<F4>', vim.lsp.buf.references, {})
             vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
+            vim.keymap.set('n', 'gK', vim.lsp.buf.signature_help, {})
         end
     },
     {
@@ -106,16 +114,21 @@ require("lazy").setup({
         opts = {},
     },
     {
-        "github/copilot.vim",
-    },
-    {
         "preservim/nerdtree",
         config = function()
             vim.keymap.set('n', '<leader>t', "<cmd>NERDTreeToggle<cr>", { desc = "Toggle NERDTree" })
         end
     },
+    "fatih/vim-go",
+    "github/copilot.vim",
 })
 
+vim.keymap.set('n', '<C-h>', "<C-w>h", { desc = "Move to window to left" })
+vim.keymap.set('n', '<C-j>', "<C-w>j", { desc = "Move to window below" })
+vim.keymap.set('n', '<C-k>', "<C-w>k", { desc = "Move to window above" })
+vim.keymap.set('n', '<C-l>', "<C-w>l", { desc = "Move to window to right" })
+vim.keymap.set('n', '<F5>', "<cmd>make<cr>", { desc = "Make" })
 vim.keymap.set('n', '<leader>xq', "<cmd>copen<cr>", { desc = "Quickfix list" })
 vim.keymap.set('n', ']q', "<cmd>cnext<cr>", { desc = "Next on quickfix list" })
 vim.keymap.set('n', '[q', "<cmd>cprevious<cr>", { desc = "Previous on quickfix list" })
+vim.keymap.set('n', '<leader>q', "vip:j<cr>:.!fmt -w 80<cr>", { desc = "Format paragraph" })
