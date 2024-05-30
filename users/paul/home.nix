@@ -11,6 +11,7 @@ in {
     awscli
     bashInteractive
     bat
+    cachix
     cmake
     colima
     curl
@@ -36,6 +37,8 @@ in {
     imagemagick
     iosevka-nerd
     jq
+    lua
+    lua-language-server
     magic-wormhole
     mas
     mosh
@@ -44,6 +47,7 @@ in {
     unstable-pkgs.ollama
     pipx
     postgresql
+    prettierd
     pstree
     pv
     python3
@@ -52,6 +56,7 @@ in {
     rlwrap
     shellcheck
     sqlite
+    stylua
     unstable-pkgs.sqlc
     swig
     tree

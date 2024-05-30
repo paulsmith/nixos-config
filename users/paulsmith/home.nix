@@ -10,6 +10,7 @@ in {
     awscli
     bashInteractive
     bat
+    cachix
     colima
     curl
     datasette
@@ -31,6 +32,8 @@ in {
     imagemagick
     iosevka-nerd
     jq
+    lua
+    lua-language-server
     magic-wormhole
     mosh
     unstable-pkgs.neovim
@@ -39,6 +42,8 @@ in {
     openssl_3_1
     postgresql
     pipx
+    prettierd
+    pstree
     pv
     python3
     qemu
@@ -48,6 +53,7 @@ in {
     unstable-pkgs.rye
     shellcheck
     sqlite
+    stylua
     swig
     tree
     wget
