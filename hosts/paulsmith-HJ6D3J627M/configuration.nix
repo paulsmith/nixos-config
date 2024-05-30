@@ -14,6 +14,7 @@ in {
       autoUpdate = true;
       upgrade = true;
     };
+    brews = [ "qemu" "runit" ];
     casks = [ "1password-cli" "docker" "inkscape" "ngrok" "typora" ];
     # masApps = { OneTab = 1540160809; };
   };

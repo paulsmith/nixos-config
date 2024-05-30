@@ -46,7 +46,6 @@ in {
     pstree
     pv
     python3
-    qemu
     readline
     ripgrep
     rlwrap
