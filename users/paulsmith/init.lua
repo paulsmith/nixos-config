@@ -86,9 +86,12 @@ require("lazy").setup({
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
+		event = { "BufReadPre", "BufNewFile" },
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter-textobjects",
+		},
 		config = function()
-			local configs = require("nvim-treesitter.configs")
-			configs.setup({
+			require("nvim-treesitter.configs").setup({
 				ensure_installed = {
 					"c",
 					"css",
@@ -109,6 +112,25 @@ require("lazy").setup({
 				sync_install = false,
 				highlight = { enable = true },
 				indent = { enable = true },
+				incremental_selection = {
+					enable = true,
+					keymaps = {
+						init_selection = "<C-space>",
+						node_incremental = "<C-space>",
+						scope_incremental = false,
+						node_decremental = "<bs>",
+					},
+				},
+				textobjects = {
+					select = {
+						enable = true,
+						lookahead = true,
+						keymaps = {
+							["af"] = { query = "@function.outer", desc = "Select outer function declaration" },
+							["if"] = { query = "@function.inner", desc = "Select inner function declaration" },
+						},
+					},
+				},
 			})
 		end,
 	},
@@ -138,6 +160,26 @@ require("lazy").setup({
 						},
 					},
 				},
+			})
+
+			-- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#imports
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				group = vim.api.nvim_create_augroup("paulsmith-lsp-bufwritepre", { clear = true }),
+				pattern = "*.go",
+				callback = function()
+					local params = vim.lsp.util.make_range_params()
+					params.context = { only = { "source.organizeImports" } }
+					local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
+					for cid, res in pairs(result or {}) do
+						for _, r in pairs(res.result or {}) do
+							if r.edit then
+								local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
+								vim.lsp.util.apply_workspace_edit(r.edit, enc)
+							end
+						end
+					end
+					vim.lsp.buf.format({ async = false })
+				end,
 			})
 
 			vim.api.nvim_create_autocmd("LspAttach", {
@@ -251,8 +293,6 @@ require("lazy").setup({
 		end,
 	},
 
-	"fatih/vim-go",
-
 	"github/copilot.vim",
 
 	{
@@ -355,6 +395,13 @@ require("lazy").setup({
 		event = "VimEnter",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = { signs = false },
+	},
+
+	{
+		"mbbill/undotree",
+		config = function()
+			vim.keymap.set("n", "<leader>u", ":UndotreeToggle<CR>")
+		end,
 	},
 
 	{ import = "nursery-plugins" },
