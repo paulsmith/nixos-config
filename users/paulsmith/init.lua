@@ -130,6 +130,15 @@ require("lazy").setup({
 							["if"] = { query = "@function.inner", desc = "Select inner function declaration" },
 						},
 					},
+					swap = {
+						enable = true,
+						swap_next = {
+							["<leader>np"] = "@parameter.inner",
+						},
+						swap_previous = {
+							["<leader>pp"] = "@parameter.inner",
+						},
+					},
 				},
 			})
 		end,
