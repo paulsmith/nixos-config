@@ -170,6 +170,7 @@ require("lazy").setup({
 					},
 				},
 			})
+			lspconfig.sourcekit.setup({})
 
 			-- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#imports
 			vim.api.nvim_create_autocmd("BufWritePre", {
@@ -352,6 +353,7 @@ require("lazy").setup({
 			"saadparwaiz1/cmp_luasnip",
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-buffer",
 		},
 		config = function()
 			local cmp = require("cmp")
@@ -394,6 +396,7 @@ require("lazy").setup({
 					{ name = "nvim_lsp" },
 					{ name = "luasnip" },
 					{ name = "path" },
+					{ name = "buffer" },
 				},
 			})
 		end,
