@@ -431,7 +431,12 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search" })
 vim.keymap.set("n", "<leader>cd", "<cmd>Copilot disable<cr>", { desc = "Disable Copilot" })
 vim.keymap.set("n", "<leader>ce", "<cmd>Copilot enable<cr>", { desc = "Enable Copilot" })
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic error messages" })
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Show diagnostic quickfix list" })
+vim.keymap.set("n", "<leader>Q", vim.diagnostic.setloclist, { desc = "Show diagnostic quickfix list" })
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("n", "<left>", [[<cmd>echo "Use 'h'"<cr>]])
+vim.keymap.set("n", "<right>", [[<cmd>echo "Use 'l'"<cr>]])
+vim.keymap.set("n", "<up>", [[<cmd>echo "Use 'k'"<cr>]])
+vim.keymap.set("n", "<down>", [[<cmd>echo "Use 'j'"<cr>]])
 
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = vim.api.nvim_create_augroup("paulsmith", { clear = true }),
