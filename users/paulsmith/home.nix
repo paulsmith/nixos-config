@@ -76,7 +76,7 @@ in {
     };
   };
 
-  programs.starship.enable = true;
+  programs.starship.enable = false;
 
   home.sessionPath =
     [ "$HOME/go/bin" "$HOME/bin" "$HOME/.local/bin" "$HOME/.rye/shims" ];

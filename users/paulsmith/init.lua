@@ -1,5 +1,3 @@
-print("Hello, NeoVim!")
-
 -- change_background updates the light/dark mode based on the system-wide
 -- setting (macOS's Appearance system setting)
 local function change_background()
