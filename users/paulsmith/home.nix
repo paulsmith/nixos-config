@@ -91,7 +91,8 @@ in {
     fi
   '';
 
-  home.file."${config.xdg.configHome}/nvim/init.lua" = {
-    source = ./init.lua;
+  home.file."${config.xdg.configHome}/nvim" = {
+    source = ../../common/nvim;
+    recursive = true;
   };
 }
