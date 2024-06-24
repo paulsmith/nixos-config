@@ -58,8 +58,6 @@ require("lazy").setup({
 	{ import = "plugins" },
 
 	"github/copilot.vim",
-
-	{ import = "nursery-plugins" },
 })
 
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to window to left" })
@@ -89,8 +87,3 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		vim.highlight.on_yank()
 	end,
 })
-
-local nursery = vim.fn.stdpath("config") .. "/lua/nursery.lua"
-if vim.loop.fs_stat(nursery) then
-	require("nursery")
-end
