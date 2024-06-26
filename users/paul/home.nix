@@ -42,7 +42,7 @@ in {
     magic-wormhole
     mas
     mosh
-    neovim
+    unstable-pkgs.neovim
     nixfmt
     unstable-pkgs.ollama
     pipx
@@ -99,4 +99,9 @@ in {
         builtin source "''${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
     fi
   '';
+
+  home.file."${config.xdg.configHome}/nvim" = {
+    source = ../../common/nvim;
+    recursive = true;
+  };
 }
