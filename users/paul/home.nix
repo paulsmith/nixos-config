@@ -88,9 +88,7 @@ in {
     recursive = true;
   };
 
-  home.sessionVariables = {
-    SVDIR = "$HOME/service"; # Runit service directory
-  };
+  home.sessionVariables.SVDIR = "$HOME/service"; # Runit service directory
 
   programs.bash.initExtra = ''
     export PS1="\[\e[1;34m\]\W\[\e[0m\] \[\e[1;33m\]\$\[\e[0m\] "

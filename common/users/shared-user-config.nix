@@ -14,13 +14,22 @@ in {
 
   programs.home-manager.enable = true;
 
+  home.shellAliases = {
+    ls = "ls --color=auto";
+    ll = "ls -l";
+    vi = "nvim";
+    vim = "nvim";
+    view = "nvim -R";
+    vimdiff = "nvim -d";
+  };
+
   programs.bash = {
     enable = true;
     historyControl = [ "ignoredups" "ignorespace" ];
-    shellAliases = {
-      ls = "ls --color=auto";
-      ll = "ls -l";
-    };
+  };
+
+  home.sessionVariables = {
+    EDITOR = "nvim";
   };
 
   programs.dircolors.enable = true;
@@ -71,6 +80,4 @@ in {
   home.file."${config.xdg.configHome}/ghostty/config" = {
     source = ./ghostty;
   };
-
-  imports = [ ../vim/default.nix ];
 }
