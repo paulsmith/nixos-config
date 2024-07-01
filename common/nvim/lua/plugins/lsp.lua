@@ -5,26 +5,43 @@ return {
 		{ "folke/neodev.nvim", opts = {} },
 	},
 	config = function()
-		local lspconfig = require("lspconfig")
-		lspconfig.gopls.setup({})
-		lspconfig.clangd.setup({})
-		lspconfig.lua_ls.setup({
-			settings = {
-				Lua = {
-					runtime = { version = "LuaJIT" },
-					workspace = {
-						checkThirdParty = false,
-						library = {
-							unpack(vim.api.nvim_get_runtime_file("", true)),
+		local servers = {
+			clangd = true,
+			gopls = true,
+			lua_ls = {
+				settings = {
+					Lua = {
+						runtime = { version = "LuaJIT" },
+						workspace = {
+							checkThirdParty = false,
+							library = {
+								unpack(vim.api.nvim_get_runtime_file("", true)),
+							},
 						},
-					},
-					completion = {
-						callSnippet = "Replace",
+						completion = {
+							callSnippet = "Replace",
+						},
 					},
 				},
 			},
-		})
-		lspconfig.sourcekit.setup({})
+			sourcekit = true,
+			zls = true,
+		}
+
+		local capabilities = vim.lsp.protocol.make_client_capabilities()
+		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+
+		local lspconfig = require("lspconfig")
+
+		for name, config in pairs(servers) do
+			if config == true then
+				config = {}
+			end
+			config = vim.tbl_deep_extend("force", {}, {
+				capabilities = capabilities,
+			}, config)
+			lspconfig[name].setup(config)
+		end
 
 		-- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#imports
 		vim.api.nvim_create_autocmd("BufWritePre", {
@@ -48,7 +65,7 @@ return {
 
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("paulsmith-lsp-attach", { clear = true }),
-			callback = function(_event)
+			callback = function()
 				vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
 				vim.keymap.set("n", "gr", require("telescope.builtin").lsp_references, { desc = "Go to references" })
 				vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Show hover" })
@@ -95,8 +112,5 @@ return {
 				-- end
 			end,
 		})
-
-		local capabilities = vim.lsp.protocol.make_client_capabilities()
-		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 	end,
 }

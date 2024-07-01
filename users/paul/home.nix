@@ -12,6 +12,7 @@ in {
     bashInteractive
     bat
     cachix
+    ccache
     cmake
     colima
     curl
@@ -44,6 +45,7 @@ in {
     mosh
     unstable-pkgs.neovim
     nixfmt
+    ninja
     unstable-pkgs.ollama
     pipx
     postgresql
