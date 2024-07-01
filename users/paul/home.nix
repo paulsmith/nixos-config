@@ -17,6 +17,7 @@ in {
     colima
     curl
     direnv
+    unstable-pkgs.diffedit3
     difftastic
     dtach
     entr
@@ -38,10 +39,12 @@ in {
     imagemagick
     iosevka-nerd
     jq
+    jujutsu
     lua
     lua-language-server
     magic-wormhole
     mas
+    meld
     mosh
     unstable-pkgs.neovim
     nixfmt

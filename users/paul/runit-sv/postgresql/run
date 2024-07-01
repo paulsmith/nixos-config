@@ -1,0 +1,4 @@
+#!/bin/sh
+exec 2>&1
+POSTGRES=$(readlink /etc/profiles/per-user/paul/bin/postgres)
+exec chpst -e ./env $POSTGRES
