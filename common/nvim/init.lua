@@ -17,6 +17,7 @@ vim.g.maplocalleader = ","
 vim.g.have_nerd_font = true
 
 vim.wo.colorcolumn = "80"
+vim.cmd([[highlight ColorColumn ctermbg=0 guibg=lightgrey]])
 vim.opt.autoindent = true
 vim.opt.cursorline = true
 vim.opt.shiftwidth = 4

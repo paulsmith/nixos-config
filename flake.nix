@@ -23,7 +23,9 @@
       system = "aarch64-darwin";
     in darwin.lib.darwinSystem {
       modules = [
-        ./hosts/paulsmith-HJ6D3J627M/configuration.nix
+        (import ./hosts/paulsmith-HJ6D3J627M/configuration.nix {
+            inherit username;
+        })
         home-manager.darwinModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
