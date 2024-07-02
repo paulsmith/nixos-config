@@ -1,9 +1,8 @@
-{ pkgs, ... }:
-let user = "paulsmith";
-in {
+{ username }:
+{ pkgs, ... }: {
   imports = [ ../../common/hosts/shared-host-config.nix ];
 
-  nix.settings.trusted-users = [ "root" "${user}" ];
+  nix.settings.trusted-users = [ "root" username ];
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
@@ -19,9 +18,9 @@ in {
     # masApps = { OneTab = 1540160809; };
   };
 
-  users.users.${user} = {
-    name = "${user}";
-    home = "/Users/${user}";
+  users.users.${username} = {
+    name = "${username}";
+    home = "/Users/${username}";
     shell = pkgs.bashInteractive;
   };
 }

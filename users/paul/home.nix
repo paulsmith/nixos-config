@@ -97,6 +97,7 @@ in {
 
   programs.bash.initExtra = ''
     export PS1="\[\e[1;34m\]\W\[\e[0m\] \[\e[1;33m\]\$\[\e[0m\] "
+    export MANPATH=$(xcode-select --show-manpaths | tr '\n' ':')
     # Ghostty shell integration
     if [ -n "$GHOSTTY_RESOURCES_DIR" ]; then
         builtin source "''${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
