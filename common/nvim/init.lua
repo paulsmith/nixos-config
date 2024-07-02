@@ -73,7 +73,6 @@ vim.keymap.set("n", "<leader><space>", "<cmd>nohlsearch<cr>", { desc = "Clear se
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search" })
 vim.keymap.set("n", "<leader>cd", "<cmd>Copilot disable<cr>", { desc = "Disable Copilot" })
 vim.keymap.set("n", "<leader>ce", "<cmd>Copilot enable<cr>", { desc = "Enable Copilot" })
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic error messages" })
 vim.keymap.set("n", "<leader>Q", vim.diagnostic.setloclist, { desc = "Show diagnostic quickfix list" })
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set("n", "<left>", [[<cmd>echo "Use 'h'"<cr>]])
