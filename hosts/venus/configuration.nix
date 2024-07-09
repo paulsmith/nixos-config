@@ -26,8 +26,7 @@
       "docker"
       "inkscape"
       "karabiner-elements"
-      # Local Wordpress development
-      "local"
+      "lulu"
       "ngrok"
       "qlmarkdown"
       "rar"
