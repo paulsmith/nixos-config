@@ -47,6 +47,6 @@
 
   services.nextdns = {
     enable = true;
-    arguments = [ "-profile ${nextdnsProfile}" ];
+    arguments = [ "-profile" "${nextdnsProfile}" "-cache-size" "10MB" ];
   };
 }
