@@ -13,24 +13,23 @@ in {
     bat
     btop
     cachix
+    cargo
     ccache
     cmake
     colima
     curl
-    direnv
-    unstable-pkgs.diffedit3
     difftastic
+    direnv
     dtach
     entr
+    fd
     ffmpeg
     fx
     fzf
-    fd
     gh
     gifsicle
     gifski
     git
-    unstable-pkgs.go
     graphviz
     guile
     helix
@@ -40,17 +39,14 @@ in {
     imagemagick
     iosevka-nerd
     jq
-    unstable-pkgs.jujutsu
     lua
     lua-language-server
     magic-wormhole
     mas
     meld
     mosh
-    unstable-pkgs.neovim
-    nixfmt
     ninja
-    unstable-pkgs.ollama
+    nixfmt
     pipx
     postgresql
     prettierd
@@ -60,13 +56,19 @@ in {
     readline
     ripgrep
     rlwrap
+    rustc
     shellcheck
     sqlite
     stylua
-    unstable-pkgs.sqlc
     swig
     tree
     ttyd
+    unstable-pkgs.diffedit3
+    unstable-pkgs.go
+    unstable-pkgs.jujutsu
+    unstable-pkgs.neovim
+    unstable-pkgs.ollama
+    unstable-pkgs.sqlc
     wget
     xz
     yt-dlp

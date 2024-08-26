@@ -6,7 +6,13 @@
 
   networking.hostName = hostname;
   networking.computerName = hostname;
-  system.defaults.smb.NetBIOSName = hostname;
+
+  system.defaults = {
+      dock.autohide = true;
+      dock.mru-spaces = false;
+      smb.NetBIOSName = hostname;
+      screencapture.location = "~/Pictures/screenshots";
+  };
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
@@ -22,7 +28,7 @@
       "1password-cli"
       "audacity"
       "avifquicklook"
-      "blender"
+      # "blender" was taking too long to upgrade
       "docker"
       "inkscape"
       "karabiner-elements"
@@ -47,6 +53,6 @@
 
   services.nextdns = {
     enable = true;
-    arguments = [ "-profile ${nextdnsProfile}" ];
+    arguments = [ "-profile" "${nextdnsProfile}" "-cache-size" "10MB" ];
   };
 }
