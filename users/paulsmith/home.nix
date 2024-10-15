@@ -6,11 +6,14 @@ in {
   imports = [ ../../common/users/shared-user-config.nix ];
 
   home.packages = with pkgs; [
+    asitop
     aws-sam-cli
     awscli
     bashInteractive
     bat
+    btop
     cachix
+    ccache
     colima
     curl
     datasette
@@ -35,6 +38,7 @@ in {
     iosevka-nerd
     jq
     jujutsu
+    unstable-pkgs.llama-cpp
     lua
     lua-language-server
     magic-wormhole
@@ -76,6 +80,7 @@ in {
     extraConfig = {
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
+      # url."ssh://git@github.com/".insteadOf = "https://github.com";
     };
   };
 
