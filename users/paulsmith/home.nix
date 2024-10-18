@@ -37,16 +37,16 @@ in {
     imagemagick
     iosevka-nerd
     jq
-    jujutsu
+    unstable-pkgs.jujutsu
     unstable-pkgs.llama-cpp
     lua
     lua-language-server
     magic-wormhole
     mosh
     unstable-pkgs.neovim
-    nodejs_21
+    nodejs_22
     nixfmt
-    openssl_3_1
+    openssl_3
     postgresql
     pipx
     prettierd
