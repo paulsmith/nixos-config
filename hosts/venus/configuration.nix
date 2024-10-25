@@ -52,7 +52,7 @@
   };
 
   services.nextdns = {
-    enable = true;
+    enable = false;
     arguments = [ "-profile" "${nextdnsProfile}" "-cache-size" "10MB" ];
   };
 }
