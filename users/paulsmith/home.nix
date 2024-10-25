@@ -6,11 +6,14 @@ in {
   imports = [ ../../common/users/shared-user-config.nix ];
 
   home.packages = with pkgs; [
+    asitop
     aws-sam-cli
     awscli
     bashInteractive
     bat
+    btop
     cachix
+    ccache
     colima
     curl
     datasette
@@ -34,15 +37,16 @@ in {
     imagemagick
     iosevka-nerd
     jq
-    jujutsu
+    unstable-pkgs.jujutsu
+    unstable-pkgs.llama-cpp
     lua
     lua-language-server
     magic-wormhole
     mosh
     unstable-pkgs.neovim
-    nodejs_21
+    nodejs_22
     nixfmt
-    openssl_3_1
+    openssl_3
     postgresql
     pipx
     prettierd
@@ -76,6 +80,7 @@ in {
     extraConfig = {
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
+      # url."ssh://git@github.com/".insteadOf = "https://github.com";
     };
   };
 

@@ -13,6 +13,9 @@ return {
 			filesystem = {
 				hijack_netrw_behavior = "open_current",
 			},
+			window = {
+				width = 25,
+			},
 		})
 	end,
 }

@@ -21,6 +21,9 @@ in {
     vim = "nvim";
     view = "nvim -R";
     vimdiff = "nvim -d";
+    gs = "git status";
+    gd = "git diff";
+    gdc = "git diff --cached";
   };
 
   programs.bash = {
