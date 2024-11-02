@@ -24,6 +24,9 @@ in {
     gs = "git status";
     gd = "git diff";
     gdc = "git diff --cached";
+    gau = "git add -u";
+    gc = "git commit";
+    gco = "git checkout";
   };
 
   programs.bash = {
