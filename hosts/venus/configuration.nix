@@ -33,6 +33,7 @@
       "inkscape"
       "karabiner-elements"
       "lulu"
+      "musicbrainz-picard"
       "ngrok"
       "qlmarkdown"
       "rar"
