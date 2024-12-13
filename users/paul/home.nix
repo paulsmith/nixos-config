@@ -24,6 +24,7 @@ in {
     entr
     fd
     ffmpeg
+    fish
     fx
     fzf
     gh
@@ -69,6 +70,7 @@ in {
     unstable-pkgs.neovim
     unstable-pkgs.ollama
     unstable-pkgs.sqlc
+    vale
     wget
     xz
     yt-dlp
