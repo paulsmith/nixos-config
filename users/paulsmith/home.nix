@@ -1,8 +1,10 @@
 { unstable-pkgs }:
 
 { pkgs, config, ... }:
-let iosevka-nerd = pkgs.callPackage ../../common/users/iosevka-nerd.nix { };
-in {
+let
+  iosevka-nerd = pkgs.callPackage ../../common/users/iosevka-nerd.nix { };
+in
+{
   imports = [ ../../common/users/shared-user-config.nix ];
 
   home.packages = with pkgs; [
@@ -45,7 +47,7 @@ in {
     mosh
     unstable-pkgs.neovim
     nodejs_22
-    nixfmt
+    nixfmt-rfc-style
     openssl_3
     postgresql
     pipx
@@ -86,8 +88,12 @@ in {
 
   programs.starship.enable = false;
 
-  home.sessionPath =
-    [ "$HOME/go/bin" "$HOME/bin" "$HOME/.local/bin" "$HOME/.rye/shims" ];
+  home.sessionPath = [
+    "$HOME/go/bin"
+    "$HOME/bin"
+    "$HOME/.local/bin"
+    "$HOME/.rye/shims"
+  ];
 
   programs.bash.initExtra = ''
     export PATH="$HOME/Downloads/google-cloud-sdk/bin:$PATH"

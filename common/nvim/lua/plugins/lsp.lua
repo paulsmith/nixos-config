@@ -26,6 +26,7 @@ return {
 			},
 			sourcekit = true,
 			zls = true,
+			rust_analyzer = true,
 		}
 
 		local capabilities = vim.lsp.protocol.make_client_capabilities()

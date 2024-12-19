@@ -1,4 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   environment.systemPackages = with pkgs; [ vim ];
   environment.shells = with pkgs; [ bashInteractive ];
 
@@ -7,7 +8,7 @@
 
   nix.settings.experimental-features = "nix-command flakes repl-flake";
 
-  programs.zsh.enable = true;  # default shell on catalina
+  programs.zsh.enable = true; # default shell on catalina
 
   # Enable sudo authentication with Touch ID
   security.pam.enableSudoTouchIdAuth = true;

@@ -1,8 +1,10 @@
 { unstable-pkgs }:
 
 { pkgs, config, ... }:
-let iosevka-nerd = pkgs.callPackage ../../common/users/iosevka-nerd.nix { };
-in {
+let
+  iosevka-nerd = pkgs.callPackage ../../common/users/iosevka-nerd.nix { };
+in
+{
   imports = [ ../../common/users/shared-user-config.nix ];
 
   home.packages = with pkgs; [
@@ -47,7 +49,7 @@ in {
     meld
     mosh
     ninja
-    nixfmt
+    nixfmt-rfc-style
     pipx
     postgresql
     prettierd
@@ -70,6 +72,7 @@ in {
     unstable-pkgs.neovim
     unstable-pkgs.ollama
     unstable-pkgs.sqlc
+    unstable-pkgs.typst
     vale
     wget
     xz
@@ -88,8 +91,12 @@ in {
       br = "branch";
     };
     extraConfig = {
-      init = { defaultBranch = "main"; };
-      push = { autoSetupRemote = true; };
+      init = {
+        defaultBranch = "main";
+      };
+      push = {
+        autoSetupRemote = true;
+      };
     };
   };
 

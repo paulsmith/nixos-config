@@ -14,52 +14,59 @@
     };
   };
 
-  outputs = inputs@{ nixpkgs, darwin, home-manager, ... }: {
-    nixpkgs.config.allowUnfree = true;
-    # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#paulsmith-HJ6D3J627M
-    darwinConfigurations."paulsmith-HJ6D3J627M" = let
-      username = "paulsmith";
-      system = "aarch64-darwin";
-    in darwin.lib.darwinSystem {
-      modules = [
-        (import ./hosts/paulsmith-HJ6D3J627M/configuration.nix {
-            inherit username;
-        })
-        home-manager.darwinModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.${username} = import ./users/${username}/home.nix ({
-            unstable-pkgs =
-              (import inputs.nixpkgs-unstable { inherit system; });
-          });
-        }
-      ];
+  outputs =
+    inputs@{
+      nixpkgs,
+      darwin,
+      home-manager,
+      ...
+    }:
+    {
+      nixpkgs.config.allowUnfree = true;
+      # Build darwin flake using:
+      # $ darwin-rebuild build --flake .#paulsmith-HJ6D3J627M
+      darwinConfigurations."paulsmith-HJ6D3J627M" =
+        let
+          username = "paulsmith";
+          system = "aarch64-darwin";
+        in
+        darwin.lib.darwinSystem {
+          modules = [
+            (import ./hosts/paulsmith-HJ6D3J627M/configuration.nix { inherit username; })
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.${username} = import ./users/${username}/home.nix ({
+                unstable-pkgs = (import inputs.nixpkgs-unstable { inherit system; });
+              });
+            }
+          ];
+        };
+      # Build darwin flake using:
+      # $ darwin-rebuild build --flake .#venus
+      darwinConfigurations."venus" =
+        let
+          username = "paul";
+          nextdnsProfile = "d3b8fa";
+          system = "aarch64-darwin";
+        in
+        darwin.lib.darwinSystem {
+          inherit system;
+          modules = [
+            (import ./hosts/venus/configuration.nix {
+              inherit username nextdnsProfile;
+              hostname = "venus";
+            })
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.${username} = import ./users/${username}/home.nix ({
+                unstable-pkgs = (import inputs.nixpkgs-unstable { inherit system; });
+              });
+            }
+          ];
+        };
     };
-    # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#venus
-    darwinConfigurations."venus" = let
-      username = "paul";
-      nextdnsProfile = "d3b8fa";
-      system = "aarch64-darwin";
-    in darwin.lib.darwinSystem {
-      inherit system;
-      modules = [
-        (import ./hosts/venus/configuration.nix {
-          inherit username nextdnsProfile;
-          hostname = "venus";
-        })
-        home-manager.darwinModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.${username} = import ./users/${username}/home.nix ({
-            unstable-pkgs =
-              (import inputs.nixpkgs-unstable { inherit system; });
-          });
-        }
-      ];
-    };
-  };
 }

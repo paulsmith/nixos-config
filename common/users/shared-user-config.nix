@@ -7,7 +7,8 @@ let
     echo use flake >> .envrc
     direnv allow
   '';
-in {
+in
+{
   # The state version is required and should stay at the version you
   # originally installed.
   home.stateVersion = "23.05";
@@ -31,7 +32,10 @@ in {
 
   programs.bash = {
     enable = true;
-    historyControl = [ "ignoredups" "ignorespace" ];
+    historyControl = [
+      "ignoredups"
+      "ignorespace"
+    ];
   };
 
   home.sessionVariables = {
@@ -73,15 +77,20 @@ in {
   };
 
   home.file."${config.xdg.configHome}/git/ignore".text = ''
-  .DS_Store
-  .idea
+    .DS_Store
+    .idea
   '';
 
   home.file.".gitattributes".text = ''
     *.sqlite diff=sqlite3
   '';
 
-  home.sessionPath = [ "$HOME/go/bin" "$HOME/bin" "$HOME/.local/bin" "/opt/homebrew/bin" ];
+  home.sessionPath = [
+    "$HOME/go/bin"
+    "$HOME/bin"
+    "$HOME/.local/bin"
+    "/opt/homebrew/bin"
+  ];
 
   home.file."${config.xdg.configHome}/ghostty/config" = {
     source = ./ghostty;

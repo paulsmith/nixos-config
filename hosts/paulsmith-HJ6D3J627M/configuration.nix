@@ -1,8 +1,12 @@
 { username }:
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   imports = [ ../../common/hosts/shared-host-config.nix ];
 
-  nix.settings.trusted-users = [ "root" username ];
+  nix.settings.trusted-users = [
+    "root"
+    username
+  ];
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
@@ -13,8 +17,18 @@
       autoUpdate = true;
       upgrade = true;
     };
-    brews = [ "qemu" "runit" "gforth" ];
-    casks = [ "1password-cli" "docker" "inkscape" "ngrok" "typora" ];
+    brews = [
+      "qemu"
+      "runit"
+      "gforth"
+    ];
+    casks = [
+      "1password-cli"
+      "docker"
+      "inkscape"
+      "ngrok"
+      "typora"
+    ];
     # masApps = { OneTab = 1540160809; };
   };
 
