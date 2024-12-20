@@ -43,7 +43,11 @@ in
   };
 
   programs.dircolors.enable = true;
-  programs.direnv.enable = true;
+  programs.direnv = {
+    enable = true;
+    enableBashIntegration = true;
+    nix-direnv.enable = true;
+  };
 
   home.file.".sqliterc".text = ''
     .header on
