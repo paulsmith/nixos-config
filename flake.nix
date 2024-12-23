@@ -55,11 +55,10 @@
           inherit system;
           modules = [
             # Pin registry entries
-            ({ config, lib, ... }: {
-                nix.registry = lib.mapAttrs
-                    (_: flake: { inherit flake; })
-                    (lib.attrsets.removeAttrs inputs [ "self" ]);
-            })
+            {
+                nix.registry.nixpkgs.flake = nixpkgs;
+                nix.registry.nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
+            }
             (import ./hosts/venus/configuration.nix {
               inherit username nextdnsProfile;
               hostname = "venus";
