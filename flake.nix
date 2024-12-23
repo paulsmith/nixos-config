@@ -54,6 +54,12 @@
         darwin.lib.darwinSystem {
           inherit system;
           modules = [
+            # Pin registry entries
+            ({ config, lib, ... }: {
+                nix.registry = lib.mapAttrs
+                    (_: flake: { inherit flake; })
+                    (lib.attrsets.removeAttrs inputs [ "self" ]);
+            })
             (import ./hosts/venus/configuration.nix {
               inherit username nextdnsProfile;
               hostname = "venus";
