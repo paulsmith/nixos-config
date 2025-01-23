@@ -52,6 +52,7 @@
     masApps = {
       Tailscale = 1475387142;
       Notchmeister = 1599169747;
+      TestFlight = 899247664;
       # FIXME: not working, claims already bought by another user
       # "Bike Outliner" = 1588292384;
     };

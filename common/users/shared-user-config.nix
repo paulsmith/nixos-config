@@ -83,6 +83,7 @@ in
   home.file."${config.xdg.configHome}/git/ignore".text = ''
     .DS_Store
     .idea
+    .envrc
   '';
 
   home.file.".gitattributes".text = ''

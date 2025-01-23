@@ -75,6 +75,7 @@ in
     unstable-pkgs.ollama
     unstable-pkgs.sqlc
     unstable-pkgs.typst
+    unstable-pkgs.utm
     vale
     wget
     xz
