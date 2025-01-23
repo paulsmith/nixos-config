@@ -19,6 +19,7 @@ in
     ccache
     cmake
     colima
+    coreutils-prefixed
     curl
     difftastic
     direnv
@@ -50,6 +51,7 @@ in
     mosh
     ninja
     nixfmt-rfc-style
+    optipng
     pipx
     postgresql
     prettierd
