@@ -84,6 +84,7 @@ in
     .DS_Store
     .idea
     .envrc
+    .direnv/
   '';
 
   home.file.".gitattributes".text = ''

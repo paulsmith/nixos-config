@@ -49,6 +49,7 @@ in
     mas
     meld
     mosh
+    neofetch
     ninja
     nixfmt-rfc-style
     optipng
