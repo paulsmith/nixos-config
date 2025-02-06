@@ -44,6 +44,7 @@
       "iina"
       "inkscape"
       "karabiner-elements"
+      "libreoffice"
       "musicbrainz-picard"
       "ngrok"
       "qlmarkdown"

@@ -24,7 +24,7 @@ return {
 					},
 				},
 			},
-			sourcekit = true,
+			--sourcekit = true,
 			zls = true,
 			rust_analyzer = true,
 		}
