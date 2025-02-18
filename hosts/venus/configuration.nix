@@ -49,6 +49,7 @@
       "ngrok"
       "qlmarkdown"
       "rar"
+      "selfcontrol"
     ];
     masApps = {
       Tailscale = 1475387142;
