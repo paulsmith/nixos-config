@@ -15,7 +15,6 @@ in
     bat
     btop
     cachix
-    cargo
     ccache
     cmake
     colima
@@ -62,18 +61,19 @@ in
     readline
     ripgrep
     rlwrap
-    rustc
     shellcheck
     sqlite
     stylua
     swig
     tree
     ttyd
+    unstable-pkgs.cargo
     unstable-pkgs.diffedit3
     unstable-pkgs.go
     unstable-pkgs.jujutsu
     unstable-pkgs.neovim
     unstable-pkgs.ollama
+    unstable-pkgs.rustc
     unstable-pkgs.sqlc
     unstable-pkgs.typst
     unstable-pkgs.utm
