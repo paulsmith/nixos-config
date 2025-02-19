@@ -39,6 +39,7 @@ in
     htop
     hugo
     hyperfine
+    iftop
     imagemagick
     iosevka-nerd
     jq
