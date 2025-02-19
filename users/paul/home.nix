@@ -53,6 +53,7 @@ in
     ninja
     nixfmt-rfc-style
     optipng
+    pandoc
     pipx
     postgresql
     prettierd
