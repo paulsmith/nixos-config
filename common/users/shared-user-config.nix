@@ -54,18 +54,26 @@ in
     .mode column
   '';
 
-  programs.git.extraConfig."diff \"sqlite3\"".binary = true;
-  programs.git.extraConfig."diff \"sqlite3\"".textconv = "echo .dump | sqlite3";
-  programs.git.extraConfig.diff.colormoved = "default";
-  programs.git.extraConfig.diff.colormovedws = "allow-indentation-change";
-  programs.git.extraConfig.merge.conflictStyle = "zdiff3";
-  programs.git.extraConfig.diff.algorithm = "histogram";
-  programs.git.extraConfig.transfer.fsckobjects = true;
-  programs.git.extraConfig.fetch.fsckobjects = true;
-  programs.git.extraConfig.receive.fsckobjects = true;
-  programs.git.extraConfig.fetch.prune = true;
-  programs.git.extraConfig.fetch.prunetags = true;
-  programs.git.extraConfig.core.hooksPath = "${config.xdg.configHome}/git/hooks";
+  programs.git.extraConfig = {
+    "diff \"sqlite3\"" = {
+      binary = true;
+      textconv = "echo .dump | sqlite3";
+    };
+    diff = {
+      colormoved = "default";
+      colormovedws = "allow-indentation-change";
+      algorithm = "histogram";
+    };
+    merge.conflictStyle = "zdiff3";
+    transfer.fsckobjects = true;
+    fetch = {
+      fsckobjects = true;
+      prune = true;
+      prunetags = true;
+    };
+    receive.fsckobjects = true;
+    core.hooksPath = "${config.xdg.configHome}/git/hooks";
+  };
 
   programs.readline = {
     bindings = {
