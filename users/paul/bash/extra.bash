@@ -10,3 +10,12 @@ fi
 function t {
     pushd $(mktemp -d -p /tmp -q "${1}.XXXXXX")
 }
+
+# uv https://docs.astral.sh/uv/getting-started/installation/#shell-autocompletion
+if command -v uv >/dev/null; then
+    eval "$(uv generate-shell-completion bash)"
+fi
+
+if command -v uvx >/dev/null; then
+    eval "$(uvx --generate-shell-completion bash)"
+fi
