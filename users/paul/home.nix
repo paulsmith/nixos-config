@@ -52,6 +52,7 @@ in
     neofetch
     ninja
     nixfmt-rfc-style
+    nodejs
     optipng
     pandoc
     pipx
