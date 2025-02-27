@@ -114,6 +114,14 @@ in
 
   home.sessionVariables.SVDIR = "$HOME/service"; # Runit service directory
 
+  home.sessionPath = [
+    "$HOME/go/bin"
+    "$HOME/bin"
+    "$HOME/.local/bin"
+    "/opt/homebrew/bin"
+    "$HOME/.npm-global/bin/"
+  ];
+
   programs.bash.initExtra = builtins.concatStringsSep "\n" [
     (builtins.readFile ./bash/extra.bash)
   ];
