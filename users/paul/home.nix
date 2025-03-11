@@ -112,7 +112,10 @@ in
     recursive = true;
   };
 
-  home.sessionVariables.SVDIR = "$HOME/service"; # Runit service directory
+  home.sessionVariables = {
+    SVDIR = "$HOME/service"; # Runit service directory
+    CDPATH = ":$HOME/Dropbox/Projects";
+  };
 
   home.sessionPath = [
     "$HOME/go/bin"
