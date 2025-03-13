@@ -106,7 +106,11 @@ in
     "/opt/homebrew/bin"
   ];
 
-  home.file."${config.xdg.configHome}/ghostty/config" = {
-    source = ./ghostty;
+  home.file = {
+    ${if pkgs.stdenv.isDarwin 
+      then "Library/Application Support/com.mitchellh.ghostty/config" 
+      else "${config.xdg.configHome}/ghostty/config"} = {
+      source = ./ghostty;
+    };
   };
 }
