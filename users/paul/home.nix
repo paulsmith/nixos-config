@@ -28,7 +28,6 @@ in
     ffmpeg
     fish
     fx
-    fzf
     gh
     gifsicle
     gifski
@@ -106,6 +105,8 @@ in
       };
     };
   };
+
+  programs.fzf.enable = true;
 
   home.file."${config.xdg.configHome}/sv" = {
     source = ./runit-sv;
