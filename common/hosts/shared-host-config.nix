@@ -6,7 +6,7 @@
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
 
-  nix.settings.experimental-features = "nix-command flakes repl-flake";
+  nix.settings.experimental-features = "nix-command flakes";
 
   programs.zsh.enable = true; # default shell on catalina
 
