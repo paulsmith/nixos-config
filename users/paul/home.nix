@@ -42,8 +42,8 @@ in
     imagemagick
     iosevka-nerd
     jq
-    lua
     lua-language-server
+    (lua.withPackages(ps: with ps; [ cjson ]))
     magic-wormhole
     mas
     meld
@@ -77,6 +77,7 @@ in
     unstable-pkgs.ollama
     unstable-pkgs.rustc
     unstable-pkgs.sqlc
+    unstable-pkgs.tailscale
     unstable-pkgs.typst
     unstable-pkgs.utm
     vale

@@ -41,6 +41,7 @@
       "avifquicklook"
       "docker"
       "elmedia-player"
+      "hammerspoon"
       "iina"
       "inkscape"
       "karabiner-elements"
