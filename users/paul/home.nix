@@ -69,13 +69,12 @@ in
     swig
     tree
     ttyd
-    unstable-pkgs.cargo
     unstable-pkgs.diffedit3
     unstable-pkgs.go
     unstable-pkgs.jujutsu
     unstable-pkgs.neovim
     unstable-pkgs.ollama
-    unstable-pkgs.rustc
+    unstable-pkgs.rustup
     unstable-pkgs.sqlc
     unstable-pkgs.tailscale
     unstable-pkgs.typst
