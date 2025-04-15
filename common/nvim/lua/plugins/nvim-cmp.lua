@@ -10,7 +10,7 @@ return {
 			dependencies = {
 				"rafamadriz/friendly-snippets",
 				config = function()
-					require("luasnip.loaders.from_vscode").lazy_load()
+					require("luasnip.loaders.from_vscode").lazy_load({ paths = "~/.config/nvim/snippets" })
 				end,
 			},
 		},
@@ -44,15 +44,33 @@ return {
 				["<C-f>"] = cmp.mapping.scroll_docs(4),
 				["<C-Space>"] = cmp.mapping.complete(),
 				["<C-e>"] = cmp.mapping.close(),
-				["<C-y>"] = cmp.mapping.confirm({ select = true }),
-				["<A-j>"] = cmp.mapping(function()
-					if luasnip.expand_or_locally_jumpable() then
-						luasnip.expand_or_jump()
+				["<C-y>"] = cmp.mapping(function(fallback)
+					if cmp.visible() then
+						if luasnip.expandable() then
+							luasnip.expand()
+						else
+							cmp.confirm({ select = true })
+						end
+					else
+						fallback()
+					end
+				end),
+				["<Tab>"] = cmp.mapping(function(fallback)
+					if cmp.visible() then
+						cmp.select_next_item()
+					elseif luasnip.locally_jumpable(1) then
+						luasnip.jump(1)
+					else
+						fallback()
 					end
 				end, { "i", "s" }),
-				["<A-k>"] = cmp.mapping(function()
-					if luasnip.locally_jumpable(-1) then
+				["<S-Tab>"] = cmp.mapping(function(fallback)
+					if cmp.visible() then
+						cmp.select_prev_item()
+					elseif luasnip.locally_jumpable(-1) then
 						luasnip.jump(-1)
+					else
+						fallback()
 					end
 				end, { "i", "s" }),
 			}),
