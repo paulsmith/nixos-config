@@ -57,7 +57,18 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	{ import = "plugins" },
-	"github/copilot.vim",
+	{
+		"github/copilot.vim",
+		init = function()
+			vim.g.copilot_no_tab_map = true
+		end,
+		config = function()
+			vim.keymap.set("i", "<C-j>", [[copilot#Accept("<CR>")]], {
+				expr = true,
+				replace_keycodes = false,
+			})
+		end,
+	},
 })
 
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to window to left" })
