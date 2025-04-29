@@ -7,6 +7,8 @@
 {
   imports = [ ../../common/hosts/shared-host-config.nix ];
 
+  nix.package = pkgs.nixVersions.nix_2_28;
+
   nix.settings.trusted-users = [
     "root"
     username
