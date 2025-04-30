@@ -100,13 +100,6 @@ in
     *.sqlite diff=sqlite3
   '';
 
-  home.sessionPath = [
-    "$HOME/go/bin"
-    "$HOME/bin"
-    "$HOME/.local/bin"
-    "/opt/homebrew/bin"
-  ];
-
   home.file = {
     ${if pkgs.stdenv.isDarwin 
       then "Library/Application Support/com.mitchellh.ghostty/config" 
