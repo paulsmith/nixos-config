@@ -115,7 +115,7 @@ in
 
   home.sessionVariables = {
     SVDIR = "$HOME/service"; # Runit service directory
-    CDPATH = ":$HOME/Dropbox/Projects";
+    CDPATH = ":$HOME/Dropbox/Projects:$HOME/.config";
   };
 
   home.sessionPath = [
