@@ -51,15 +51,15 @@ in
     neofetch
     ninja
     nixfmt-rfc-style
-    nodejs
+    nodejs_22
     optipng
     pandoc
     pipx
     postgresql
-    prettierd
     pstree
     pv
     python3
+    rclone
     readline
     ripgrep
     rlwrap
