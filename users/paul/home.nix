@@ -113,6 +113,11 @@ in
     recursive = true;
   };
 
+  home.file.".claude" = {
+    source = ./.claude;
+    recursive = true;
+  };
+
   home.sessionVariables = {
     SVDIR = "$HOME/service"; # Runit service directory
     CDPATH = ":$HOME/Dropbox/Projects:$HOME/.config";
