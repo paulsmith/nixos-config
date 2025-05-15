@@ -25,9 +25,9 @@
       upgrade = true;
     };
     brews = [
+      "gforth"
       "qemu"
       "runit"
-      "gforth"
     ];
     casks = [
       "1password-cli"
