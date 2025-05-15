@@ -19,8 +19,8 @@ in
     colima
     curl
     datasette
-    direnv
     difftastic
+    direnv
     entr
     fd
     ffmpeg
@@ -30,7 +30,6 @@ in
     gifsicle
     gifski
     git
-    unstable-pkgs.go
     guile
     helix
     htop
@@ -39,31 +38,34 @@ in
     imagemagick
     iosevka-nerd
     jq
-    unstable-pkgs.jujutsu
-    unstable-pkgs.llama-cpp
     lua
     lua-language-server
     magic-wormhole
     mosh
-    unstable-pkgs.neovim
-    nodejs_22
     nixfmt-rfc-style
+    nodejs_22
+    pandoc
     openssl_3
-    postgresql
     pipx
-    prettierd
+    postgresql
     pstree
     pv
     python3
     readline
     ripgrep
     rlwrap
-    unstable-pkgs.rye
     shellcheck
     sqlite
     stylua
     swig
     tree
+    unstable-pkgs.diffedit3
+    unstable-pkgs.go
+    unstable-pkgs.jujutsu
+    unstable-pkgs.llama-cpp
+    unstable-pkgs.neovim
+    unstable-pkgs.rustup
+    unstable-pkgs.typst
     wget
     xz
     zstd
@@ -86,13 +88,10 @@ in
     };
   };
 
-  programs.starship.enable = false;
-
   home.sessionPath = [
     "$HOME/go/bin"
     "$HOME/bin"
     "$HOME/.local/bin"
-    "$HOME/.rye/shims"
   ];
 
   programs.bash.initExtra = ''

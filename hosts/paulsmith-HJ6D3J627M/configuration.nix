@@ -3,10 +3,17 @@
 {
   imports = [ ../../common/hosts/shared-host-config.nix ];
 
+  nix.package = pkgs.nixVersions.nix_2_28;
+
   nix.settings.trusted-users = [
     "root"
     username
   ];
+
+  system.defaults = {
+    dock.autohide = true;
+    dock.mru-spaces = false;
+  };
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
@@ -25,6 +32,7 @@
     casks = [
       "1password-cli"
       "docker"
+      "ghostty"
       "inkscape"
       "ngrok"
       "typora"
