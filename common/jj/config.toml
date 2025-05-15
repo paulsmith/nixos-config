@@ -1,0 +1,9 @@
+[ui]
+diff-editor = ":builtin"
+default-command = "log"
+paginate = "auto"
+pager = "less -FRX"
+merge-editor = ":builtin"
+
+[git]
+write-change-id-header = true

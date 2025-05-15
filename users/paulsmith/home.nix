@@ -104,4 +104,14 @@ in
     source = ../../common/nvim;
     recursive = true;
   };
+
+  home.file."Library/Application Support/jj/config.toml" = {
+    text = builtins.concatStringsSep "\n" [
+        "[user]"
+        "name = \"Paul Smith\""
+        "email = \"paul@adhocteam.us\""
+        ""
+        (builtins.readFile ../../common/jj/config.toml)
+    ];
+  };
 }
