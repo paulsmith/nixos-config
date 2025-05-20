@@ -132,7 +132,7 @@ in
   ];
 
   programs.bash.initExtra = builtins.concatStringsSep "\n" [
-    (builtins.readFile ../common/bash/extra.bash)
+    (builtins.readFile ../../common/bash/extra.bash)
   ];
 
   home.file."${config.xdg.configHome}/nvim" = {
