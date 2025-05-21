@@ -140,7 +140,7 @@ in
     recursive = true;
   };
 
-  home.file."Library/Application Support/jj/config.toml" = {
+  home.file."${config.xdg.configHome}/jj/config.toml" = {
     text = builtins.concatStringsSep "\n" [
         "[user]"
         "name = \"Paul Smith\""
