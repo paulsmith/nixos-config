@@ -45,6 +45,7 @@
       "dangerzone"
       "docker"
       "elmedia-player"
+      "ghostty"
       "hammerspoon"
       "iina"
       "inkscape"
