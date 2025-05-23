@@ -8,6 +8,7 @@ in
   imports = [ ../../common/users/shared-user-config.nix ];
 
   home.packages = with pkgs; [
+    (lua.withPackages(ps: with ps; [ cjson ]))
     autossh
     aws-sam-cli
     awscli
@@ -43,7 +44,6 @@ in
     iosevka-nerd
     jq
     lua-language-server
-    (lua.withPackages(ps: with ps; [ cjson ]))
     magic-wormhole
     mas
     meld

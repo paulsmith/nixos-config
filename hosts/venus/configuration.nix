@@ -62,6 +62,7 @@
       Notchmeister = 1599169747;
       TestFlight = 899247664;
       WhatsApp = 310633997;
+      TypeIt4Me = 6474688391;
       # FIXME: not working, claims already bought by another user
       # "Bike Outliner" = 1588292384;
     };
