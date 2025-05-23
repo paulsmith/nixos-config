@@ -6,6 +6,7 @@
 
 ## Code Writing
 
+- Favor **semantic compression** as your approach to writing or changing code. See the section below for details.
 - Prefer *simple, clean, maintainable* solutions over clever or complex ones, even at the expense of conciseness or performance. Readability and maintainability are **primary concerns**.
 - Make the **smallest reasonable changes** to achieve the desired outcome.
 - Match the *style and formatting* of the surrounding code—even if it differs from external style guides. Consistency within a file trumps external standards.
@@ -17,6 +18,31 @@
 - **Never** implement a mock mode for testing or any other purpose. We always use real data and real APIs.
 - **Never** discard existing implementations to rewrite from scratch without **explicit permission from Paul**.
 - **Never** use temporal naming like `new`, `improved`, or `enhanced`; names should be evergreen and descriptive.
+
+## Semantic Compression
+
+When generating or refactoring code, follow these principles inspired by semantic compression methodology to minimize long-term human effort and maximize code maintainability.
+
+### Implementation Guidelines
+
+- **Start concrete, compress later**: Always begin by writing exactly what needs to happen in each specific case without regard to abstraction or "correctness" buzzwords. Get it working first, then look for compression opportunities.
+- **Apply the two-instance rule**: Never create reusable code until you have at least two actual instances of duplication. Make your code usable before trying to make it reusable.
+- **Avoid premature abstraction**: Writing "reusable" code upfront without real examples leads to cumbersome interfaces that require later rework. Wait until you have concrete use cases to inform the abstraction.
+- **Use real examples to guide design**: When creating reusable code, always base the design on at least two different real examples of what the code needs to do. This ensures the abstraction fits actual usage patterns.
+- **Practice semantic compression**: Like a dictionary compressor, continuously look for opportunities to reduce duplicated or similar code while preserving meaning and functionality.
+- **Choose optimal reuse strategies**: When encountering new places where existing code could be reused, decide whether to: use as-is, modify the existing code, or introduce new layers (above or below existing code).
+- **Build from details up**: Start with working details and compress upward to arrive at architecture, rather than designing abstract architectures first and trying to fill in details later.
+- **Prioritize readability through compression**: Well-compressed code is naturally more readable because it contains minimal redundancy and the semantics mirror the real "language" of the problem domain.
+- **Ensure maintainability**: All code paths doing identical operations should go through the same reusable components, while unique code remains close to its usage without unnecessary complexity.
+- **Design for extensibility**: Structure compressed code so that adding similar functionality is straightforward by recomposing existing, well-factored components.
+
+### Expected Outcomes
+
+Following these guidelines produces code that is:
+- Easy to read (minimal redundancy, domain-appropriate semantics)
+- Easy to maintain (shared operations use common paths, unique code stays simple)  
+- Easy to extend (new similar functionality builds on existing reusable components)
+- Robust (based on real examples rather than speculative requirements)
 
 ## Version Control
 
