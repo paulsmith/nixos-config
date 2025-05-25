@@ -6,6 +6,7 @@
 
 ## Code Writing
 
+- Please write a high quality, general purpose solution. If the task is unreasonable, please tell me.
 - Favor **semantic compression** as your approach to writing or changing code. See the section below for details.
 - Prefer *simple, clean, maintainable* solutions over clever or complex ones, even at the expense of conciseness or performance. Readability and maintainability are **primary concerns**.
 - Make the **smallest reasonable changes** to achieve the desired outcome.
@@ -75,6 +76,8 @@ We practice **strict TDD**:
 4. Run the test suite to confirm success.
 5. **Refactor** code while ensuring all tests remain green.
 6. Repeat for each new feature or bug-fix.
+
+If any of the tests are incorrect, please tell me. Do not hard code any test cases. Please tell me if the problem is unreasonable instead of hard coding test cases!
 
 ## Specific Technologies
 
