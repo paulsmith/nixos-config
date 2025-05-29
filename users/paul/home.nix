@@ -78,6 +78,7 @@ in
     unstable-pkgs.sqlc
     unstable-pkgs.tailscale
     unstable-pkgs.typst
+    unstable-pkgs.uv
     vale
     wget
     xz
