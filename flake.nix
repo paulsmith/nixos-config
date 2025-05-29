@@ -73,5 +73,35 @@
             }
           ];
         };
+      # Build darwin flake using:
+      # $ darwin-rebuild build --flake .#oberon
+      darwinConfigurations."oberon" =
+        let
+          username = "paul";
+          nextdnsProfile = "d3b8fa";
+          system = "aarch64-darwin";
+        in
+        darwin.lib.darwinSystem {
+          inherit system;
+          modules = [
+            # Pin registry entries
+            {
+                nix.registry.nixpkgs.flake = nixpkgs;
+                nix.registry.nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
+            }
+            (import ./hosts/oberon/configuration.nix {
+              inherit username nextdnsProfile;
+              hostname = "oberon";
+            })
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.${username} = import ./users/${username}/home.nix ({
+                unstable-pkgs = (import inputs.nixpkgs-unstable { inherit system; });
+              });
+            }
+          ];
+        };
     };
 }

@@ -7,5 +7,8 @@ paulsmith-HJ6D3J627M:
 venus:
 	darwin-rebuild switch --flake .#$@
 
+oberon:
+	darwin-rebuild switch --flake .#$@
+
 update-unstable:
 	nix flake lock --update-input nixpkgs-unstable
