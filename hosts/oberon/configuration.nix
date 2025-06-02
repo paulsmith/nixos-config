@@ -106,6 +106,10 @@
     name = "${username}";
     home = "/Users/${username}";
     shell = pkgs.bashInteractive;
+    description = "Paul Smith";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIYzIg4z5qi2uAqLLSM3c4wqcLSHzNwCW0jqQwt/3bvO paul@venus"
+    ];
   };
 
   services.nextdns = {
