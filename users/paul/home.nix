@@ -149,4 +149,9 @@ in
         (builtins.readFile ../../common/jj/config.toml)
     ];
   };
+
+  home.file.".hammerspoon" = {
+    source = ./hammerspoon;
+    recursive = true;
+  };
 }
