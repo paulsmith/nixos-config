@@ -82,6 +82,7 @@
       "sanesidebuttons"
       "selfcontrol"
       "signal"
+      "slideshower"
       "sonos"
       "soundsource"
       "steam"
