@@ -28,7 +28,6 @@ in
     gau = "git add -u";
     gc = "git commit";
     gco = "git checkout";
-    push-main = "jj bookmark set main -r @- && jj git push";
   };
 
   programs.bash = {
