@@ -56,6 +56,7 @@
       "qlmarkdown"
       "rar"
       "selfcontrol"
+      "slideshower"
     ];
     masApps = {
       Tailscale = 1475387142;
