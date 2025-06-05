@@ -154,4 +154,10 @@ in
     source = ./hammerspoon;
     recursive = true;
   };
+
+  home.file.".npmrc" = {
+    text = ''
+      prefix=/Users/paul/.local
+    '';
+  };
 }
