@@ -44,8 +44,8 @@
           ];
         };
       # Build darwin flake using:
-      # $ darwin-rebuild build --flake .#venus
-      darwinConfigurations."venus" =
+      # $ darwin-rebuild build --flake .#io
+      darwinConfigurations."io" =
         let
           username = "paul";
           nextdnsProfile = "d3b8fa";
@@ -59,9 +59,9 @@
                 nix.registry.nixpkgs.flake = nixpkgs;
                 nix.registry.nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
             }
-            (import ./hosts/venus/configuration.nix {
+            (import ./hosts/io/configuration.nix {
               inherit username nextdnsProfile;
-              hostname = "venus";
+              hostname = "io";
             })
             home-manager.darwinModules.home-manager
             {
