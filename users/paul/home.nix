@@ -67,6 +67,7 @@ in
     sqlite
     stylua
     swig
+    tmux
     tree
     ttyd
     unstable-pkgs.diffedit3
