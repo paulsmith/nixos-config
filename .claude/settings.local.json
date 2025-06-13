@@ -5,7 +5,8 @@
       "Bash(nix flake show)",
       "Bash(jj new:*)",
       "Bash(rg:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(hostname)"
     ],
     "deny": []
   }

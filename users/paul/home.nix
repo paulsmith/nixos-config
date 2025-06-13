@@ -18,6 +18,7 @@ in
     fish
     graphviz
     iftop
+    iosevka-nerd
     mas
     meld
     neofetch

@@ -28,7 +28,6 @@
     hugo
     hyperfine
     imagemagick
-    iosevka-nerd
     jq
     lua-language-server
     magic-wormhole

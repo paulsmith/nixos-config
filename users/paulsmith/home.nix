@@ -13,6 +13,7 @@ in
     asitop
     datasette
     fzf
+    iosevka-nerd
     lua
     openssl_3
     unstable-pkgs.llama-cpp

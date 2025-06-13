@@ -13,8 +13,7 @@ in
   imports = [ baseConfig ];
 
   homebrew.onActivation.cleanup = "uninstall";
-  homebrew.
-    casks = [
+  homebrew.casks = [
       "1password"
       "1password-cli"
       "anki"
@@ -69,14 +68,13 @@ in
       "zed"
       "zoom"
     ];
-    masApps = {
-      "Bike Outliner" = 1588292384;
-      Tailscale = 1475387142;
-      TestFlight = 899247664;
-      Tomito = 1526042938;
-      TypeIt4Me = 6474688391;
-      WhatsApp = 310633997;
-    };
+  homebrew.masApps = {
+    "Bike Outliner" = 1588292384;
+    Tailscale = 1475387142;
+    TestFlight = 899247664;
+    Tomito = 1526042938;
+    TypeIt4Me = 6474688391;
+    WhatsApp = 310633997;
   };
 
 }

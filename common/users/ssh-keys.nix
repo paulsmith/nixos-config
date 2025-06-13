@@ -1,4 +1,4 @@
-{
+rec {
   # Centralized SSH public key management for Paul's machines
   paul = {
     # SSH keys for personal machines

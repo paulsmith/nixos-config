@@ -34,15 +34,21 @@
           unstable-pkgs = (import inputs.nixpkgs-unstable { inherit system; });
         });
       };
-      
-      makeDarwinConfig = { hostname, username, hostArgs ? {}, includeRegistry ? true }: 
+
+      makeDarwinConfig =
+        {
+          hostname,
+          username,
+          hostArgs ? { },
+          includeRegistry ? true,
+        }:
         darwin.lib.darwinSystem {
           inherit system;
           modules = [
             (import ./hosts/${hostname}/configuration.nix ({ inherit username; } // hostArgs))
             home-manager.darwinModules.home-manager
             (homeManagerModule username)
-          ] ++ (if includeRegistry then [ registryModule ] else []);
+          ] ++ (if includeRegistry then [ registryModule ] else [ ]);
         };
     in
     {
@@ -74,5 +80,7 @@
           hostname = "oberon";
         };
       };
+
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
     };
 }
