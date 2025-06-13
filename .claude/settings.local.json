@@ -3,7 +3,8 @@
     "allow": [
       "Bash(nix flake check)",
       "Bash(nix flake show)",
-      "Bash(jj new:*)"
+      "Bash(jj new:*)",
+      "Bash(rg:*)"
     ],
     "deny": []
   }

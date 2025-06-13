@@ -4,40 +4,16 @@
   nextdnsProfile,
 }:
 { config, pkgs, ... }:
-{
-  imports = [ ../../common/hosts/shared-host-config.nix ];
-
-  nix.package = pkgs.nixVersions.nix_2_28;
-
-  nix.settings.trusted-users = [
-    "root"
-    username
-  ];
-
-  networking.hostName = hostname;
-  networking.computerName = hostname;
-
-  system.defaults = {
-    dock.autohide = true;
-    dock.mru-spaces = false;
-    smb.NetBIOSName = hostname;
-    screencapture.location = "~/Pictures/screenshots";
+let
+  baseConfig = import ../../common/hosts/personal-host-base.nix {
+    inherit username hostname nextdnsProfile;
   };
+in
+{
+  imports = [ baseConfig ];
 
-  # The platform the configuration will be used on.
-  nixpkgs.hostPlatform = "aarch64-darwin";
-
-  homebrew = {
-    enable = true;
-    onActivation = {
-      autoUpdate = true;
-      cleanup = "uninstall";
-      upgrade = true;
-    };
-    brews = [
-      "qemu"
-      "runit"
-    ];
+  homebrew.onActivation.cleanup = "uninstall";
+  homebrew.
     casks = [
       "1password"
       "1password-cli"
@@ -103,30 +79,8 @@
     };
   };
 
-  users.users.${username} = {
-    name = "${username}";
-    home = "/Users/${username}";
-    shell = pkgs.bashInteractive;
-    description = "Paul Smith";
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIYzIg4z5qi2uAqLLSM3c4wqcLSHzNwCW0jqQwt/3bvO paul@venus"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID+tz9m2PPg7jriW/l2lOFGwprrf3bMLdeP5C0N8+2zg paul@io"
-    ];
-  };
-
-  services.nextdns = {
-    enable = false;
-    arguments = [
-      "-profile"
-      "${nextdnsProfile}"
-      "-cache-size"
-      "10MB"
-    ];
-  };
-
-  nix.gc = {
-    automatic = true;
-    interval = { Weekday = 0; Hour = 0; Minute = 0; };
-    options = "--delete-older-than 14d";
-  };
+  users.users.${username}.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIYzIg4z5qi2uAqLLSM3c4wqcLSHzNwCW0jqQwt/3bvO paul@venus"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID+tz9m2PPg7jriW/l2lOFGwprrf3bMLdeP5C0N8+2zg paul@io"
+  ];
 }
