@@ -46,9 +46,6 @@ in
     };
   };
 
-  users.users.${username}.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMYZ+GM6pSUOcbGOhJe6WEeDhjVArUti1Wj3OxIl8IlL paul@oberon"
-  ];
 
   nix.gc.user = "root";
 }

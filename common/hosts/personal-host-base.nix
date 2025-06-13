@@ -4,6 +4,9 @@
   nextdnsProfile,
 }:
 { config, pkgs, ... }:
+let
+  sshKeys = import ../users/ssh-keys.nix;
+in
 {
   imports = [ ./shared-host-config.nix ];
 
@@ -43,6 +46,7 @@
     home = "/Users/${username}";
     shell = pkgs.bashInteractive;
     description = "Paul Smith";
+    openssh.authorizedKeys.keys = sshKeys.personalMachineKeys hostname;
   };
 
   services.nextdns = {
