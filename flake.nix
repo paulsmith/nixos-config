@@ -21,87 +21,58 @@
       home-manager,
       ...
     }:
+    let
+      system = "aarch64-darwin";
+      registryModule = {
+        nix.registry.nixpkgs.flake = nixpkgs;
+        nix.registry.nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
+      };
+      homeManagerModule = username: {
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.users.${username} = import ./users/${username}/home.nix ({
+          unstable-pkgs = (import inputs.nixpkgs-unstable { inherit system; });
+        });
+      };
+      
+      makeDarwinConfig = { hostname, username, hostArgs ? {}, includeRegistry ? true }: 
+        darwin.lib.darwinSystem {
+          inherit system;
+          modules = [
+            (import ./hosts/${hostname}/configuration.nix ({ inherit username; } // hostArgs))
+            home-manager.darwinModules.home-manager
+            (homeManagerModule username)
+          ] ++ (if includeRegistry then [ registryModule ] else []);
+        };
+    in
     {
       nixpkgs.config.allowUnfree = true;
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#paulsmith-HJ6D3J627M
-      darwinConfigurations."paulsmith-HJ6D3J627M" =
-        let
-          username = "paulsmith";
-          system = "aarch64-darwin";
-        in
-        darwin.lib.darwinSystem {
-          modules = [
-            (import ./hosts/paulsmith-HJ6D3J627M/configuration.nix { inherit username; })
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.${username} = import ./users/${username}/home.nix ({
-                unstable-pkgs = (import inputs.nixpkgs-unstable { inherit system; });
-              });
-            }
-          ];
-        };
+      darwinConfigurations."paulsmith-HJ6D3J627M" = makeDarwinConfig {
+        hostname = "paulsmith-HJ6D3J627M";
+        username = "paulsmith";
+        includeRegistry = false;
+      };
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#io
-      darwinConfigurations."io" =
-        let
-          username = "paul";
+      darwinConfigurations."io" = makeDarwinConfig {
+        hostname = "io";
+        username = "paul";
+        hostArgs = {
           nextdnsProfile = "d3b8fa";
-          system = "aarch64-darwin";
-        in
-        darwin.lib.darwinSystem {
-          inherit system;
-          modules = [
-            # Pin registry entries
-            {
-                nix.registry.nixpkgs.flake = nixpkgs;
-                nix.registry.nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
-            }
-            (import ./hosts/io/configuration.nix {
-              inherit username nextdnsProfile;
-              hostname = "io";
-            })
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.${username} = import ./users/${username}/home.nix ({
-                unstable-pkgs = (import inputs.nixpkgs-unstable { inherit system; });
-              });
-            }
-          ];
+          hostname = "io";
         };
+      };
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#oberon
-      darwinConfigurations."oberon" =
-        let
-          username = "paul";
+      darwinConfigurations."oberon" = makeDarwinConfig {
+        hostname = "oberon";
+        username = "paul";
+        hostArgs = {
           nextdnsProfile = "d3b8fa";
-          system = "aarch64-darwin";
-        in
-        darwin.lib.darwinSystem {
-          inherit system;
-          modules = [
-            # Pin registry entries
-            {
-                nix.registry.nixpkgs.flake = nixpkgs;
-                nix.registry.nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
-            }
-            (import ./hosts/oberon/configuration.nix {
-              inherit username nextdnsProfile;
-              hostname = "oberon";
-            })
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.${username} = import ./users/${username}/home.nix ({
-                unstable-pkgs = (import inputs.nixpkgs-unstable { inherit system; });
-              });
-            }
-          ];
+          hostname = "oberon";
         };
+      };
     };
 }

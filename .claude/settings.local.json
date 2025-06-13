@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(nix flake check)",
+      "Bash(nix flake show)",
+      "Bash(jj new:*)"
+    ],
+    "deny": []
+  }
+}
