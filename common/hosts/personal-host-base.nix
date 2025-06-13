@@ -1,7 +1,7 @@
-{
-  username,
-  hostname,
-  nextdnsProfile,
+{ username
+, hostname
+, nextdnsProfile
+,
 }:
 { config, pkgs, ... }:
 let

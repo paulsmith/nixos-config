@@ -10,7 +10,7 @@ in
 
   home.packages = sharedPackages.core ++ sharedPackages.unstable ++ (with pkgs; [
     # Personal-specific packages
-    (lua.withPackages(ps: with ps; [ cjson ]))
+    (lua.withPackages (ps: with ps; [ cjson ]))
     autossh
     cmake
     coreutils-prefixed
@@ -90,11 +90,11 @@ in
 
   home.file."${config.xdg.configHome}/jj/config.toml" = {
     text = builtins.concatStringsSep "\n" [
-        "[user]"
-        "name = \"Paul Smith\""
-        "email = \"paulsmith@pobox.com\""
-        ""
-        (builtins.readFile ../../common/jj/config.toml)
+      "[user]"
+      "name = \"Paul Smith\""
+      "email = \"paulsmith@pobox.com\""
+      ""
+      (builtins.readFile ../../common/jj/config.toml)
     ];
   };
 

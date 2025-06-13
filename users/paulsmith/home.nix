@@ -54,11 +54,11 @@ in
 
   home.file."${config.xdg.configHome}/jj/config.toml" = {
     text = builtins.concatStringsSep "\n" [
-        "[user]"
-        "name = \"Paul Smith\""
-        "email = \"paul@adhocteam.us\""
-        ""
-        (builtins.readFile ../../common/jj/config.toml)
+      "[user]"
+      "name = \"Paul Smith\""
+      "email = \"paul@adhocteam.us\""
+      ""
+      (builtins.readFile ../../common/jj/config.toml)
     ];
   };
 }

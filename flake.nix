@@ -15,11 +15,10 @@
   };
 
   outputs =
-    inputs@{
-      nixpkgs,
-      darwin,
-      home-manager,
-      ...
+    inputs@{ nixpkgs
+    , darwin
+    , home-manager
+    , ...
     }:
     let
       system = "aarch64-darwin";
@@ -36,11 +35,11 @@
       };
 
       makeDarwinConfig =
-        {
-          hostname,
-          username,
-          hostArgs ? { },
-          includeRegistry ? true,
+        { hostname
+        , username
+        , hostArgs ? { }
+        , includeRegistry ? true
+        ,
         }:
         darwin.lib.darwinSystem {
           inherit system;

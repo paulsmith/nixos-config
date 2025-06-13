@@ -100,9 +100,9 @@ in
   '';
 
   home.file = {
-    ${if pkgs.stdenv.isDarwin 
-      then "Library/Application Support/com.mitchellh.ghostty/config" 
-      else "${config.xdg.configHome}/ghostty/config"} = {
+    ${if pkgs.stdenv.isDarwin
+    then "Library/Application Support/com.mitchellh.ghostty/config"
+    else "${config.xdg.configHome}/ghostty/config"} = {
       source = ./ghostty;
     };
   };
