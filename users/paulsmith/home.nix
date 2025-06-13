@@ -3,74 +3,20 @@
 { pkgs, config, ... }:
 let
   iosevka-nerd = pkgs.callPackage ../../common/users/iosevka-nerd.nix { };
+  sharedPackages = import ../../common/users/shared-packages.nix { inherit pkgs unstable-pkgs; };
 in
 {
   imports = [ ../../common/users/shared-user-config.nix ];
 
-  home.packages = with pkgs; [
+  home.packages = sharedPackages.core ++ sharedPackages.unstable ++ (with pkgs; [
+    # Work-specific packages
     asitop
-    aws-sam-cli
-    awscli
-    bashInteractive
-    bat
-    btop
-    cachix
-    ccache
-    colima
-    curl
     datasette
-    difftastic
-    direnv
-    entr
-    fd
-    ffmpeg
-    fx
     fzf
-    gh
-    gifsicle
-    gifski
-    git
-    guile
-    helix
-    htop
-    hugo
-    hyperfine
-    imagemagick
-    iosevka-nerd
-    jq
     lua
-    lua-language-server
-    magic-wormhole
-    mosh
-    nixfmt-rfc-style
-    nodejs_22
-    pandoc
     openssl_3
-    pipx
-    postgresql
-    pstree
-    pv
-    python3
-    readline
-    ripgrep
-    rlwrap
-    shellcheck
-    sqlite
-    stylua
-    swig
-    tree
-    unstable-pkgs.diffedit3
-    unstable-pkgs.go
-    unstable-pkgs.jujutsu
     unstable-pkgs.llama-cpp
-    unstable-pkgs.neovim
-    unstable-pkgs.rustup
-    unstable-pkgs.typst
-    unstable-pkgs.uv
-    wget
-    xz
-    zstd
-  ];
+  ]);
 
   programs.git = {
     enable = true;

@@ -4,7 +4,8 @@
       "Bash(nix flake check)",
       "Bash(nix flake show)",
       "Bash(jj new:*)",
-      "Bash(rg:*)"
+      "Bash(rg:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }
