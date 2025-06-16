@@ -76,7 +76,6 @@ in
     "$HOME/bin"
     "$HOME/.local/bin"
     "/opt/homebrew/bin"
-    "$HOME/.npm-global/bin/"
   ];
 
   programs.bash.initExtra = builtins.concatStringsSep "\n" [
