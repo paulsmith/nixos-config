@@ -98,3 +98,18 @@ If any of the tests are incorrect, please tell me. Do not hard code any test cas
 ## Compliance Check
 
 Before submitting any work, verify that you have followed **all** guidelines above. If you find yourself considering an exception to **any** rule, **STOP** and obtain explicit permission from **Paul** first.
+
+## Development Environment Management
+
+Paul uses **Nix flakes** and **direnv** to create consistent, reproducible development environments for all projects. When working on projects outside this configuration:
+
+### Setting Up Project Development Environment
+
+1. **Check for existing Nix configuration**: Look for `flake.nix` or `.envrc` files in the project root
+2. **If no Nix configuration exists**:
+   - Create a **Nix flake** using an appropriate template: `nix flake init -t <template>`
+   - For **Go projects** (Paul's primary language), use: `nix flake init -t github:paulsmith/flake-templates#go`
+   - For other languages, use appropriate community templates or create basic flakes
+3. **Enable direnv integration**:
+   - Create `.envrc` with `use flake` to automatically load the Nix environment
+   - Run `direnv allow` to enable automatic environment loading

@@ -62,7 +62,7 @@ in
   };
 
   home.file.".claude" = {
-    source = ./.claude;
+    source = ./claude;
     recursive = true;
   };
 
