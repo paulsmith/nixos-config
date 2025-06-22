@@ -64,6 +64,7 @@ in
     "tic80"
     # "topaz-video-ai"
     "utm"
+    "virtualbuddy"
     "vlc"
     "zed"
     "zoom"
