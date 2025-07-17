@@ -47,10 +47,8 @@ Following these guidelines produces code that is:
 
 ## Version Control
 
-- Track all **non-trivial edits** in **git**.
-- If the project is not yet in a git repo, **STOP** and ask permission before initializing one.
-- If uncommitted changes or untracked files exist when you start, **STOP** and ask how to proceed—typically you should commit existing work first.
-- If no clear branch exists for the current task, create a **WIP** branch.
+- Track all **non-trivial edits** in **jj** (the Jujutsu VCS).
+- If the project is not yet in a jj repo, **STOP** and ask permission before initializing one.
 - **Commit frequently** throughout development.
 
 ## Getting Help
@@ -90,10 +88,11 @@ If any of the tests are incorrect, please tell me. Do not hard code any test cas
 
 ### Go
 
-- Assume Go version 1.23 or later unless otherwise specified.
+- As of 2025, assume Go version 1.23 or later unless otherwise specified.
 - Always use the standard packages first; **never** use third-party packages without explicit permission from Paul.
-- Ensure a **`go.mod`** file exists at the repository root.  
-  - If it does not exist, create one by running `go mod init <module-name>`.
+- Mine the stdlib for functionality first before reinventing the wheel - for example, the `slices` package has a lot of utility.
+- Ensure a **`go.mod`** file exists at the repository root. If it does not exist, create one by running `go mod init <module-name>`.
+- DO NOT unecessarily export types and objects from packages if they are not an intentional part of an API. ALWAYS default to unexported (i.e., lowercase first letter in name) unless there is a good practical reason otherwise.
 
 ## Compliance Check
 
