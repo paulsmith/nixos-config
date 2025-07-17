@@ -28,6 +28,7 @@ in
     gau = "git add -u";
     gc = "git commit";
     gco = "git checkout";
+    claude-yolo = "claude --dangerously-skip-permissions";
   };
 
   programs.bash = {
