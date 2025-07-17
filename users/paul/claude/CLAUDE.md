@@ -7,6 +7,7 @@
 ## Code Writing
 
 - Please write a high quality, general purpose solution. If the task is unreasonable, please tell me.
+- Design **deep modules**, ones with small and simple interfaces with a lot of functionality.
 - Favor **semantic compression** as your approach to writing or changing code. See the section below for details.
 - Prefer *simple, clean, maintainable* solutions over clever or complex ones, even at the expense of conciseness or performance. Readability and maintainability are **primary concerns**.
 - Make the **smallest reasonable changes** to achieve the desired outcome.
