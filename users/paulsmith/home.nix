@@ -42,23 +42,26 @@ in
     "$HOME/.local/bin"
   ];
 
-  programs.bash.initExtra = builtins.concatStringsSep "\n" [
-    "export PATH=\"$HOME/Downloads/google-cloud-sdk/bin:$PATH\""
-    (builtins.readFile ../../common/bash/extra.bash)
-  ];
+  # Bash extras now managed by chezmoi
+  # programs.bash.initExtra = builtins.concatStringsSep "\n" [
+  #   "export PATH=\"$HOME/Downloads/google-cloud-sdk/bin:$PATH\""
+  #   (builtins.readFile ../../common/bash/extra.bash)
+  # ];
 
-  home.file."${config.xdg.configHome}/nvim" = {
-    source = ../../common/nvim;
-    recursive = true;
-  };
+  # Neovim config now managed by chezmoi
+  # home.file."${config.xdg.configHome}/nvim" = {
+  #   source = ../../common/nvim;
+  #   recursive = true;
+  # };
 
-  home.file."${config.xdg.configHome}/jj/config.toml" = {
-    text = builtins.concatStringsSep "\n" [
-      "[user]"
-      "name = \"Paul Smith\""
-      "email = \"paul@adhocteam.us\""
-      ""
-      (builtins.readFile ../../common/jj/config.toml)
-    ];
-  };
+  # JJ config now managed by chezmoi
+  # home.file."${config.xdg.configHome}/jj/config.toml" = {
+  #   text = builtins.concatStringsSep "\n" [
+  #     "[user]"
+  #     "name = \"Paul Smith\""
+  #     "email = \"paul@adhocteam.us\""
+  #     ""
+  #     (builtins.readFile ../../common/jj/config.toml)
+  #   ];
+  # };
 }

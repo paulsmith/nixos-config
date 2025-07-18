@@ -10,6 +10,7 @@
     btop
     cachix
     ccache
+    chezmoi
     colima
     curl
     difftastic
