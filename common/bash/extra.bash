@@ -19,3 +19,7 @@ fi
 if command -v uvx >/dev/null; then
     eval "$(uvx --generate-shell-completion bash)"
 fi
+
+google() {
+    claude --allowedTools=web_search -p "Search google for <query>$1</query> and summarize the results"
+}
