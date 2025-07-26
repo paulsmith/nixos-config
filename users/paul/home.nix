@@ -61,50 +61,10 @@ in
     recursive = true;
   };
 
-  home.file.".claude" = {
-    source = ./claude;
-    recursive = true;
-  };
-
-  home.sessionVariables = {
-    SVDIR = "$HOME/service"; # Runit service directory
-    CDPATH = ":$HOME/Dropbox/Projects:$HOME/.config";
-  };
-
   home.sessionPath = [
     "$HOME/go/bin"
     "$HOME/bin"
     "$HOME/.local/bin"
     "/opt/homebrew/bin"
   ];
-
-  programs.bash.initExtra = builtins.concatStringsSep "\n" [
-    (builtins.readFile ../../common/bash/extra.bash)
-  ];
-
-  home.file."${config.xdg.configHome}/nvim" = {
-    source = ../../common/nvim;
-    recursive = true;
-  };
-
-  home.file."${config.xdg.configHome}/jj/config.toml" = {
-    text = builtins.concatStringsSep "\n" [
-      "[user]"
-      "name = \"Paul Smith\""
-      "email = \"paulsmith@pobox.com\""
-      ""
-      (builtins.readFile ../../common/jj/config.toml)
-    ];
-  };
-
-  home.file.".hammerspoon" = {
-    source = ./hammerspoon;
-    recursive = true;
-  };
-
-  home.file.".npmrc" = {
-    text = ''
-      prefix=/Users/paul/.local
-    '';
-  };
 }

@@ -37,6 +37,12 @@ in
       "ignoredups"
       "ignorespace"
     ];
+    initExtra = ''
+      # Source local bashrc managed by chezmoi
+      if [ -f "$HOME/.bashrc.local" ]; then
+        source "$HOME/.bashrc.local"
+      fi
+    '';
   };
 
   home.sessionVariables = {
@@ -50,10 +56,11 @@ in
     nix-direnv.enable = true;
   };
 
-  home.file.".sqliterc".text = ''
-    .header on
-    .mode column
-  '';
+  # SQLite config now managed by chezmoi
+  # home.file.".sqliterc".text = ''
+  #   .header on
+  #   .mode column
+  # '';
 
   programs.git.extraConfig = {
     "diff \"sqlite3\"" = {
@@ -89,22 +96,24 @@ in
     };
   };
 
-  home.file."${config.xdg.configHome}/git/ignore".text = ''
-    .DS_Store
-    .idea
-    .envrc
-    .direnv/
-  '';
+  # Git ignore and attributes files now managed by chezmoi
+  # home.file."${config.xdg.configHome}/git/ignore".text = ''
+  #   .DS_Store
+  #   .idea
+  #   .envrc
+  #   .direnv/
+  # '';
 
-  home.file.".gitattributes".text = ''
-    *.sqlite diff=sqlite3
-  '';
+  # home.file.".gitattributes".text = ''
+  #   *.sqlite diff=sqlite3
+  # '';
 
-  home.file = {
-    ${if pkgs.stdenv.isDarwin
-    then "Library/Application Support/com.mitchellh.ghostty/config"
-    else "${config.xdg.configHome}/ghostty/config"} = {
-      source = ./ghostty;
-    };
-  };
+  # Ghostty config now managed by chezmoi
+  # home.file = {
+  #   ${if pkgs.stdenv.isDarwin
+  #   then "Library/Application Support/com.mitchellh.ghostty/config"
+  #   else "${config.xdg.configHome}/ghostty/config"} = {
+  #     source = ./ghostty;
+  #   };
+  # };
 }

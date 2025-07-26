@@ -22,7 +22,7 @@ in
     "avifquicklook"
     "bambu-studio"
     "bartender"
-    "blender"
+        # "blender" - failing to upgrade as of Jul 18 2025
     "chatgpt"
     "claude"
     "dangerzone"
