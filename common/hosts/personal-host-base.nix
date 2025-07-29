@@ -55,17 +55,6 @@ in
 
   nixpkgs.hostPlatform = "aarch64-darwin";
 
-  homebrew = {
-    enable = true;
-    onActivation = {
-      autoUpdate = true;
-      upgrade = true;
-    };
-    brews = [
-      "qemu"
-      "runit"
-    ];
-  };
 
   users.users.${username} = {
     name = "${username}";

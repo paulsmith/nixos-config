@@ -18,27 +18,6 @@
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
 
-  homebrew = {
-    enable = true;
-    onActivation = {
-      autoUpdate = true;
-      upgrade = true;
-    };
-    brews = [
-      "gforth"
-      "qemu"
-      "runit"
-    ];
-    casks = [
-      "1password-cli"
-      "docker"
-      "ghostty"
-      "inkscape"
-      "ngrok"
-      "typora"
-    ];
-    # masApps = { OneTab = 1540160809; };
-  };
 
   users.users.${username} = {
     name = "${username}";
