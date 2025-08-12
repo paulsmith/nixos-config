@@ -25,6 +25,7 @@ in
     ninja
     optipng
     rclone
+    rrdtool
     tmux
     ttyd
     unstable-pkgs.ollama
