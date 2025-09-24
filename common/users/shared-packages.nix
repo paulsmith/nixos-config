@@ -19,6 +19,7 @@
     fd
     ffmpeg
     fx
+    fzf
     gh
     gifsicle
     gifski
@@ -49,6 +50,7 @@
     stylua
     swig
     tree
+    tree-sitter
     wget
     xz
     zstd

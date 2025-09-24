@@ -35,37 +35,8 @@ in
     yt-dlp
   ]);
 
-  programs.git = {
-    enable = true;
-    userName = "Paul Smith";
-    userEmail = "paulsmith@gmail.com";
-    aliases = {
-      co = "checkout";
-      st = "status";
-      ci = "commit";
-      br = "branch";
-    };
-    extraConfig = {
-      init = {
-        defaultBranch = "main";
-      };
-      push = {
-        autoSetupRemote = true;
-      };
-    };
-  };
-
-  programs.fzf.enable = true;
-
   home.file."${config.xdg.configHome}/sv" = {
     source = ./runit-sv;
     recursive = true;
   };
-
-  home.sessionPath = [
-    "$HOME/go/bin"
-    "$HOME/bin"
-    "$HOME/.local/bin"
-    "/opt/homebrew/bin"
-  ];
 }
