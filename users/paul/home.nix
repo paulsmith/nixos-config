@@ -12,6 +12,7 @@ in
     # Personal-specific packages
     (lua.withPackages (ps: with ps; [ cjson ]))
     autossh
+    chez
     cmake
     coreutils-prefixed
     dtach
