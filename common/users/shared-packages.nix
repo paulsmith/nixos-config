@@ -3,6 +3,7 @@
 {
   # Core development and system packages shared across all users
   core = with pkgs; [
+    age
     aws-sam-cli
     awscli
     bashInteractive
