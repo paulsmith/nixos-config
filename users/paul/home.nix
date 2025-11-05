@@ -24,6 +24,7 @@ in
     meld
     neofetch
     ninja
+    opam
     optipng
     rclone
     rrdtool
