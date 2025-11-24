@@ -35,6 +35,7 @@
     lua-language-server
     magic-wormhole
     mosh
+    nix-direnv
     nixfmt-rfc-style
     nodejs_22
     pandoc
