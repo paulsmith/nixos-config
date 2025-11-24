@@ -40,4 +40,8 @@ in
     source = ./runit-sv;
     recursive = true;
   };
+
+  home.file."${config.xdg.configHome}/direnv/direnvrc".text = ''
+    source ${pkgs.nix-direnv}/share/nix-direnv/direnvrc
+  '';
 }
