@@ -12,6 +12,7 @@
     cachix
     ccache
     chezmoi
+    chafa # terminal graphics protocol - image viewer (Ghostty)
     colima
     curl
     difftastic
@@ -32,6 +33,7 @@
     hyperfine
     imagemagick
     jq
+    lima
     lua-language-server
     magic-wormhole
     mosh
