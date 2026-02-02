@@ -11,12 +11,14 @@
     btop
     cachix
     ccache
-    chezmoi
     chafa # terminal graphics protocol - image viewer (Ghostty)
+    chezmoi
+    clang-tools # clang-format, clangd
     colima
     curl
     difftastic
     direnv
+    e2fsprogs
     entr
     fd
     ffmpeg
@@ -66,6 +68,7 @@
     unstable-pkgs.go
     unstable-pkgs.jujutsu
     unstable-pkgs.neovim
+    unstable-pkgs.pnpm
     unstable-pkgs.rustup
     unstable-pkgs.typst
     unstable-pkgs.uv
