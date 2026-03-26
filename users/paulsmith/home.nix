@@ -8,16 +8,19 @@ in
 {
   imports = [ ../../common/users/shared-user-config.nix ];
 
-  home.packages = sharedPackages.core ++ sharedPackages.unstable ++ (with pkgs; [
-    # Work-specific packages
-    asitop
-    datasette
-    fzf
-    iosevka-nerd
-    lua
-    openssl_3
-    unstable-pkgs.llama-cpp
-  ]);
+  home.packages =
+    sharedPackages.core
+    ++ sharedPackages.unstable
+    ++ (with pkgs; [
+      # Work-specific packages
+      asitop
+      datasette
+      fzf
+      iosevka-nerd
+      lua
+      openssl_3
+      unstable-pkgs.llama-cpp
+    ]);
 
   programs.git = {
     enable = true;

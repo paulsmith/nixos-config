@@ -53,8 +53,9 @@ in
     screencapture.location = "~/Pictures/screenshots";
   };
 
-  nixpkgs.hostPlatform = "aarch64-darwin";
+  system.primaryUser = username;
 
+  nixpkgs.hostPlatform = "aarch64-darwin";
 
   users.users.${username} = {
     name = "${username}";
@@ -81,6 +82,6 @@ in
       Hour = 0;
       Minute = 0;
     };
-    options = "--delete-older-than 14d";
+    options = "--delete-older-than 30d";
   };
 }

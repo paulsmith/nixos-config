@@ -2,23 +2,24 @@
   description = "NixOS (and nix-darwin) configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-24.11-darwin";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     darwin = {
-      url = "github:LnL7/nix-darwin/nix-darwin-24.11";
+      url = "github:LnL7/nix-darwin/nix-darwin-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs =
-    inputs@{ nixpkgs
-    , darwin
-    , home-manager
-    , ...
+    inputs@{
+      nixpkgs,
+      darwin,
+      home-manager,
+      ...
     }:
     let
       system = "aarch64-darwin";
@@ -35,11 +36,11 @@
       };
 
       makeDarwinConfig =
-        { hostname
-        , username
-        , hostArgs ? { }
-        , includeRegistry ? true
-        ,
+        {
+          hostname,
+          username,
+          hostArgs ? { },
+          includeRegistry ? true,
         }:
         darwin.lib.darwinSystem {
           inherit system;
@@ -47,7 +48,8 @@
             (import ./hosts/${hostname}/configuration.nix ({ inherit username; } // hostArgs))
             home-manager.darwinModules.home-manager
             (homeManagerModule username)
-          ] ++ (if includeRegistry then [ registryModule ] else [ ]);
+          ]
+          ++ (if includeRegistry then [ registryModule ] else [ ]);
         };
     in
     {

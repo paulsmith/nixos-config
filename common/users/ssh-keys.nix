@@ -8,7 +8,8 @@ rec {
   };
 
   # Helper functions to generate key sets for different access patterns
-  personalMachineKeys = hostname:
+  personalMachineKeys =
+    hostname:
     let
       allKeys = [
         paul.oberon
@@ -17,10 +18,14 @@ rec {
       ];
       # Filter out the current host's key
       filterKey =
-        if hostname == "oberon" then paul.oberon
-        else if hostname == "venus" then paul.venus
-        else if hostname == "io" then paul.io
-        else "";
+        if hostname == "oberon" then
+          paul.oberon
+        else if hostname == "venus" then
+          paul.venus
+        else if hostname == "io" then
+          paul.io
+        else
+          "";
     in
     builtins.filter (key: key != filterKey) allKeys;
 

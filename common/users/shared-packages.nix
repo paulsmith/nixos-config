@@ -4,8 +4,8 @@
   # Core development and system packages shared across all users
   core = with pkgs; [
     age
-    aws-sam-cli
-    awscli
+    # aws-sam-cli
+    # awscli
     bashInteractive
     bat
     btop
@@ -14,7 +14,6 @@
     chafa # terminal graphics protocol - image viewer (Ghostty)
     chezmoi
     clang-tools # clang-format, clangd
-    colima
     curl
     difftastic
     direnv
@@ -35,7 +34,6 @@
     hyperfine
     imagemagick
     jq
-    lima
     lua-language-server
     magic-wormhole
     mosh
@@ -64,6 +62,7 @@
 
   # Unstable packages shared across users
   unstable = [
+    unstable-pkgs.colima
     unstable-pkgs.diffedit3
     unstable-pkgs.go
     unstable-pkgs.jujutsu

@@ -1,7 +1,7 @@
-{ username
-, hostname
-, nextdnsProfile
-,
+{
+  username,
+  hostname,
+  nextdnsProfile,
 }:
 { config, pkgs, ... }:
 let
@@ -11,8 +11,6 @@ let
 in
 {
   imports = [ baseConfig ];
-
-
 
   nix.gc.user = "root";
 }
