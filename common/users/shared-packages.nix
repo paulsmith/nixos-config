@@ -36,6 +36,7 @@
     jq
     lua-language-server
     magic-wormhole
+    mitmproxy
     mosh
     nix-direnv
     nixfmt-rfc-style
