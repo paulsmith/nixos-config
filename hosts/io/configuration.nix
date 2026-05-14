@@ -11,6 +11,4 @@ let
 in
 {
   imports = [ baseConfig ];
-
-  nix.gc.user = "root";
 }

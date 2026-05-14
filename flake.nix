@@ -12,6 +12,7 @@
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    go-overlay.url = "github:purpleclay/go-overlay";
   };
 
   outputs =
@@ -19,6 +20,7 @@
       nixpkgs,
       darwin,
       home-manager,
+      go-overlay,
       ...
     }:
     let
@@ -45,6 +47,12 @@
         darwin.lib.darwinSystem {
           inherit system;
           modules = [
+            (
+              { ... }:
+              {
+                nixpkgs.overlays = [ go-overlay.overlays.default ];
+              }
+            )
             (import ./hosts/${hostname}/configuration.nix ({ inherit username; } // hostArgs))
             home-manager.darwinModules.home-manager
             (homeManagerModule username)

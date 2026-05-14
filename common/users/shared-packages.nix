@@ -27,6 +27,7 @@
     gifsicle
     gifski
     git
+    go-bin.latestStable # this is coming from go-overlay
     guile
     helix
     htop
@@ -65,7 +66,6 @@
   unstable = [
     unstable-pkgs.colima
     unstable-pkgs.diffedit3
-    unstable-pkgs.go
     unstable-pkgs.jujutsu
     unstable-pkgs.neovim
     unstable-pkgs.pnpm
