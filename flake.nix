@@ -1,95 +1,75 @@
 {
-  description = "NixOS (and nix-darwin) configuration";
+  description = "NixOS (and nix-darwin) configuration by paulsmith";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     darwin = {
-      url = "github:LnL7/nix-darwin/nix-darwin-25.11";
+      url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     go-overlay.url = "github:purpleclay/go-overlay";
+    jj.url = "github:martinvonz/jj";
   };
 
   outputs =
     inputs@{
+      self,
       nixpkgs,
-      darwin,
-      home-manager,
-      go-overlay,
       ...
     }:
     let
-      system = "aarch64-darwin";
-      registryModule = {
-        nix.registry.nixpkgs.flake = nixpkgs;
-        nix.registry.nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
-      };
-      homeManagerModule = username: {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.users.${username} = import ./users/${username}/home.nix ({
-          unstable-pkgs = (import inputs.nixpkgs-unstable { inherit system; });
-        });
-      };
+      allSystems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
 
-      makeDarwinConfig =
-        {
-          hostname,
-          username,
-          hostArgs ? { },
-          includeRegistry ? true,
-        }:
-        darwin.lib.darwinSystem {
-          inherit system;
-          modules = [
-            (
-              { ... }:
-              {
-                nixpkgs.overlays = [ go-overlay.overlays.default ];
-              }
-            )
-            (import ./hosts/${hostname}/configuration.nix ({ inherit username; } // hostArgs))
-            home-manager.darwinModules.home-manager
-            (homeManagerModule username)
-          ]
-          ++ (if includeRegistry then [ registryModule ] else [ ]);
-        };
+      forEachSystem =
+        fn:
+        nixpkgs.lib.genAttrs allSystems (
+          system:
+          fn {
+            inherit system;
+            pkgs = nixpkgs.legacyPackages.${system};
+          }
+        );
+
+      configurationRevision = self.rev or self.dirtyRev or null;
+
+      overlays = [
+        inputs.go-overlay.overlays.default
+        inputs.jj.overlays.default
+      ];
+
+      mkSystem = import ./lib/mksystem.nix {
+        inherit
+          nixpkgs
+          overlays
+          inputs
+          configurationRevision
+          ;
+      };
     in
     {
-      nixpkgs.config.allowUnfree = true;
-      # Build darwin flake using:
-      # $ darwin-rebuild build --flake .#paulsmith-HJ6D3J627M
-      darwinConfigurations."paulsmith-HJ6D3J627M" = makeDarwinConfig {
-        hostname = "paulsmith-HJ6D3J627M";
-        username = "paulsmith";
-        includeRegistry = false;
-      };
-      # Build darwin flake using:
-      # $ darwin-rebuild build --flake .#io
-      darwinConfigurations."io" = makeDarwinConfig {
-        hostname = "io";
-        username = "paul";
-        hostArgs = {
-          nextdnsProfile = "d3b8fa";
-          hostname = "io";
-        };
-      };
-      # Build darwin flake using:
-      # $ darwin-rebuild build --flake .#oberon
-      darwinConfigurations."oberon" = makeDarwinConfig {
-        hostname = "oberon";
-        username = "paul";
-        hostArgs = {
-          nextdnsProfile = "d3b8fa";
-          hostname = "oberon";
-        };
+      darwinConfigurations.andon = mkSystem "andon" {
+        user = "paul";
+        isVibium = true;
       };
 
-      formatter.${system} = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
+      darwinConfigurations.io = mkSystem "io" {
+        user = "paul";
+      };
+
+      darwinConfigurations.oberon = mkSystem "oberon" {
+        user = "paul";
+      };
+
+      formatter = forEachSystem ({ pkgs, ... }: pkgs.nixfmt-tree);
     };
 }

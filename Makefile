@@ -1,14 +1,15 @@
-all:
-	sudo darwin-rebuild switch --flake .#`hostname`
+HOSTNAME ?= $(shell hostname)
+UNAME := $(shell uname)
 
-paulsmith-HJ6D3J627M:
-	sudo darwin-rebuild switch --flake .#$@
+switch:
+ifeq ($(UNAME), Darwin)
+	sudo darwin-rebuild switch --flake ".#${HOSTNAME}"
+else
+	sudo nixos-rebuild switch --flake ".#$(HOSTNAME)"
+endif
 
-venus:
-	sudo darwin-rebuild switch --flake .#$@
-
-oberon:
-	sudo darwin-rebuild switch --flake .#$@
+test:
+	@echo "test TBD"
 
 update:
 	nix flake update
