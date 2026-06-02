@@ -18,3 +18,15 @@ Use these commands to validate changes before expensive rebuilds:
 ## Source code control
 
 This repo is managed with `jj` (jujutsu), not `git`.
+
+## NixOS VMs From macOS nix-darwin
+
+When adding a NixOS VM host on Apple Silicon macOS:
+
+- Prefer `nix-rosetta-builder` for local Linux builds.
+- Bootstrap it with temporary host-scoped `nix.linux-builder.enable = true;`, then replace that with `inputs.nix-rosetta-builder.darwinModules.default` plus `nix-rosetta-builder.onDemand = true;`.
+- Verify the builder with an `aarch64-linux` `uname -a` derivation before building NixOS systems.
+- For VM hosts, import `${modulesPath}/virtualisation/qemu-vm.nix`.
+- Set `virtualisation.host.pkgs` to an `aarch64-darwin` nixpkgs import so `system.build.vm` produces a Darwin-runnable QEMU script.
+- Put `virtualisation.memorySize` and `virtualisation.cores` at top level for direct `config.system.build.vm` builds.
+- Before running the VM, verify `result/bin/run-*-vm` uses Mach-O QEMU and `accel=hvf:tcg`.

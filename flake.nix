@@ -14,6 +14,10 @@
     };
     go-overlay.url = "github:purpleclay/go-overlay";
     jj.url = "github:martinvonz/jj";
+    nix-rosetta-builder = {
+      url = "github:cpick/nix-rosetta-builder";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -68,6 +72,11 @@
 
       darwinConfigurations.oberon = mkSystem "oberon" {
         user = "paul";
+      };
+
+      nixosConfigurations.nixos-vm = mkSystem "nixos-vm" {
+        user = "paul";
+        system = "aarch64-linux";
       };
 
       formatter = forEachSystem ({ pkgs, ... }: pkgs.nixfmt-tree);

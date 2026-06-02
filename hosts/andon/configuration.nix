@@ -3,4 +3,7 @@
   ...
 }:
 {
+  nix-rosetta-builder = {
+    onDemand = true;
+  };
 }

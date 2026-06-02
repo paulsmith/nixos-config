@@ -47,16 +47,21 @@ systemFn {
     username = user;
   };
 
-  modules = [
-    {
-      nixpkgs = {
-        overlays = overlays;
-        config.allowUnfree = true;
-      };
-    }
-    ../modules/packages.nix
-    platformConfig
-    hostConfig
-    userOSConfig
-  ];
+  modules =
+    lib.optionals (isDarwin system) [
+      inputs.nix-rosetta-builder.darwinModules.default
+    ]
+    ++ [
+      {
+        nixpkgs = {
+          overlays = overlays;
+          config.allowUnfree = true;
+        };
+      }
+      ../modules/packages.nix
+      ../users/ssh-pubkeys.nix
+      platformConfig
+      hostConfig
+      userOSConfig
+    ];
 }
