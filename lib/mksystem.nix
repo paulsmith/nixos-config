@@ -17,7 +17,7 @@ name:
 let
   lib = nixpkgs.lib;
 
-  isDarwin = system: nixpkgs.lib.hasSuffix "-darwin" system;
+  isDarwin = system: lib.hasSuffix "-darwin" system;
   isLinux = !isDarwin system;
   platform = if isDarwin system then "darwin" else "nixos";
 
@@ -30,7 +30,7 @@ let
   hostConfig = ../hosts/${name}/configuration.nix;
   userOSConfig = ../users/${user}/${platform}.nix;
 
-  systemFn = if isLinux then nixpkgs.lib.nixosSystem else inputs.darwin.lib.darwinSystem;
+  systemFn = if isLinux then lib.nixosSystem else inputs.darwin.lib.darwinSystem;
 in
 systemFn {
   inherit system;

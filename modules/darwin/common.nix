@@ -29,7 +29,7 @@
     dock.autohide = true;
     dock.mru-spaces = false;
     smb.NetBIOSName = hostname;
-    screencapture.location = "~/Pictures/screenshots";
+    screencapture.location = "/Users/${username}/Pictures/screenshots";
   };
 
   networking.hostName = hostname;

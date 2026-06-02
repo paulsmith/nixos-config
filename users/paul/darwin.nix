@@ -87,6 +87,9 @@ in
 
   homebrew = {
     enable = true;
+    onActivation = {
+      cleanup = "check";
+    };
     taps = [ ];
     brews = [ "cowsay" ];
     casks = [
