@@ -5,6 +5,8 @@
     "${modulesPath}/virtualisation/qemu-vm.nix"
   ];
 
+  boot.kernelParams = [ "quiet" ];
+
   networking.networkmanager.enable = true;
 
   virtualisation = {
