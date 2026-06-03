@@ -100,15 +100,77 @@ After the guest has booted, SSH into it:
 make vm-ssh
 ```
 
+VM SSH uses a repo-local passwordless key at `./.var/nixos-vm_ed25519`.
+Generate it explicitly with:
+
+```bash
+make vm-ssh-key
+```
+
+For a VM that is already running and does not have that public key yet,
+bootstrap it once:
+
+```bash
+make vm-ssh-bootstrap-key
+```
+
+This one-time bootstrap uses your normal SSH authentication path, so it may ask
+Secretive for Touch ID once. After that, `make vm-ssh`, `make vm-deploy`, and
+`make vm-guest-switch` use the VM-local key with `IdentityAgent=none`, so they
+do not ask Secretive for SSH authentication.
+
+VM SSH uses a repo-local known-hosts file at `./.var/known_hosts` instead of
+`~/.ssh/known_hosts`. New VM host keys are accepted automatically for this VM
+only, and stale keys can be removed without editing your normal SSH
+known-hosts file:
+
+```bash
+make vm-ssh-reset-key
+```
+
+Update the running VM from the host:
+
+```bash
+make vm-deploy
+```
+
+`vm-deploy` uses `nixos-rebuild` from the repo's pinned `nixpkgs`, connects to
+the guest over SSH, copies the built system closure, and activates it with
+remote `sudo`. By default, it asks for the guest sudo password when activation
+needs it.
+
+Ship this checkout into the guest and switch from inside the VM:
+
+```bash
+make vm-guest-switch
+```
+
+`vm-guest-switch` first copies the working tree to `/home/paul/nixos-config` in
+the guest, excluding local VCS/build artifacts, then runs:
+
+```bash
+sudo nixos-rebuild switch --flake .#nixos-vm
+```
+
+For kernel, initrd, or other next-boot changes, rebuild the host-side VM runner
+with `make vm-build` before launching the VM again.
+
 Useful VM overrides:
 
 ```bash
 VM_SSH_HOST=2223 make vm-run
+VM_SSH_HOST=2223 make vm-ssh-bootstrap-key
 VM_SSH_HOST=2223 make vm-ssh
+VM_SSH_HOST=2223 make vm-ssh-reset-key
+VM_SSH_HOST=2223 make vm-deploy
+VM_SSH_KEY=/tmp/nixos-vm_ed25519 make vm-ssh-key
 VM_DISK=/tmp/nixos-vm.qcow2 make vm-run
+VM_CONFIG_DIR=/home/paul/src/nixos-config make vm-guest-switch
+VM_REBUILD_ACTION=test make vm-deploy
+VM_REBUILD_SUDO='--sudo' make vm-deploy
 ```
 
-The VM currently gets `virtualisation.memorySize = 2048`,
+The VM currently gets `virtualisation.memorySize = 1024`,
 `virtualisation.cores = 2`, NetworkManager, OpenSSH, and a pared-down package
 set from `modules/packages/vm.nix`.
 

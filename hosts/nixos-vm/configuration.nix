@@ -1,4 +1,9 @@
-{ inputs, modulesPath, ... }:
+{
+  pkgs,
+  inputs,
+  modulesPath,
+  ...
+}:
 
 {
   imports = [
@@ -15,7 +20,12 @@
       config.allowUnfree = true;
     };
 
-    memorySize = 2048;
+    memorySize = 1024;
     cores = 2;
   };
+
+  environment.systemPackages = with pkgs; [
+    cowsay
+    ponysay
+  ];
 }

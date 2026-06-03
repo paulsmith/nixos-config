@@ -1,4 +1,5 @@
 result
 workspaces
+.var/
 *.swp
 *.qcow2
