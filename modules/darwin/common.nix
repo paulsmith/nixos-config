@@ -54,4 +54,12 @@
       "10MB"
     ];
   };
+
+  networking.dns = lib.mkIf (nextdnsProfile != null) [
+    "127.0.0.1"
+  ];
+
+  networking.knownNetworkServices = lib.mkIf (nextdnsProfile != null) [
+    "Wi-Fi"
+  ];
 }

@@ -5,14 +5,14 @@
     with pkgs;
     [
       curl
+      fd
+      git
       jq
       ripgrep
       runit
       tmux
-      wget
-      git
       vim
-      fd
+      wget
     ]
     ++ lib.optionals pkgs.stdenv.isDarwin [
       terminal-notifier

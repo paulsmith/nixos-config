@@ -64,19 +64,23 @@
       darwinConfigurations.andon = mkSystem "andon" {
         user = "paul";
         isVibium = true;
+        # nextdnsProfile = "8ce4cd"; # Wed Jun  3 12:12:24 CDT 2026 still debugging this
       };
 
       darwinConfigurations.io = mkSystem "io" {
         user = "paul";
+        nextdnsProfile = "d3b8fa";
       };
 
       darwinConfigurations.oberon = mkSystem "oberon" {
         user = "paul";
+        nextdnsProfile = "d3b8fa";
       };
 
       nixosConfigurations.nixos-vm = mkSystem "nixos-vm" {
         user = "paul";
         system = "aarch64-linux";
+        packageProfile = "vm";
       };
 
       formatter = forEachSystem ({ pkgs, ... }: pkgs.nixfmt-tree);
