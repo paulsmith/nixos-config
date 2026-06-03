@@ -18,8 +18,15 @@ VM_CONFIG_DIR ?= /home/$(VM_USER)/nixos-config
 VM_REBUILD_ACTION ?= switch
 VM_REBUILD_SUDO ?= --sudo --ask-sudo-password
 VM_TAR_EXCLUDES := --exclude=.git --exclude=.jj --exclude=.var --exclude=result
+AGENT_VM_HOST ?= agent-vm
+AGENT_VM_USER ?= paul
+AGENT_VM_SSH_HOST ?= 2223
+AGENT_VM_SSH_TARGET ?= $(AGENT_VM_USER)@localhost
+AGENT_VM_SSH_OPTS ?= -p $(AGENT_VM_SSH_HOST) $(VM_SSH_HOST_KEY_OPTS)
+AGENT_VM_STATE_DIR ?= $(VM_STATE_DIR)/$(AGENT_VM_HOST)
+AGENT_VM_STATE_DIR_ABS := $(abspath $(AGENT_VM_STATE_DIR))
 
-.PHONY: vm-build vm-run vm-ssh vm-ssh-setup vm-ssh-key vm-ssh-bootstrap-key vm-ssh-reset-key vm-deploy vm-copy-config vm-guest-switch
+.PHONY: vm-build vm-run vm-ssh vm-ssh-setup vm-ssh-key vm-ssh-bootstrap-key vm-ssh-reset-key vm-deploy vm-copy-config vm-guest-switch agent-vm-build agent-vm-run agent-vm-ssh agent-vm-reset-key
 
 switch:
 ifeq ($(UNAME), Darwin)
@@ -75,3 +82,17 @@ vm-copy-config: vm-ssh-key
 
 vm-guest-switch: vm-copy-config
 	ssh -t $(VM_SSH_OPTS) $(VM_SSH_TARGET) 'cd $(VM_CONFIG_DIR) && sudo nixos-rebuild $(VM_REBUILD_ACTION) --flake ".#$(VM_HOST)"'
+
+agent-vm-build:
+	nix build .#nixosConfigurations.$(AGENT_VM_HOST).config.microvm.declaredRunner
+
+agent-vm-run: agent-vm-build
+	mkdir -p $(AGENT_VM_STATE_DIR)
+	cd $(AGENT_VM_STATE_DIR) && $(abspath result/bin/microvm-run)
+
+agent-vm-ssh: vm-ssh-setup
+	ssh $(AGENT_VM_SSH_OPTS) $(AGENT_VM_SSH_TARGET)
+
+agent-vm-reset-key: vm-ssh-setup
+	touch $(VM_SSH_KNOWN_HOSTS)
+	ssh-keygen -R "[localhost]:$(AGENT_VM_SSH_HOST)" -f "$(VM_SSH_KNOWN_HOSTS)"

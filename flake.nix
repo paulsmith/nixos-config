@@ -12,6 +12,14 @@
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    microvm = {
+      url = "github:microvm-nix/microvm.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    dotfiles = {
+      url = "git+ssh://git@github.com/paulsmith/dotfiles.git";
+      flake = false;
+    };
     go-overlay.url = "github:purpleclay/go-overlay";
     jj.url = "github:martinvonz/jj";
     nix-rosetta-builder = {
@@ -78,6 +86,12 @@
       };
 
       nixosConfigurations.nixos-vm = mkSystem "nixos-vm" {
+        user = "paul";
+        system = "aarch64-linux";
+        packageProfile = "vm";
+      };
+
+      nixosConfigurations.agent-vm = mkSystem "agent-vm" {
         user = "paul";
         system = "aarch64-linux";
         packageProfile = "vm";

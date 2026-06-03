@@ -21,6 +21,22 @@
         "type": "github"
       }
     },
+    "dotfiles": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780517802,
+        "narHash": "sha256-OSR0848cFpHxmy8XUZ1Q1EIejfBSscpdk6YWy4RrfCs=",
+        "ref": "refs/heads/main",
+        "rev": "79d3f3b88c3c52d1eaa048b7eabd5cf0fd2568e3",
+        "revCount": 72,
+        "type": "git",
+        "url": "ssh://git@github.com/paulsmith/dotfiles.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/paulsmith/dotfiles.git"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -179,6 +195,27 @@
         "type": "github"
       }
     },
+    "microvm": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "spectrum": "spectrum"
+      },
+      "locked": {
+        "lastModified": 1779970379,
+        "narHash": "sha256-ZHsxoYXXnfJtMVh1/yY+1Eh9hHcPBhE28Qvinauh+BQ=",
+        "owner": "microvm-nix",
+        "repo": "microvm.nix",
+        "rev": "0d49083ba2d7419b22908ac392777c16df9a032e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "microvm-nix",
+        "repo": "microvm.nix",
+        "type": "github"
+      }
+    },
     "nix-rosetta-builder": {
       "inputs": {
         "nixpkgs": [
@@ -266,9 +303,11 @@
     "root": {
       "inputs": {
         "darwin": "darwin",
+        "dotfiles": "dotfiles",
         "go-overlay": "go-overlay",
         "home-manager": "home-manager",
         "jj": "jj",
+        "microvm": "microvm",
         "nix-rosetta-builder": "nix-rosetta-builder",
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-unstable": "nixpkgs-unstable"
@@ -293,6 +332,22 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "type": "github"
+      }
+    },
+    "spectrum": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778940603,
+        "narHash": "sha256-voSM8dZNlaOWN3kbYFky+FNY6fFQOEw0xF+ZMpZKkCQ=",
+        "ref": "refs/heads/main",
+        "rev": "367dd227f539267eae2b62770b4c17b88ac8c1f1",
+        "revCount": 1265,
+        "type": "git",
+        "url": "https://spectrum-os.org/git/spectrum"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://spectrum-os.org/git/spectrum"
       }
     },
     "systems": {
