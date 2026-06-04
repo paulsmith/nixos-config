@@ -5,6 +5,11 @@
   ...
 }:
 
+let
+  agentVmRun = pkgs.writeShellScriptBin "agent-vm-run" ''
+    exec ${pkgs.gnumake}/bin/make --no-print-directory -C /private/etc/nix-darwin agent-vm-run "$@"
+  '';
+in
 {
   users.users.${username}.packages =
     (with pkgs; [
@@ -68,6 +73,7 @@
       zstd
     ])
     ++ [
+      agentVmRun
       unstablePkgs.jujutsu
       unstablePkgs.neovim
       unstablePkgs.pnpm
