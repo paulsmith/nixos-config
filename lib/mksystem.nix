@@ -29,12 +29,12 @@ let
 
   packageProfiles = {
     workstation = [
-        ../modules/packages/core.nix
-        ../modules/packages/workstation.nix
+      ../modules/packages/core.nix
+      ../modules/packages/workstation.nix
     ];
     vm = [
-        ../modules/packages/core.nix
-        ../modules/packages/vm.nix
+      ../modules/packages/core.nix
+      ../modules/packages/vm.nix
     ];
   };
 

@@ -2,19 +2,25 @@
   dotfiles,
   lib,
   pkgs,
+  username,
   ...
 }:
 
 let
-  homeDirectory = "/home/paul";
+  homeDirectory = "/home/${username}";
 
-  gitConfig = builtins.replaceStrings [ "/Users/paul" ] [ homeDirectory ] (
-    builtins.readFile "${dotfiles}/dot_config/git/config"
-  );
+  dotfile = path: "${dotfiles}/${path}";
+  readDotfile = path: builtins.readFile (dotfile path);
+  replaceDotfile =
+    path: from: to:
+    builtins.replaceStrings from to (readDotfile path);
 
-  jjConfig = builtins.replaceStrings [ "{{ .email | quote }}" ] [ "\"paulsmith@pobox.com\"" ] (
-    builtins.readFile "${dotfiles}/dot_config/jj/config.toml.tmpl"
-  );
+  gitConfig = replaceDotfile "dot_config/git/config" [ "/Users/paul" ] [ homeDirectory ];
+
+  jjConfig =
+    replaceDotfile "dot_config/jj/config.toml.tmpl"
+      [ "{{ .email | quote }}" ]
+      [ "\"paulsmith@pobox.com\"" ];
 
   nvimInit = ''
     vim.g.mapleader = ","
@@ -78,7 +84,7 @@ let
 in
 {
   home = {
-    username = "paul";
+    inherit username;
     homeDirectory = homeDirectory;
     stateVersion = "26.05";
 
@@ -90,17 +96,17 @@ in
 
     file = {
       ".config/git/config".text = gitConfig;
-      ".config/git/ignore".source = "${dotfiles}/dot_config/git/ignore";
+      ".config/git/ignore".source = dotfile "dot_config/git/ignore";
       ".config/jj/config.toml".text = jjConfig;
-      ".config/bat/config".source = "${dotfiles}/dot_config/bat/config";
-      ".config/fontconfig/fonts.conf".source = "${dotfiles}/dot_config/fontconfig/fonts.conf";
+      ".config/bat/config".source = dotfile "dot_config/bat/config";
+      ".config/fontconfig/fonts.conf".source = dotfile "dot_config/fontconfig/fonts.conf";
       ".config/nvim/init.lua".text = nvimInit;
-      ".inputrc".source = "${dotfiles}/dot_inputrc";
-      ".sqliterc".source = "${dotfiles}/dot_sqliterc";
-      ".gitattributes".source = "${dotfiles}/dot_gitattributes";
-      ".gitignore_global".source = "${dotfiles}/dot_gitignore_global";
-      ".dotfiles/reference/bashrc".source = "${dotfiles}/dot_bashrc";
-      ".dotfiles/reference/bash_profile".source = "${dotfiles}/dot_bash_profile";
+      ".inputrc".source = dotfile "dot_inputrc";
+      ".sqliterc".source = dotfile "dot_sqliterc";
+      ".gitattributes".source = dotfile "dot_gitattributes";
+      ".gitignore_global".source = dotfile "dot_gitignore_global";
+      ".dotfiles/reference/bashrc".source = dotfile "dot_bashrc";
+      ".dotfiles/reference/bash_profile".source = dotfile "dot_bash_profile";
     };
 
     activation.removeLegacyNvimPluginSymlinks = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

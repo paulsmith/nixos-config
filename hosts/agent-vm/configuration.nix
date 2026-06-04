@@ -8,15 +8,37 @@
 }:
 
 let
-  hostRoot = "/Users/paul/microvms/agent-vm";
+  settings = import ./settings.nix { inherit username; };
 
   hostPkgs = import inputs.nixpkgs {
     system = "aarch64-darwin";
     config.allowUnfree = true;
   };
 
-  optionalUnstable =
-    name: lib.optionals (builtins.hasAttr name unstablePkgs) [ unstablePkgs.${name} ];
+  optionalUnstable = name: lib.optional (builtins.hasAttr name unstablePkgs) unstablePkgs.${name};
+
+  tmpdirRule =
+    {
+      path,
+      mode ? "0755",
+      user ? username,
+      group ? "users",
+    }:
+    "d ${path} ${mode} ${user} ${group} -";
+
+  userStateDirs = [
+    settings.homeDirectory
+    "${settings.homeDirectory}/.local"
+    "${settings.homeDirectory}/.local/state"
+    "${settings.homeDirectory}/.local/state/nix"
+    "${settings.homeDirectory}/.local/state/nix/profiles"
+    "${settings.homeDirectory}/service"
+  ];
+
+  microvmVolume = volume: {
+    image = "${settings.name}-${volume.name}.img";
+    inherit (volume) mountPoint size;
+  };
 in
 {
   imports = [
@@ -44,12 +66,12 @@ in
     enable = true;
     hostKeys = [
       {
-        path = "/var/lib/ssh/ssh_host_ed25519_key";
+        path = "${settings.ssh.hostKeyDirectory}/ssh_host_ed25519_key";
         type = "ed25519";
       }
       {
         bits = 4096;
-        path = "/var/lib/ssh/ssh_host_rsa_key";
+        path = "${settings.ssh.hostKeyDirectory}/ssh_host_rsa_key";
         type = "rsa";
       }
     ];
@@ -61,14 +83,13 @@ in
 
   security.sudo.wheelNeedsPassword = false;
 
-  systemd.tmpfiles.rules = [
-    "d /home/${username} 0755 ${username} users -"
-    "d /home/${username}/.local 0755 ${username} users -"
-    "d /home/${username}/.local/state 0755 ${username} users -"
-    "d /home/${username}/.local/state/nix 0755 ${username} users -"
-    "d /home/${username}/.local/state/nix/profiles 0755 ${username} users -"
-    "d /home/${username}/service 0755 ${username} users -"
-    "d /var/lib/ssh 0700 root root -"
+  systemd.tmpfiles.rules = map (path: tmpdirRule { inherit path; }) userStateDirs ++ [
+    (tmpdirRule {
+      path = settings.ssh.hostKeyDirectory;
+      mode = "0700";
+      user = "root";
+      group = "root";
+    })
   ];
 
   environment.systemPackages =
@@ -99,69 +120,52 @@ in
     useUserPackages = true;
     extraSpecialArgs = {
       dotfiles = inputs.dotfiles;
-      inherit unstablePkgs;
+      inherit unstablePkgs username;
     };
     users.${username} = import ../../users/paul/agent-home.nix;
   };
 
   microvm = {
     hypervisor = "qemu";
-    vcpu = 4;
-    mem = 8192;
+    inherit (settings.resources) mem vcpu;
     vmHostPackages = hostPkgs;
-    socket = "agent-vm.sock";
+    socket = "${settings.name}.sock";
     storeDiskErofsFlags = [
       "-zlz4"
       "-Eztailpacking"
     ];
 
     preStart = ''
-      mkdir -p ${hostRoot}/workspace
-      chmod 0777 ${hostRoot}/workspace
+      mkdir -p ${settings.workspace.hostPath}
+      chmod 0777 ${settings.workspace.hostPath}
     '';
 
     interfaces = [
       {
         type = "user";
-        id = "agent-vm";
-        mac = "02:00:00:00:00:01";
+        id = settings.network.interfaceId;
+        inherit (settings.network) mac;
       }
     ];
 
     forwardPorts = [
       {
         from = "host";
-        host.port = 2223;
-        guest.port = 22;
+        host.port = settings.ssh.hostPort;
+        guest.port = settings.ssh.guestPort;
       }
     ];
 
-    volumes = [
-      {
-        image = "agent-vm-home.img";
-        mountPoint = "/home";
-        size = 16384;
-      }
-      {
-        image = "agent-vm-var.img";
-        mountPoint = "/var";
-        size = 8192;
-      }
-      {
-        image = "agent-vm-rw-store.img";
-        mountPoint = "/nix/.rw-store";
-        size = 16384;
-      }
-    ];
+    volumes = map microvmVolume settings.volumes;
 
-    writableStoreOverlay = "/nix/.rw-store";
+    writableStoreOverlay = settings.writableStoreOverlay;
 
     shares = [
       {
         proto = "9p";
-        tag = "workspace";
-        source = "${hostRoot}/workspace";
-        mountPoint = "/home/${username}/workspace";
+        tag = settings.workspace.tag;
+        source = settings.workspace.hostPath;
+        mountPoint = settings.workspace.guestPath;
         securityModel = "none";
       }
     ];

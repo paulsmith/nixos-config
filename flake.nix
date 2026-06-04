@@ -67,6 +67,14 @@
           configurationRevision
           ;
       };
+
+      mkPaulLinuxVm =
+        name:
+        mkSystem name {
+          user = "paul";
+          system = "aarch64-linux";
+          packageProfile = "vm";
+        };
     in
     {
       darwinConfigurations.andon = mkSystem "andon" {
@@ -85,17 +93,9 @@
         nextdnsProfile = "d3b8fa";
       };
 
-      nixosConfigurations.nixos-vm = mkSystem "nixos-vm" {
-        user = "paul";
-        system = "aarch64-linux";
-        packageProfile = "vm";
-      };
+      nixosConfigurations.nixos-vm = mkPaulLinuxVm "nixos-vm";
 
-      nixosConfigurations.agent-vm = mkSystem "agent-vm" {
-        user = "paul";
-        system = "aarch64-linux";
-        packageProfile = "vm";
-      };
+      nixosConfigurations.agent-vm = mkPaulLinuxVm "agent-vm";
 
       formatter = forEachSystem ({ pkgs, ... }: pkgs.nixfmt-tree);
     };
