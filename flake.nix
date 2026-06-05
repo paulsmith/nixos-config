@@ -97,6 +97,22 @@
 
       nixosConfigurations.agent-vm = mkPaulLinuxVm "agent-vm";
 
+      checks.aarch64-darwin.agent-vm-shutdown-helper =
+        let
+          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+          shutdownScript = "${self.nixosConfigurations.agent-vm.config.microvm.declaredRunner}/bin/microvm-shutdown";
+        in
+        pkgs.runCommand "agent-vm-shutdown-helper-check" { } ''
+          if ${pkgs.gnugrep}/bin/grep -q 'input-send-event' ${shutdownScript}; then
+            echo "agent-vm shutdown helper still uses input-send-event"
+            exit 1
+          fi
+
+          ${pkgs.gnugrep}/bin/grep -q '"execute":"system_powerdown"' ${shutdownScript}
+          ${pkgs.gnugrep}/bin/grep -q '"execute":"quit"' ${shutdownScript}
+          touch $out
+        '';
+
       formatter = forEachSystem ({ pkgs, ... }: pkgs.nixfmt-tree);
     };
 }

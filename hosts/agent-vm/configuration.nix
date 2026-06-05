@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   lib,
   pkgs,
@@ -39,6 +40,54 @@ let
     image = "${settings.name}-${volume.name}.img";
     inherit (volume) mountPoint size;
   };
+
+  shutdownScript = hostPkgs.writeShellScript "microvm-${settings.name}-shutdown" ''
+    # Exit gracefully if QEMU is already gone.
+    if [ ! -S ${settings.name}.sock ]; then
+      exit 0
+    fi
+
+    send_qmp() {
+      (
+        echo '{"execute":"qmp_capabilities"}'
+        echo "$1"
+      ) | ${hostPkgs.socat}/bin/socat -T 1 STDIO UNIX-CONNECT:${settings.name}.sock
+    }
+
+    send_qmp '{"execute":"system_powerdown"}'
+
+    wait_seconds=0
+    while [ "$wait_seconds" -lt 5 ]; do
+      if [ ! -S ${settings.name}.sock ]; then
+        exit 0
+      fi
+
+      ${hostPkgs.coreutils}/bin/sleep 1
+      wait_seconds=$((wait_seconds + 1))
+    done
+
+    send_qmp '{"execute":"quit"}'
+  '';
+
+  patchedRunner =
+    hostPkgs.runCommand "microvm-qemu-${settings.name}-patched-shutdown"
+      {
+        meta = config.microvm.runner.qemu.meta;
+        passthru = config.microvm.runner.qemu.passthru;
+      }
+      ''
+        mkdir -p $out/bin $out/share
+
+        for script in ${config.microvm.runner.qemu}/bin/*; do
+          name="$(basename "$script")"
+          if [ "$name" != microvm-shutdown ]; then
+            ln -s "$script" "$out/bin/$name"
+          fi
+        done
+
+        ln -s ${shutdownScript} $out/bin/microvm-shutdown
+        ln -s ${config.microvm.runner.qemu}/share/microvm $out/share/microvm
+      '';
 in
 {
   imports = [
@@ -127,6 +176,7 @@ in
 
   microvm = {
     hypervisor = "qemu";
+    declaredRunner = patchedRunner;
     inherit (settings.resources) mem vcpu;
     vmHostPackages = hostPkgs;
     socket = "${settings.name}.sock";
