@@ -8,9 +8,10 @@
 
 let
   lib = pkgs.lib;
-  sshPubKeys = import ../ssh-pubkeys.nix;
 in
 {
+  imports = [../ssh-pubkeys.nix { inherit lib; }];
+
   users.users.paul.packages = with pkgs; [
     colima
     coreutils-prefixed
@@ -57,7 +58,7 @@ in
     home = "/Users/paul";
     shell = pkgs.bashInteractive;
     description = "Paul Smith";
-    openssh.authorizedKeys.keys = lib.optionals (!isVibium) sshPubKeys.allPersonalKeys;
+    openssh.authorizedKeys.keys = lib.optionals (!isVibium) config.local.sshPubKeys.allPersonalKeys;
   };
 
   system.primaryUser = "paul";
