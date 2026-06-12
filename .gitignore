@@ -3,3 +3,4 @@ workspaces
 .var/
 *.swp
 *.qcow2
+keys/
