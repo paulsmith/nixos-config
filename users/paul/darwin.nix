@@ -10,7 +10,10 @@ let
   lib = pkgs.lib;
 in
 {
-  imports = [../ssh-pubkeys.nix { inherit lib; }];
+  imports = [
+    ../ssh-pubkeys.nix
+    { inherit lib; }
+  ];
 
   users.users.paul.packages = with pkgs; [
     colima
