@@ -4,3 +4,4 @@ workspaces
 *.swp
 *.qcow2
 keys/
+.kata.local.toml
