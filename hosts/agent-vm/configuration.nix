@@ -138,6 +138,17 @@ in {
       })
     ];
 
+  users.users.${username} = {
+    isNormalUser = lib.mkForce false;
+    isSystemUser = true;
+    uid = 501;
+    group = "users";
+    createHome = true;
+    home = settings.homeDirectory;
+    homeMode = "700";
+    useDefaultShell = true;
+  };
+
   environment.systemPackages =
     (with pkgs; [
       bat
