@@ -1,8 +1,4 @@
-{
-  pkgs,
-  ...
-}:
-{
+{pkgs, ...}: {
   nix-rosetta-builder = {
     onDemand = true;
     # Make the VM SSH user key group/other-readable so other tailnet hosts

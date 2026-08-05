@@ -1,23 +1,20 @@
-{ lib, ... }:
-
-let
+{lib, ...}: let
   inherit (lib) types;
-in
-{
+in {
   options.local.sshPubKeys = {
     paul = lib.mkOption {
       type = types.attrsOf types.str;
-      default = { };
+      default = {};
     };
 
     vibium = lib.mkOption {
       type = types.attrsOf types.str;
-      default = { };
+      default = {};
     };
 
     allPersonalKeys = lib.mkOption {
       type = types.listOf types.str;
-      default = [ ];
+      default = [];
     };
   };
 

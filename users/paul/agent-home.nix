@@ -4,23 +4,20 @@
   pkgs,
   username,
   ...
-}:
-
-let
+}: let
   homeDirectory = "/home/${username}";
 
   dotfile = path: "${dotfiles}/${path}";
   readDotfile = path: builtins.readFile (dotfile path);
-  replaceDotfile =
-    path: from: to:
+  replaceDotfile = path: from: to:
     builtins.replaceStrings from to (readDotfile path);
 
-  gitConfig = replaceDotfile "dot_config/git/config" [ "/Users/paul" ] [ homeDirectory ];
+  gitConfig = replaceDotfile "dot_config/git/config" ["/Users/paul"] [homeDirectory];
 
   jjConfig =
     replaceDotfile "dot_config/jj/config.toml.tmpl"
-      [ "{{ .email | quote }}" ]
-      [ "\"paulsmith@pobox.com\"" ];
+    ["{{ .email | quote }}"]
+    ["\"paulsmith@pobox.com\""];
 
   nvimInit = ''
     vim.g.mapleader = ","
@@ -81,8 +78,7 @@ let
       command = "set ft=html",
     })
   '';
-in
-{
+in {
   home = {
     inherit username;
     homeDirectory = homeDirectory;
@@ -109,7 +105,7 @@ in
       ".dotfiles/reference/bash_profile".source = dotfile "dot_bash_profile";
     };
 
-    activation.removeLegacyNvimPluginSymlinks = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    activation.removeLegacyNvimPluginSymlinks = lib.hm.dag.entryAfter ["writeBoundary"] ''
       for path in "$HOME/.config/nvim/lazy-lock.json" "$HOME/.config/nvim/lua"; do
         if [ -L "$path" ]; then
           target="$(${pkgs.coreutils}/bin/readlink "$path")"

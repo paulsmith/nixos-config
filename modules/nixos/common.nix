@@ -1,6 +1,8 @@
-{ hostname, pkgs, ... }:
-
 {
+  hostname,
+  pkgs,
+  ...
+}: {
   networking.hostName = hostname;
 
   nix = {

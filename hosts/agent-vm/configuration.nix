@@ -6,10 +6,8 @@
   unstablePkgs,
   username,
   ...
-}:
-
-let
-  settings = import ./settings.nix { inherit username; };
+}: let
+  settings = import ./settings.nix {inherit username;};
 
   hostPkgs = import inputs.nixpkgs {
     system = "aarch64-darwin";
@@ -18,14 +16,12 @@ let
 
   optionalUnstable = name: lib.optional (builtins.hasAttr name unstablePkgs) unstablePkgs.${name};
 
-  tmpdirRule =
-    {
-      path,
-      mode ? "0755",
-      user ? username,
-      group ? "users",
-    }:
-    "d ${path} ${mode} ${user} ${group} -";
+  tmpdirRule = {
+    path,
+    mode ? "0755",
+    user ? username,
+    group ? "users",
+  }: "d ${path} ${mode} ${user} ${group} -";
 
   userStateDirs = [
     settings.homeDirectory
@@ -71,34 +67,33 @@ let
 
   patchedRunner =
     hostPkgs.runCommand "microvm-qemu-${settings.name}-patched-shutdown"
-      {
-        meta = config.microvm.runner.qemu.meta;
-        passthru = config.microvm.runner.qemu.passthru;
-      }
-      ''
-        mkdir -p $out/bin $out/share
+    {
+      meta = config.microvm.runner.qemu.meta;
+      passthru = config.microvm.runner.qemu.passthru;
+    }
+    ''
+      mkdir -p $out/bin $out/share
 
-        for script in ${config.microvm.runner.qemu}/bin/*; do
-          name="$(basename "$script")"
-          if [ "$name" != microvm-shutdown ]; then
-            ln -s "$script" "$out/bin/$name"
-          fi
-        done
+      for script in ${config.microvm.runner.qemu}/bin/*; do
+        name="$(basename "$script")"
+        if [ "$name" != microvm-shutdown ]; then
+          ln -s "$script" "$out/bin/$name"
+        fi
+      done
 
-        ln -s ${shutdownScript} $out/bin/microvm-shutdown
-        ln -s ${config.microvm.runner.qemu}/share/microvm $out/share/microvm
-      '';
-in
-{
+      ln -s ${shutdownScript} $out/bin/microvm-shutdown
+      ln -s ${config.microvm.runner.qemu}/share/microvm $out/share/microvm
+    '';
+in {
   imports = [
     inputs.microvm.nixosModules.microvm
     inputs.home-manager.nixosModules.home-manager
   ];
 
-  boot.kernelParams = [ "quiet" ];
+  boot.kernelParams = ["quiet"];
 
   documentation.enable = false;
-  environment.defaultPackages = [ ];
+  environment.defaultPackages = [];
 
   networking.useDHCP = false;
   networking.useNetworkd = true;
@@ -109,7 +104,7 @@ in
 
   services.resolved.enable = true;
 
-  networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.firewall.allowedTCPPorts = [22];
 
   services.openssh = {
     enable = true;
@@ -132,14 +127,16 @@ in
 
   security.sudo.wheelNeedsPassword = false;
 
-  systemd.tmpfiles.rules = map (path: tmpdirRule { inherit path; }) userStateDirs ++ [
-    (tmpdirRule {
-      path = settings.ssh.hostKeyDirectory;
-      mode = "0700";
-      user = "root";
-      group = "root";
-    })
-  ];
+  systemd.tmpfiles.rules =
+    map (path: tmpdirRule {inherit path;}) userStateDirs
+    ++ [
+      (tmpdirRule {
+        path = settings.ssh.hostKeyDirectory;
+        mode = "0700";
+        user = "root";
+        group = "root";
+      })
+    ];
 
   environment.systemPackages =
     (with pkgs; [

@@ -4,15 +4,12 @@
   isVibium,
   config,
   ...
-}:
-
-let
+}: let
   lib = pkgs.lib;
-in
-{
+in {
   imports = [
     ../ssh-pubkeys.nix
-    { inherit lib; }
+    {inherit lib;}
   ];
 
   users.users.paul.packages = with pkgs; [
@@ -22,15 +19,15 @@ in
     mas
   ];
 
-  fonts.packages = with pkgs; [ nerd-fonts.iosevka-term ];
+  fonts.packages = with pkgs; [nerd-fonts.iosevka-term];
 
   homebrew = {
     enable = true;
     onActivation = {
       cleanup = "uninstall";
     };
-    taps = [ ];
-    brews = [ "cowsay" ];
+    taps = [];
+    brews = ["cowsay"];
     casks = [
       "1password"
       "claude"

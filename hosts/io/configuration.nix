@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   # io runs no local Linux builder. It offloads aarch64-linux / x86_64-linux
   # builds to oberon's nix-rosetta-builder VM, reached directly over the tailnet:
   # oberon bridges its Tailscale IP to the VM's SSH port (see hosts/oberon). The
@@ -41,6 +40,5 @@
       GlobalKnownHostsFile /etc/ssh/ssh_known_hosts.d/rosetta-builder
       StrictHostKeyChecking yes
   '';
-  environment.etc."ssh/ssh_known_hosts.d/rosetta-builder".text =
-    "rosetta-builder-key ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOUB8y3JrNS2tQ8lwSCYc1gjnGzFM4HuH0x5RjPgiMRi root@rosetta-builder\n";
+  environment.etc."ssh/ssh_known_hosts.d/rosetta-builder".text = "rosetta-builder-key ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOUB8y3JrNS2tQ8lwSCYc1gjnGzFM4HuH0x5RjPgiMRi root@rosetta-builder\n";
 }

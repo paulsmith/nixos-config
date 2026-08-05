@@ -1,12 +1,9 @@
-{ username }:
-
-let
+{username}: let
   name = "agent-vm";
   homeDirectory = "/home/${username}";
   hostRoot = "/Users/paul/microvms/${name}";
   writableStoreOverlay = "/nix/.rw-store";
-in
-{
+in {
   inherit
     homeDirectory
     hostRoot
