@@ -32,7 +32,7 @@ in {
       "1password"
       "claude"
       "cleanshot"
-      "codex"
+      "codex-app"
       "discord"
       "ghostty"
       "google-chrome"
