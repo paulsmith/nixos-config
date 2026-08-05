@@ -26,6 +26,7 @@
       url = "github:cpick/nix-rosetta-builder";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    herdr.url = "github:herdrdev/herdr";
   };
 
   outputs = inputs @ {
@@ -53,6 +54,7 @@
 
     overlays = [
       inputs.go-overlay.overlays.default
+      inputs.herdr.overlays.default
       inputs.jj.overlays.default
     ];
 

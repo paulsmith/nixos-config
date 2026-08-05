@@ -34,6 +34,7 @@ in {
       graphviz
       guile
       helix
+      herdr
       htop
       hugo
       hyperfine
