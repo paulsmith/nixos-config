@@ -109,6 +109,13 @@
         touch $out
       '';
 
-    formatter = forEachSystem ({pkgs, ...}: pkgs.nixfmt-tree);
+    # alejandra reads stdin when given no paths, so default to the whole tree
+    # for a bare `nix fmt`.
+    formatter = forEachSystem (
+      {pkgs, ...}:
+        pkgs.writeShellScriptBin "alejandra-fmt" ''
+          exec ${pkgs.alejandra}/bin/alejandra "''${@:-.}"
+        ''
+    );
   };
 }
