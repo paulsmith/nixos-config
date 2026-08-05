@@ -6,7 +6,11 @@
       "Bash(jj new:*)",
       "Bash(rg:*)",
       "Bash(grep:*)",
-      "Bash(hostname)"
+      "Bash(hostname)",
+      "Bash(nix fmt *)",
+      "Bash(jj status *)",
+      "Bash(nix flake *)",
+      "Bash(scutil --get LocalHostName)"
     ],
     "deny": []
   }
