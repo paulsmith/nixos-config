@@ -12,6 +12,7 @@ in {
     (with pkgs; [
       age
       autossh
+      bash-completion
       bat
       btop
       cachix
@@ -31,6 +32,7 @@ in {
       gifsicle
       gifski
       go-bin.latestStable # this is coming from go-overlay
+      golangci-lint
       graphviz
       guile
       helix
@@ -59,6 +61,7 @@ in {
       rlwrap
       rrdtool
       rustup
+      shellcheck
       sqlite
       stylua
       swig
