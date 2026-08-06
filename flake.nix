@@ -21,7 +21,7 @@
       flake = false;
     };
     go-overlay.url = "github:purpleclay/go-overlay";
-    jj.url = "github:martinvonz/jj";
+    jj.url = "github:jj-vcs/jj";
     nix-rosetta-builder = {
       url = "github:cpick/nix-rosetta-builder";
       inputs.nixpkgs.follows = "nixpkgs";

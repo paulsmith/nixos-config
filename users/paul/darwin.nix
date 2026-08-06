@@ -46,11 +46,11 @@ in {
     ];
     masApps = {
       "Tomito" = 1526042938;
-      "GarageBand" = 682658836;
-      "iMovie" = 408981434;
-      "Keynote" = 409183694;
-      "Numbers" = 409203825;
-      "Pages" = 409201541;
+      # "GarageBand" = 682658836;
+      # "iMovie" = 408981434;
+      # "Keynote" = 409183694;
+      # "Numbers" = 409203825;
+      # "Pages" = 409201541;
     };
   };
 

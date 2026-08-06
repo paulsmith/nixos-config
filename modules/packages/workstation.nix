@@ -42,6 +42,7 @@ in {
       hyperfine
       iftop
       imagemagick
+      jujutsu # this is coming from the jj flake overlay
       lua-language-server
       magic-wormhole
       mitmproxy
@@ -75,7 +76,6 @@ in {
     ])
     ++ [
       agentVmRun
-      unstablePkgs.jujutsu
       unstablePkgs.neovim
       unstablePkgs.pnpm
       unstablePkgs.uv
