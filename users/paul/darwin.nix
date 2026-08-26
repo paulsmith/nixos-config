@@ -13,7 +13,6 @@ in {
   ];
 
   users.users.paul.packages = with pkgs; [
-    colima
     coreutils-prefixed
     e2fsprogs
     mas
