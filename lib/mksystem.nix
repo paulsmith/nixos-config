@@ -51,6 +51,7 @@ in
       lib.optionals (isDarwin system) [
         inputs.nix-rosetta-builder.darwinModules.default
         ../modules/darwin/homebrew.nix
+        ../modules/darwin/runit.nix
       ]
       ++ [
         {
