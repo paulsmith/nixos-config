@@ -41,24 +41,29 @@ instantly, where `darwin-rebuild switch` does not. The costs have accumulated:
 | `runit` | `pkgs.runit` + a launchd agent; drop `brew "runit"` | Declarative, and consistent with how the NixOS side already supervises services |
 | Docker | Dropped | Colima was removed last commit; no runtime has been missed since |
 | `andon` (work machine) | Personal Homebrew list gated on `isVibium` | Mirrors existing `isVibium` gating of SSH keys |
+| HM activation (Darwin) | **Standalone** — `homeConfigurations`, not a darwin module | User packages and dotfiles activate without sudo or system activation; `darwin-rebuild switch` is reserved for genuinely system-level state |
+| User packages | `users.users.<name>.packages` → `home.packages` | Consolidates "what is installed" into the home config and puts it behind the sudo-free switch |
 
 ## Target architecture
 
 ```
 /etc/nix-darwin/
-  flake.nix                    # + home-manager wired into Darwin hosts
-  lib/mksystem.nix             # + homeRepoRoot, deliveryMode
-  hosts/…                      # unchanged
+  flake.nix                    # + homeConfigurations."paul@{io,oberon,andon}"
+  lib/mksystem.nix             # unchanged for Darwin; no HM module
+  lib/mkhome.nix               # NEW — parallels mksystem; homeRepoRoot, deliveryMode
+  hosts/…                      # andon's google-cloud-sdk moves out
   modules/
     darwin/common.nix
     darwin/homebrew.nix        # NEW — moved out of users/paul/darwin.nix
     nixos/common.nix
-    packages/…
+    packages/core.nix          # stays as environment.systemPackages
   home/
     common.nix                 # HM config shared by all hosts and platforms
     darwin.nix                 #   Darwin-only
     linux.nix                  #   VM-only
     hosts/{io,oberon,andon}.nix
+    packages/workstation.nix   # was modules/packages/workstation.nix
+    packages/vm.nix            # was modules/packages/vm.nix
     dotfiles/                  # plain files, live-edited
       bashrc  bash_profile  inputrc  sqliterc
       gitattributes  gitignore_global  npmrc  tmux.conf
@@ -105,6 +110,71 @@ store — hermetic, no checkout required. One dotfile set, two delivery modes.
 This retires `inputs.dotfiles`, its stale lock pin, and the `replaceStrings`
 hacks in `users/paul/agent-home.nix`.
 
+### Activation model
+
+Darwin hosts do **not** import `home-manager.darwinModules.home-manager`. The
+flake exposes `homeConfigurations."paul@<host>"`, activated separately:
+
+```
+home-manager switch --flake .#paul@$(hostname)   # user: packages + dotfiles, no sudo
+darwin-rebuild switch --flake .#$(hostname)      # system: defaults, Homebrew, nextdns, builders
+```
+
+Wrapped as `make home` and the existing `make switch`.
+
+Wiring HM as a darwin module *and* running standalone is deliberately avoided —
+the two maintain competing generation profiles over the same files.
+
+The Linux VMs keep `home-manager.nixosModules.home-manager`, because they are
+provisioned wholesale rather than edited incrementally. Only the entry point
+differs; `home/common.nix` and the dotfile set are shared with Darwin.
+
+`~/.nix-profile/bin` already precedes `/etc/profiles/per-user/paul/bin` on PATH,
+so packages resolve correctly after the move. Verified on `io`.
+
+Bootstrap order on a new machine: clone the repo to `/etc/nix-darwin` →
+`darwin-rebuild switch` → `nix run home-manager -- switch --flake .#paul@<host>`.
+The repo must exist before HM activation or the live-tier symlinks dangle.
+
+`lib/mkhome.nix` must reproduce what `mksystem.nix` currently supplies to the
+module system, because the workstation package set depends on it: the
+`go-overlay`, `herdr` and `jj` overlays, `config.allowUnfree = true`, and
+`unstablePkgs`, `username`, `hostname` and `isVibium` passed via
+`extraSpecialArgs`. Without these, `go-bin.latestStable`, `herdr`, `jujutsu` and
+the three `unstablePkgs.*` entries fail to resolve once the list moves out of
+the system configuration.
+
+### Package tiers
+
+| Tier | Option | Where | Activated by |
+| --- | --- | --- | --- |
+| System | `environment.systemPackages` | `modules/packages/core.nix` | `darwin-rebuild switch` |
+| User | `home.packages` | `home/packages/*.nix`, `home/darwin.nix`, `home/hosts/*.nix` | `home-manager switch` |
+
+Moving into `home.packages`:
+
+- `modules/packages/workstation.nix` — the ~60-package list
+- `modules/packages/vm.nix`
+- `users/paul/darwin.nix` — `coreutils-prefixed`, `e2fsprogs`, `mas`
+- `hosts/andon/configuration.nix` — `google-cloud-sdk`, into `home/hosts/andon.nix`
+
+`core.nix` stays as `environment.systemPackages`: root needs `git`, `curl` and
+`vim` independent of any user profile. `fonts.packages`, `users.users.paul.shell`
+and the rest of the user *account* record remain system-level.
+
+`users/paulsmith/home.nix` is an empty stub with no importer — delete it.
+
+### Bash and HM session variables
+
+`programs.bash.enable` writes `~/.bashrc`, which collides with delivering
+`bashrc` from `home/dotfiles/`. It is therefore left disabled on every host:
+`bashrc` and `bash_profile` are delivered as files, and `bashrc` sources
+`~/.nix-profile/etc/profile.d/hm-session-vars.sh` when present so
+`home.sessionVariables` still applies.
+
+This also retires an existing duplication — `agent-home.nix` re-declares the
+same shell aliases that `dot_bashrc` already defines.
+
 ### File naming
 
 chezmoi's `dot_`, `private_` and `empty_` prefixes are dropped; files take their
@@ -128,13 +198,13 @@ merge is a union of deletions:
 | `Notchmeister` | Moves to `hosts/io/configuration.nix` via `homebrew.masApps` |
 
 Taps: keep `1password/tap` and `ngrok/ngrok`. Drop `helix-editor/helix`
-(`pkgs.helix` is in `workstation.nix`) and `nextdns/tap` (`services.nextdns` is
+(`pkgs.helix` is in the workstation package set) and `nextdns/tap` (`services.nextdns` is
 a nix-darwin module). `nikitabobko/tap` and `kenn-io/tap` are orphans — nothing
 is installed from either (`kata` is a Go binary in `~/go/bin`) — so they go
 undeclared. With `cleanup = "none"` no tap is removed; they simply stop being
 asserted.
 
-A proposed personal/work split is recorded below for review at Step 4; the
+A proposed personal/work split is recorded below for review at Step 5; the
 boundary is adjustable without reopening the design.
 
 - **Personal only (`!isVibium`)** — casks: audacity, avifquicklook, discord,
@@ -167,30 +237,42 @@ visibility decision.
 **Step 2 — Land the files.** Reconciled dotfiles into `home/dotfiles/` with
 prefixes stripped. File moves only, no behaviour change.
 
-**Step 3 — Wire Home Manager into Darwin.** `mksystem.nix` gains
-`home-manager.darwinModules.home-manager`; add `home/{common,darwin,linux}.nix`
-and per-host modules; select delivery mode per host.
+**Step 3 — Stand up standalone Home Manager.** Add `lib/mkhome.nix` and
+`homeConfigurations."paul@{io,oberon,andon}"` to the flake; add
+`home/{common,darwin,linux}.nix` and per-host modules; select delivery mode per
+host; add `make home`. Dotfiles only at this stage — packages stay put, so the
+step is revertible without touching what is installed.
 
 > **The one dangerous moment.** chezmoi wrote *real files* into `$HOME`. Home
-> Manager refuses to overwrite them and activation aborts. The first switch on
-> each machine must set `home-manager.backupFileExtension = "hm-bak"` so
+> Manager refuses to overwrite them and activation aborts. The first activation
+> on each machine must set `home-manager.backupFileExtension = "hm-bak"` so
 > originals are preserved rather than lost.
 
-**Step 4 — Homebrew module.** Move, merge, `cleanup = "none"`, `isVibium`
+**Step 4 — Move packages to `home.packages`.** Relocate
+`modules/packages/{workstation,vm}.nix` to `home/packages/`, convert
+`users.users.<name>.packages` to `home.packages`, and fold in the three stragglers
+(`coreutils-prefixed`, `e2fsprogs`, `mas` from `users/paul/darwin.nix`;
+`google-cloud-sdk` from `hosts/andon`). Delete the `users/paulsmith/home.nix`
+stub. Kept separate from Step 3 so a package regression is diagnosable on its
+own — after this step `/etc/profiles/per-user/paul` should be empty of user
+tools and `~/.nix-profile` should hold them.
+
+**Step 5 — Homebrew module.** Move, merge, `cleanup = "none"`, `isVibium`
 split, tap audit.
 
-**Step 5 — runit via launchd.** Replace `restart_service: :changed` with a
+**Step 6 — runit via launchd.** Replace `restart_service: :changed` with a
 launchd agent supervising `runsvdir` against `$HOME/service`.
 
-**Step 6 — Retire chezmoi.** Drop `pkgs.chezmoi` from `workstation.nix`, delete
-the `run_onchange` script, retire `inputs.dotfiles` and the `replaceStrings`
-hacks in `agent-home.nix`. Leave `ssh://bunny/media/nas/repo/dotfiles.git`
-frozen in place as the rollback path — do not delete it.
+**Step 7 — Retire chezmoi.** Drop `pkgs.chezmoi` from
+`home/packages/workstation.nix`, delete the `run_onchange` script, retire
+`inputs.dotfiles` and the `replaceStrings` hacks in `agent-home.nix`. Leave
+`ssh://bunny/media/nas/repo/dotfiles.git` frozen in place as the rollback path —
+do not delete it.
 
-**Step 7 — Roll out.** `io` → `oberon` → `andon`. Daily driver first, work
+**Step 8 — Roll out.** `io` → `oberon` → `andon`. Daily driver first, work
 machine last, after two clean precedents.
 
-**Step 8 — Backup remote.** Create `ssh://bunny/media/nas/repo/nixos-config.git`
+**Step 9 — Backup remote.** Create `ssh://bunny/media/nas/repo/nixos-config.git`
 and add it as a second remote on `/etc/nix-darwin`. Force-push when diverged;
 GitHub remains authoritative.
 
@@ -212,12 +294,8 @@ cost, but it is unrelated to Home Manager and predates this split. Options for
 a follow-up: pin `jj` to a release tag, use `pkgs.jujutsu`, or add a binary
 cache.
 
-**Moving `users.users.paul.packages` to `home.packages`.** A clean consolidation
-that would also put package changes behind the faster `home-manager switch`, but
-separable churn. Follow-up, not part of this migration.
-
 ## Rollback
 
 Each step is independently revertible via `jj`. The frozen `dotfiles.git` on
 bunny plus `*.hm-bak` files in `$HOME` mean the pre-migration state is
-recoverable on every machine even after Step 6.
+recoverable on every machine even after Step 7.
