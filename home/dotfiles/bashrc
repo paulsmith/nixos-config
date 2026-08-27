@@ -1,14 +1,20 @@
-# ABOUTME: Consolidated bash configuration managed by chezmoi
+# ABOUTME: Consolidated bash configuration, delivered by Home Manager
 
 # Commands that should be applied only for interactive shells.
 [[ $- == *i* ]] || return
 
-# Home Manager session variables (programs.bash is intentionally disabled
-# so this file can be delivered as a live symlink).
-hm_session_vars="$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-if [ -f "$hm_session_vars" ]; then
-    builtin source "$hm_session_vars"
-fi
+# Home Manager session variables. programs.bash is intentionally disabled so
+# this file can be delivered as a live symlink, which means nothing else
+# sources these. The profile path differs between standalone Home Manager
+# (~/.nix-profile) and the NixOS module (/etc/profiles/per-user/$USER).
+for hm_session_vars in \
+    "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" \
+    "/etc/profiles/per-user/${USER:-$(id -un)}/etc/profile.d/hm-session-vars.sh"; do
+    if [ -f "$hm_session_vars" ]; then
+        builtin source "$hm_session_vars"
+        break
+    fi
+done
 unset hm_session_vars
 
 HISTCONTROL=ignoredups:ignorespace
@@ -25,7 +31,11 @@ if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
   eval "$(fzf --bash)"
 fi
 
-eval $(gdircolors)
+if command -v gdircolors >/dev/null; then
+    eval "$(gdircolors)"
+elif command -v dircolors >/dev/null; then
+    eval "$(dircolors)"
+fi
 
 # Custom environment variables and configuration from extra.bash
 export CDPATH=".:$HOME/projects:$HOME/.config"
@@ -82,7 +92,9 @@ PS1+='\[$(prompt_exit_code)\]\$'
 PS1+='\[$RESET\] '
 export PS1
 
-export MANPATH=$(xcode-select --show-manpaths | tr '\n' ':')
+if command -v xcode-select >/dev/null; then
+    export MANPATH="$(xcode-select --show-manpaths | tr '\n' ':')"
+fi
 
 # Ghostty shell integration
 if [ -n "$GHOSTTY_RESOURCES_DIR" ]; then

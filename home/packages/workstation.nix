@@ -16,7 +16,6 @@ in {
       btop
       cachix
       chafa # terminal graphics protocol - image viewer (Ghostty)
-      chezmoi
       clang-tools # clang-format, clangd
       cmake
       coreutils-prefixed

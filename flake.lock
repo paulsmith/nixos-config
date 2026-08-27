@@ -21,22 +21,6 @@
         "type": "github"
       }
     },
-    "dotfiles": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1780517802,
-        "narHash": "sha256-OSR0848cFpHxmy8XUZ1Q1EIejfBSscpdk6YWy4RrfCs=",
-        "ref": "refs/heads/main",
-        "rev": "79d3f3b88c3c52d1eaa048b7eabd5cf0fd2568e3",
-        "revCount": 72,
-        "type": "git",
-        "url": "ssh://git@github.com/paulsmith/dotfiles.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/paulsmith/dotfiles.git"
-      }
-    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -338,7 +322,6 @@
     "root": {
       "inputs": {
         "darwin": "darwin",
-        "dotfiles": "dotfiles",
         "go-overlay": "go-overlay",
         "herdr": "herdr",
         "home-manager": "home-manager",

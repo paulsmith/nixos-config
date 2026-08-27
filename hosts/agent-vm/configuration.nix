@@ -1,5 +1,6 @@
 {
   config,
+  hostname,
   inputs,
   lib,
   pkgs,
@@ -176,10 +177,22 @@ in {
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {
-      dotfiles = inputs.dotfiles;
-      inherit unstablePkgs username;
+      inherit
+        inputs
+        unstablePkgs
+        hostname
+        username
+        ;
+      isVibium = false;
+      email = "paulsmith@pobox.com";
+      homeRepoRoot = "/etc/nix-darwin";
+      # The guest has no checkout, so dotfiles are copied into the store.
+      deliveryMode = "store";
     };
-    users.${username} = import ../../users/paul/agent-home.nix;
+    users.${username}.imports = [
+      ../../home/common.nix
+      ../../home/linux.nix
+    ];
   };
 
   microvm = {

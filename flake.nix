@@ -16,10 +16,6 @@
       url = "github:microvm-nix/microvm.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dotfiles = {
-      url = "git+ssh://git@github.com/paulsmith/dotfiles.git";
-      flake = false;
-    };
     go-overlay.url = "github:purpleclay/go-overlay";
     jj.url = "github:jj-vcs/jj";
     nix-rosetta-builder = {
