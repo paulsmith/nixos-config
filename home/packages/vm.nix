@@ -1,9 +1,6 @@
-{
-  username,
-  pkgs,
-  ...
-}: {
-  users.users.${username}.packages = with pkgs; [
+{pkgs, ...}: {
+  home.packages = with pkgs; [
+    bashInteractive
     btop
     fastfetch
     htop

@@ -9,6 +9,8 @@
     then config.lib.file.mkOutOfStoreSymlink "${homeRepoRoot}/home/dotfiles/${name}"
     else ./dotfiles/${name};
 in {
+  imports = [./packages/workstation.nix];
+
   home = {
     homeDirectory = "/Users/${config.home.username}";
 

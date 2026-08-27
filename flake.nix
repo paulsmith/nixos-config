@@ -71,7 +71,6 @@
       mkSystem name {
         user = "paul";
         system = "aarch64-linux";
-        packageProfile = "vm";
       };
 
     mkHome = import ./lib/mkhome.nix {

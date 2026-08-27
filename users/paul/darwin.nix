@@ -12,12 +12,6 @@ in {
     {inherit lib;}
   ];
 
-  users.users.paul.packages = with pkgs; [
-    coreutils-prefixed
-    e2fsprogs
-    mas
-  ];
-
   fonts.packages = with pkgs; [nerd-fonts.iosevka-term];
 
   homebrew = {

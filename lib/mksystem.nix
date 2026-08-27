@@ -8,7 +8,6 @@
   user,
   isVibium ? false,
   nextdnsProfile ? null,
-  packageProfile ? "workstation",
 }: let
   lib = nixpkgs.lib;
 
@@ -22,17 +21,6 @@
   unstablePkgs = import inputs.nixpkgs-unstable {
     inherit system;
     config.allowUnfree = true;
-  };
-
-  packageProfiles = {
-    workstation = [
-      ../modules/packages/core.nix
-      ../modules/packages/workstation.nix
-    ];
-    vm = [
-      ../modules/packages/core.nix
-      ../modules/packages/vm.nix
-    ];
   };
 
   platformConfig = ../modules/${platform}/common.nix;
@@ -63,7 +51,6 @@ in
       lib.optionals (isDarwin system) [
         inputs.nix-rosetta-builder.darwinModules.default
       ]
-      ++ packageProfiles.${packageProfile}
       ++ [
         {
           nixpkgs = {
@@ -71,6 +58,7 @@ in
             config.allowUnfree = true;
           };
         }
+        ../modules/packages/core.nix
         ../users/ssh-pubkeys.nix
         platformConfig
         hostConfig

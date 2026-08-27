@@ -1,5 +1,4 @@
 {
-  username,
   pkgs,
   unstablePkgs,
   ...
@@ -8,7 +7,7 @@
     exec ${pkgs.gnumake}/bin/make --no-print-directory -C /private/etc/nix-darwin agent-vm-run "$@"
   '';
 in {
-  users.users.${username}.packages =
+  home.packages =
     (with pkgs; [
       age
       autossh
@@ -20,9 +19,11 @@ in {
       chezmoi
       clang-tools # clang-format, clangd
       cmake
+      coreutils-prefixed
       difftastic
       direnv
       dtach
+      e2fsprogs
       entr
       fastfetch
       ffmpeg
@@ -45,6 +46,7 @@ in {
       jujutsu # this is coming from the jj flake overlay
       lua-language-server
       magic-wormhole
+      mas
       mitmproxy
       mosh
       ninja
@@ -66,7 +68,6 @@ in {
       sqlite
       stylua
       swig
-      tmux
       tree
       tree-sitter
       typst

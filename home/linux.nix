@@ -4,6 +4,8 @@
   pkgs,
   ...
 }: {
+  imports = [./packages/vm.nix];
+
   home = {
     homeDirectory = "/home/${config.home.username}";
 
