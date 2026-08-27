@@ -70,8 +70,11 @@ Expected: PASS. The live file is valid; the source copy is not. The live file wi
 cd /Users/paul/.local/share/chezmoi
 jj git remote add github git@github.com:paulsmith/dotfiles.git
 jj git fetch --remote github
-jj log -r 'main | github@github' --no-pager
+jj log -r 'main | main@github' --no-pager
 ```
+
+The remote-tracking revset is `main@github` — the bookmark name followed by the
+remote name, not the remote name twice.
 
 Expected: both heads visible, diverged from `dde1191c`.
 
@@ -108,9 +111,13 @@ with no conflict markers as resolved.
 `run_onchange_before_install-packages-darwin.sh.tmpl` is deleted by Task 8, so
 its content does not matter. Take the bunny side verbatim:
 
+Note: only two conflicts may actually materialise — the `.tmpl` file often
+merges cleanly, since each fork only deleted distinct lines from it. Resolve
+whichever ones jj reports; leave a clean merge alone.
+
 ```bash
 cd /Users/paul/.local/share/chezmoi
-jj file show 'main@bunny:run_onchange_before_install-packages-darwin.sh.tmpl' \
+jj file show -r main@bunny run_onchange_before_install-packages-darwin.sh.tmpl \
   > run_onchange_before_install-packages-darwin.sh.tmpl
 ```
 
@@ -118,7 +125,7 @@ jj file show 'main@bunny:run_onchange_before_install-packages-darwin.sh.tmpl' \
 either:
 
 ```bash
-jj file show 'main@bunny:dot_config/nvim/lazy-lock.json' \
+jj file show -r main@bunny dot_config/nvim/lazy-lock.json \
   > dot_config/nvim/lazy-lock.json
 ```
 
@@ -194,7 +201,15 @@ cd /Users/paul/.local/share/chezmoi
 find . -path ./.git -prune -o -path ./.jj -prune -o -type f -print | sort
 ```
 
-Expected: 39 files (38 managed + the `run_onchange` script).
+Expected: 43 files after the Task 1 merge.
+
+**39 of those are in scope** — the 38 that Task 3 copies into the public repo,
+plus `run_onchange_before_install-packages-darwin.sh.tmpl`, whose contents are
+transcribed into the Homebrew module in Task 6.
+
+Four are out of scope because nothing copies them: `.chezmoiignore`,
+`AGENTS.md`, `CLAUDE.md`, `README.md`. Confirm they are genuinely not in Task
+3's copy list before skipping them.
 
 - [ ] **Step 2: Run a mechanical scan for common secret shapes**
 
@@ -208,7 +223,7 @@ Note: this is a first pass, not the audit. Hits are expected and mostly benign (
 
 - [ ] **Step 3: Read every file end to end**
 
-Read all 39 files in full. Mechanical scanning does not catch a hardcoded internal hostname, a private tailnet IP, an employer-identifying path, or a personal API endpoint. Known items to adjudicate explicitly:
+Read all 39 in-scope files in full. Mechanical scanning does not catch a hardcoded internal hostname, a private tailnet IP, an employer-identifying path, or a personal API endpoint. Known items to adjudicate explicitly:
 
 - `dot_config/private_karabiner/private_karabiner.json` — large generated file, read it fully
 - `dot_claude/settings.json` — permissions and hook commands
