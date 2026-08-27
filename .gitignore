@@ -5,3 +5,4 @@ workspaces
 *.qcow2
 keys/
 .kata.local.toml
+.superpowers/

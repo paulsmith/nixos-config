@@ -101,18 +101,35 @@ esac
 
 - [ ] **Step 6: Resolve the remaining two conflicts**
 
-`run_onchange_before_install-packages-darwin.sh.tmpl` is deleted by Task 7 — take either side, it does not matter:
+`jj resolve --tool` invokes an *external* 3-way merge tool; there is no
+built-in `:ours`. Resolve these by writing the file directly — jj treats a file
+with no conflict markers as resolved.
+
+`run_onchange_before_install-packages-darwin.sh.tmpl` is deleted by Task 8, so
+its content does not matter. Take the bunny side verbatim:
 
 ```bash
 cd /Users/paul/.local/share/chezmoi
-jj resolve --tool :ours run_onchange_before_install-packages-darwin.sh.tmpl
+jj file show 'main@bunny:run_onchange_before_install-packages-darwin.sh.tmpl' \
+  > run_onchange_before_install-packages-darwin.sh.tmpl
 ```
 
-`lazy-lock.json` is generated. Take either side now; Step 8 regenerates it:
+`lazy-lock.json` is regenerated in Step 8, so its content does not matter
+either:
 
 ```bash
-jj resolve --tool :ours dot_config/nvim/lazy-lock.json
+jj file show 'main@bunny:dot_config/nvim/lazy-lock.json' \
+  > dot_config/nvim/lazy-lock.json
 ```
+
+Confirm neither file still carries conflict markers:
+
+```bash
+grep -l '^<<<<<<<' run_onchange_before_install-packages-darwin.sh.tmpl \
+  dot_config/nvim/lazy-lock.json 2>/dev/null && echo "STILL CONFLICTED" || echo "RESOLVED"
+```
+
+Expected: `RESOLVED`.
 
 - [ ] **Step 7: Replace the broken settings.json with the valid live copy**
 
@@ -1508,11 +1525,19 @@ jj new
 
 Do **not** delete `ssh://bunny/media/nas/repo/dotfiles.git` or `/Users/paul/.local/share/chezmoi`. They are the rollback path. Push the reconciliation from Task 1 so the archive is complete:
 
+The chezmoi repo's remotes are `bunny` (its original) and `github` (added in
+Task 1 Step 3). There is no `origin` there.
+
 ```bash
 cd /Users/paul/.local/share/chezmoi
-jj git push --remote origin --bookmark main
+jj git push --remote bunny --bookmark main
 jj git push --remote github --bookmark main
 ```
+
+Both remotes have commits the other lacks, so these pushes move each bookmark
+forward past a divergence — expect to need `--allow-backwards` or a forced
+push on whichever remote rejects the update. GitHub and bunny are both
+archives at this point; either is acceptable as the surviving copy.
 
 ---
 
