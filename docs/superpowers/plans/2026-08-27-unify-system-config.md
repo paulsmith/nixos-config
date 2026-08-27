@@ -880,7 +880,33 @@ Home Manager does not manage `~/.config/jj/config.toml`, so it will not back it 
 mv ~/.config/jj/config.toml ~/.config/jj/config.toml.pre-hm
 ```
 
-- [ ] **Step 14: Activate on io**
+- [ ] **Step 14: Dry-run the activation, and snapshot the two directories**
+
+Twenty real files in `$HOME` will be moved aside as `*.hm-bak`. **Two of them
+are directories** — `.config/nvim/lua` and `.hammerspoon/Spoons`.
+`backupFileExtension` is well-proven for files; directories are the untested
+case, and a bad move takes the whole nvim plugin tree with it.
+
+Snapshot them first, so a bad move is recoverable no matter what:
+
+```bash
+cp -R ~/.config/nvim/lua /tmp/nvim-lua-backup
+cp -R ~/.hammerspoon/Spoons /tmp/hammerspoon-spoons-backup
+ls /tmp/nvim-lua-backup /tmp/hammerspoon-spoons-backup >/dev/null && echo "snapshots taken"
+```
+
+Then dry-run:
+
+```bash
+cd /etc/nix-darwin
+nix run home-manager -- switch --flake ".#$(id -un)@$(hostname)" -b hm-bak --dry-run 2>&1 | tail -40
+```
+
+Expected: it reports moving existing paths aside and creating symlinks, and
+exits 0. **If it errors on either directory, STOP and report** — do not proceed
+to Step 15.
+
+- [ ] **Step 15: Activate on io**
 
 ```bash
 cd /etc/nix-darwin
@@ -889,7 +915,7 @@ make home
 
 Expected: activation succeeds. Files chezmoi had written are moved aside as `*.hm-bak`.
 
-- [ ] **Step 15: Verify the live tier is genuinely live**
+- [ ] **Step 16: Verify the live tier is genuinely live**
 
 ```bash
 readlink ~/.bashrc
@@ -912,7 +938,7 @@ tail -1 ~/.bashrc
 
 Expected: `# live-edit probe` — with no switch. Then remove the probe line.
 
-- [ ] **Step 16: Commit**
+- [ ] **Step 17: Commit**
 
 ```bash
 cd /etc/nix-darwin
