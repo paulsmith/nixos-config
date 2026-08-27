@@ -14,7 +14,12 @@ Spec: `docs/superpowers/specs/2026-08-27-unify-system-config-design.md`
 
 - **Version control is `jj`, never raw `git`.** Every commit step uses `jj describe -m "..."` followed by `jj new`. `jj git push` is permitted; `git commit`/`git add` are not.
 - Nix formatting is `alejandra`. Run `nix fmt` before every commit that touches `.nix` files.
-- `nix flake check` must pass before any commit that changes flake evaluation.
+- `nix flake check --no-build` must pass before any commit that changes flake
+  evaluation. **Use `--no-build` on `io`.** Bare `nix flake check` tries to
+  *build* the two `aarch64-linux` NixOS configurations, and `io` has no local
+  Linux builder — it offloads to `oberon`'s rosetta-builder over the tailnet,
+  which is currently refusing connections. That failure is environmental and
+  predates this work; it is not a signal about your change.
 - `darwin-rebuild build --flake .#<hostname>` must succeed before any commit that changes a Darwin system configuration.
 - Home Manager release is `release-26.05`, matching `nixpkgs` (`nixos-26.05`). Do not mix releases.
 - `home.stateVersion` is `"26.05"` on all hosts. Never change an existing `stateVersion`.
@@ -852,7 +857,7 @@ Add `home` to the `.PHONY` line.
 ```bash
 cd /etc/nix-darwin
 nix fmt
-nix flake check
+nix flake check --no-build
 ```
 
 Expected: PASS.
@@ -1262,7 +1267,7 @@ In `flake.nix`, remove the now-unused `packageProfile = "vm";` line from
 ```bash
 cd /etc/nix-darwin
 nix fmt
-nix flake check
+nix flake check --no-build
 darwin-rebuild build --flake .#io
 ```
 
@@ -1448,7 +1453,7 @@ In `lib/mksystem.nix`, add `../modules/darwin/homebrew.nix` to the Darwin-only `
 ```bash
 cd /etc/nix-darwin
 nix fmt
-nix flake check
+nix flake check --no-build
 darwin-rebuild build --flake .#io
 darwin-rebuild build --flake .#andon
 ```
@@ -1556,7 +1561,7 @@ mkdir -p ~/service ~/Library/Logs
 ```bash
 cd /etc/nix-darwin
 nix fmt
-nix flake check
+nix flake check --no-build
 darwin-rebuild build --flake .#io
 ```
 
@@ -1673,12 +1678,29 @@ Expected: `INPUT GONE`.
 ```bash
 cd /etc/nix-darwin
 nix fmt
-nix flake check
+nix flake check --no-build
 darwin-rebuild build --flake .#io
 nix build .#nixosConfigurations.agent-vm.config.system.build.toplevel --no-link
 ```
 
-Expected: all PASS. The agent-vm build may take several minutes if it needs the Linux builder.
+Expected: the first two PASS.
+
+**The `agent-vm` build requires an `aarch64-linux` builder**, which `io` does not
+have locally — it offloads to `oberon`'s rosetta-builder VM over the tailnet. If
+that builder is unreachable (`Connection refused` on port 31122), this build
+cannot run from `io`. That is an infrastructure state, not a defect in your
+change.
+
+If it is unreachable: **do not treat it as a task failure and do not work around
+it.** Verify the configuration evaluates instead, and report clearly that the
+build was not exercised:
+
+```bash
+nix eval .#nixosConfigurations.agent-vm.config.system.build.toplevel.drvPath --raw
+```
+
+The full build must then be run later from `oberon`, or from `io` once the
+builder is back.
 
 - [ ] **Step 6: Confirm the VM gets store-mode dotfiles**
 
