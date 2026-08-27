@@ -510,6 +510,11 @@ Dotfiles only. Packages stay in the system config so this task is revertible wit
 - Create: `home/hosts/io.nix`, `home/hosts/oberon.nix`, `home/hosts/andon.nix`
 - Modify: `flake.nix`
 - Modify: `Makefile`
+- Modify: `home/dotfiles/bashrc` (Step 7 — source `hm-session-vars.sh`)
+- Modify: `home/dotfiles/config/git/config-body` (Step 13 — preserve `column.ui`)
+
+These two dotfiles are in scope for this task. Everything else under
+`home/dotfiles/` was finalised by Task 3 and must not be touched.
 
 **Interfaces:**
 - Consumes: `home/dotfiles/<name>` from Task 3.
@@ -872,12 +877,36 @@ grep -c 'etc/nix-darwin/home/dotfiles' /tmp/hm-io/home-files/.bashrc 2>/dev/null
 
 Expected: the `.bashrc` entry resolves to `/etc/nix-darwin/home/dotfiles/bashrc`, not a `/nix/store` path. If it points into the store, `deliveryMode` did not reach `common.nix`.
 
-- [ ] **Step 13: Remove the unmanaged jj config that would shadow conf.d**
+- [ ] **Step 13: Clear the two unmanaged configs that shadow the generated ones**
 
-Home Manager does not manage `~/.config/jj/config.toml`, so it will not back it up — and jj merges it with `conf.d`, so a stale copy silently overrides the new identity fragment.
+Home Manager manages neither of these, so it will never back them up — and both
+are read *in addition to* the generated files, with the unmanaged copy winning.
+A stale copy silently overrides the new per-host identity.
+
+**jj** merges `config.toml` with everything in `conf.d/`:
 
 ```bash
 mv ~/.config/jj/config.toml ~/.config/jj/config.toml.pre-hm
+```
+
+**git** reads `~/.gitconfig` *after* `~/.config/git/config`, so it wins on
+duplicate keys. Leaving it in place means `user.email` keeps resolving to the
+old value while jj uses the new one — the cause of a long-standing split
+authorship in these repos.
+
+```bash
+mv ~/.gitconfig ~/.gitconfig.pre-hm
+```
+
+Before moving it, note what it uniquely provides. `core.excludesfile` is safe to
+lose: git's default when unset is `$XDG_CONFIG_HOME/git/ignore`, which Home
+Manager now manages and which is a strict superset of the old file. But
+`column.ui = auto` would be genuinely lost, so add it to
+`home/dotfiles/config/git/config-body`:
+
+```
+[column]
+	ui = auto
 ```
 
 - [ ] **Step 14: Dry-run the activation, and snapshot the two directories**
@@ -908,9 +937,19 @@ to Step 15.
 
 - [ ] **Step 15: Activate on io**
 
+The **first** activation cannot use `make home`: the `home-manager` binary is
+not on `PATH` until an activation installs it into the profile. Bootstrap with
+`nix run` — the same invocation Step 14 already validated, minus `--dry-run`:
+
 ```bash
 cd /etc/nix-darwin
-make home
+nix run home-manager -- switch --flake ".#$(id -un)@$(hostname)" -b hm-bak
+```
+
+Every subsequent activation uses `make home`. Verify that now:
+
+```bash
+hash -r && command -v home-manager && make home
 ```
 
 Expected: activation succeeds. Files chezmoi had written are moved aside as `*.hm-bak`.
@@ -918,10 +957,16 @@ Expected: activation succeeds. Files chezmoi had written are moved aside as `*.h
 - [ ] **Step 16: Verify the live tier is genuinely live**
 
 ```bash
-readlink ~/.bashrc
+readlink -f ~/.bashrc
 ```
 
-Expected: `/etc/nix-darwin/home/dotfiles/bashrc`.
+Expected: `/private/etc/nix-darwin/home/dotfiles/bashrc`.
+
+Use `readlink -f`, not `readlink`. `mkOutOfStoreSymlink` composes with home-
+manager's file-linking to produce a multi-hop chain
+(`~/.bashrc` → home-manager-files → `hm_bashrc` → repo). That is inherent, not a
+defect; what matters is that the chain terminates inside the repo rather than at
+a store copy.
 
 ```bash
 jj config get user.email
@@ -1713,10 +1758,21 @@ jj git fetch
 jj new main
 ```
 
-- [ ] **Step 4: Remove the shadowing jj config**
+- [ ] **Step 4: Clear both shadowing configs**
+
+Same reasoning as Task 4 Step 13 — these exist per machine, so `oberon` and
+`andon` each need it:
 
 ```bash
 mv ~/.config/jj/config.toml ~/.config/jj/config.toml.pre-hm
+mv ~/.gitconfig ~/.gitconfig.pre-hm
+```
+
+Then confirm both tools agree:
+
+```bash
+git config --get user.email
+jj config get user.email
 ```
 
 - [ ] **Step 5: Recreate the Hammerspoon private file**
