@@ -6,6 +6,8 @@
   # band; not in the Nix store), and its host key is pinned below.
   nix-rosetta-builder.enable = false;
 
+  homebrew.masApps."Notchmeister" = 1599169747;
+
   nix.distributedBuilds = true;
   nix.buildMachines = [
     {
