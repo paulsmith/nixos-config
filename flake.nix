@@ -73,6 +73,10 @@
         system = "aarch64-linux";
         packageProfile = "vm";
       };
+
+    mkHome = import ./lib/mkhome.nix {
+      inherit nixpkgs overlays inputs;
+    };
   in {
     darwinConfigurations.andon = mkSystem "andon" {
       user = "paul";
@@ -93,6 +97,24 @@
     nixosConfigurations.nixos-vm = mkPaulLinuxVm "nixos-vm";
 
     nixosConfigurations.agent-vm = mkPaulLinuxVm "agent-vm";
+
+    homeConfigurations = {
+      "paul@io" = mkHome {
+        hostname = "io";
+        email = "paulsmith@pobox.com";
+      };
+
+      "paul@oberon" = mkHome {
+        hostname = "oberon";
+        email = "paulsmith@pobox.com";
+      };
+
+      "paul@andon" = mkHome {
+        hostname = "andon";
+        email = "paul@vibium.com";
+        isVibium = true;
+      };
+    };
 
     checks.aarch64-darwin.agent-vm-shutdown-helper = let
       pkgs = nixpkgs.legacyPackages.aarch64-darwin;

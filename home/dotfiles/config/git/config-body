@@ -4,6 +4,9 @@
 	co = "checkout"
 	st = "status"
 
+[column]
+	ui = auto
+
 [core]
 
 [diff]

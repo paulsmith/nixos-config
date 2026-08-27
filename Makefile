@@ -28,7 +28,7 @@ AGENT_VM_STATE_DIR ?= $(VM_STATE_DIR)/$(AGENT_VM_HOST)
 AGENT_VM_RUNNER_ATTR ?= nixosConfigurations.$(AGENT_VM_HOST).config.microvm.declaredRunner
 AGENT_VM_RUNNER := $(abspath result/bin/microvm-run)
 
-.PHONY: vm-build vm-run vm-ssh vm-ssh-setup vm-ssh-key vm-ssh-bootstrap-key vm-ssh-reset-key vm-deploy vm-copy-config vm-guest-switch agent-vm-build agent-vm-run agent-vm-ssh agent-vm-reset-key
+.PHONY: vm-build vm-run vm-ssh vm-ssh-setup vm-ssh-key vm-ssh-bootstrap-key vm-ssh-reset-key vm-deploy vm-copy-config vm-guest-switch agent-vm-build agent-vm-run agent-vm-ssh agent-vm-reset-key home
 
 switch:
 ifeq ($(UNAME), Darwin)
@@ -36,6 +36,11 @@ ifeq ($(UNAME), Darwin)
 else
 	sudo nixos-rebuild switch --flake ".#$(HOSTNAME)"
 endif
+
+HOME_TARGET ?= $(shell id -un)@$(HOSTNAME)
+
+home:
+	home-manager switch --flake ".#$(HOME_TARGET)" -b hm-bak
 
 test:
 	@echo "test TBD"

@@ -3,6 +3,14 @@
 # Commands that should be applied only for interactive shells.
 [[ $- == *i* ]] || return
 
+# Home Manager session variables (programs.bash is intentionally disabled
+# so this file can be delivered as a live symlink).
+hm_session_vars="$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+if [ -f "$hm_session_vars" ]; then
+    builtin source "$hm_session_vars"
+fi
+unset hm_session_vars
+
 HISTCONTROL=ignoredups:ignorespace
 HISTFILESIZE=100000
 HISTSIZE=10000
@@ -21,8 +29,6 @@ eval $(gdircolors)
 
 # Custom environment variables and configuration from extra.bash
 export CDPATH=".:$HOME/projects:$HOME/.config"
-export SVDIR="$HOME/service" # Runit service directory
-export FONTCONFIG_FILE="$HOME/.config/fontconfig/fonts.conf"
 
 # Start prompt configuration
 RED=$'\e[31m'
@@ -164,8 +170,6 @@ fi
 google() {
     claude --allowedTools=web_search -p "Search google for <query>$1</query> and summarize the results"
 }
-
-export EDITOR=nvim
 
 alias gau='git add -u'
 alias gc='git commit'
