@@ -312,9 +312,15 @@ cp "$SRC/private_Library/private_Application Support/com.mitchellh.ghostty/confi
 
 - [ ] **Step 3: Strip the templated identity out of the jj fragment**
 
-`config/jj/50-main.toml` still carries the chezmoi template. Delete the entire `[user]` block from the top of the file — Task 5 generates identity separately. The file must now begin with:
+`config/jj/50-main.toml` still carries the chezmoi template. Delete the entire `[user]` block — Task 4 generates identity separately.
+
+**Keep the leading `#:schema` pragma comment.** It gives editors schema
+validation and is valid in a `conf.d` fragment. Only the `[user]` block goes,
+so the file begins:
 
 ```toml
+#:schema https://docs.jj-vcs.dev/latest/config-schema.json
+
 [ui]
 diff-editor = ":builtin"
 ```
@@ -403,6 +409,16 @@ Add a guard as the first statement inside `ssidChangedCallback`:
 
 Leave the `tailscale` binary path as-is — a path to the Tailscale binary is not
 sensitive.
+
+**Search the whole file, not just those two lines.** The SSID is also
+interpolated into a notification string further down. Every literal occurrence
+must become a reference to the variable:
+
+```bash
+grep -n 'homeSSID\|exitNode' home/dotfiles/hammerspoon/init.lua
+```
+
+Every hit must be a variable reference, never a quoted literal.
 
 Now create the unversioned file on this machine, moving the two original values
 out of the chezmoi source and into it:
