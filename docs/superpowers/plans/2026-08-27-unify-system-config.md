@@ -1023,10 +1023,14 @@ Kept separate from Task 4 so a package regression is diagnosable on its own.
 ```bash
 cd /etc/nix-darwin
 nix build .#homeConfigurations."paul@io".activationPackage -o /tmp/hm-pkgs
-ls /tmp/hm-pkgs/home-path/bin/rg
+ls /tmp/hm-pkgs/home-path/bin/bat
 ```
 
 Expected: FAIL — `No such file or directory`. Packages are still in the system profile.
+
+Use `bat` as the canary, **not `rg`**. `ripgrep` lives in `modules/packages/core.nix`
+as `environment.systemPackages`, which Step 7 keeps system-level by design — so it
+could never appear in `home-path` no matter what this task does.
 
 - [ ] **Step 2: Create `home/packages/workstation.nix`**
 
@@ -1103,7 +1107,6 @@ in {
       sqlite
       stylua
       swig
-      tmux
       tree
       tree-sitter
       typst
@@ -1120,7 +1123,12 @@ in {
 }
 ```
 
-`coreutils-prefixed`, `e2fsprogs` and `mas` are folded in here from `users/paul/darwin.nix`.
+`coreutils-prefixed`, `e2fsprogs` and `mas` are folded in here from
+`users/paul/darwin.nix`. `tmux` is deliberately **absent** — it is declared in
+`modules/packages/core.nix` and stays a system package, so it is declared once
+rather than twice.
+
+Arithmetic to check against: 67 original − 1 (`tmux`) + 3 stragglers = **69**.
 
 - [ ] **Step 3: Create `home/packages/vm.nix`**
 
@@ -1278,7 +1286,7 @@ Expected: all PASS.
 ```bash
 cd /etc/nix-darwin
 nix build .#homeConfigurations."paul@io".activationPackage -o /tmp/hm-pkgs
-ls /tmp/hm-pkgs/home-path/bin/rg /tmp/hm-pkgs/home-path/bin/jj /tmp/hm-pkgs/home-path/bin/uv
+ls /tmp/hm-pkgs/home-path/bin/bat /tmp/hm-pkgs/home-path/bin/jj /tmp/hm-pkgs/home-path/bin/uv
 ```
 
 Expected: PASS — all three resolve. `jj` proves the overlay reached `mkHome`; `uv` proves `unstablePkgs` did.
@@ -1290,10 +1298,14 @@ cd /etc/nix-darwin
 make home
 sudo darwin-rebuild switch --flake .#io
 hash -r
-command -v rg jj uv
+command -v bat jj uv
 ```
 
-Expected: all three resolve under `/Users/paul/.nix-profile/bin`, not `/etc/profiles/per-user/paul/bin`.
+Expected: `bat` and `jj` resolve under `/Users/paul/.nix-profile/bin`.
+
+`uv` may resolve to `~/.local/bin/uv` instead — a pre-existing pipx install that
+shadows the Nix one on PATH. That is not a defect in this task; confirm
+`~/.nix-profile/bin/uv` exists and points at the store path just built.
 
 - [ ] **Step 11: Commit**
 
@@ -1680,27 +1692,26 @@ cd /etc/nix-darwin
 nix fmt
 nix flake check --no-build
 darwin-rebuild build --flake .#io
-nix build .#nixosConfigurations.agent-vm.config.system.build.toplevel --no-link
 ```
 
-Expected: the first two PASS.
+Expected: both PASS.
 
-**The `agent-vm` build requires an `aarch64-linux` builder**, which `io` does not
-have locally — it offloads to `oberon`'s rosetta-builder VM over the tailnet. If
-that builder is unreachable (`Connection refused` on port 31122), this build
-cannot run from `io`. That is an infrastructure state, not a defect in your
-change.
+**The `agent-vm` build is an authorized skip.** Paul has explicitly decided not
+to build it during this migration: `io` has no local `aarch64-linux` builder and
+`oberon`'s rosetta-builder is refusing connections on port 31122.
 
-If it is unreachable: **do not treat it as a task failure and do not work around
-it.** Verify the configuration evaluates instead, and report clearly that the
-build was not exercised:
+Do **not** attempt the build, do not try to reach the builder, and do not treat
+its absence as a blocker. Evaluate instead — this proves the configuration is
+still well-formed after `inputs.dotfiles` is removed:
 
 ```bash
 nix eval .#nixosConfigurations.agent-vm.config.system.build.toplevel.drvPath --raw
 ```
 
-The full build must then be run later from `oberon`, or from `io` once the
-builder is back.
+**Report explicitly that the agent-vm closure was never built**, so the risk is
+visible: evaluation catches attribute and type errors, but not build-time
+failures. The VM stays unproven until Paul builds it from `oberon`, or from `io`
+once that builder is restored.
 
 - [ ] **Step 6: Confirm the VM gets store-mode dotfiles**
 
@@ -1828,7 +1839,7 @@ sudo darwin-rebuild switch --flake ".#$(hostname)"
 readlink ~/.bashrc
 git config --get user.email
 jj config get user.email
-command -v rg jj uv
+command -v bat jj uv
 brew list --cask | head
 ```
 
