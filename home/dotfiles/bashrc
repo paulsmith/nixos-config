@@ -1,0 +1,204 @@
+# ABOUTME: Consolidated bash configuration managed by chezmoi
+
+# Commands that should be applied only for interactive shells.
+[[ $- == *i* ]] || return
+
+HISTCONTROL=ignoredups:ignorespace
+HISTFILESIZE=100000
+HISTSIZE=10000
+
+shopt -s histappend
+shopt -s checkwinsize
+shopt -s extglob
+shopt -s globstar
+shopt -s checkjobs
+
+if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
+  eval "$(fzf --bash)"
+fi
+
+eval $(gdircolors)
+
+# Custom environment variables and configuration from extra.bash
+export CDPATH=".:$HOME/projects:$HOME/.config"
+export SVDIR="$HOME/service" # Runit service directory
+export FONTCONFIG_FILE="$HOME/.config/fontconfig/fonts.conf"
+
+# Start prompt configuration
+RED=$'\e[31m'
+LIGHT_GREEN=$'\e[1;32m'
+YELLOW=$'\e[33m'
+LIGHT_BLUE=$'\e[1;34m'
+LIGHT_PURPLE=$'\e[1;35m'
+LIGHT_CYAN=$'\e[1;36m'
+GRAY=$'\e[38;5;247m'
+RESET=$'\e[0m'
+RL_PROMT_START=$'\001'
+RL_PROMT_END=$'\002'
+
+ps1_color() {
+    echo -e "${RL_PROMT_START}${1}${RL_PROMT_END}"
+}
+
+prompt_zmx() {
+    if [ -n "$ZMX_SESSION" ]; then
+        printf "%s[%s]%s" $(ps1_color "$LIGHT_GREEN") "$ZMX_SESSION" $(ps1_color "$RESET")
+    fi
+}
+
+prompt_shlvl() {
+    if [ $SHLVL -gt 1 ]; then
+        printf "%s[%s]%s" $(ps1_color "$LIGHT_CYAN") "$SHLVL" $(ps1_color "$RESET")
+    fi
+}
+
+prompt_separator() {
+    printf "%s◉%s" $(ps1_color "$GRAY") $(ps1_color "$RESET")
+}
+
+prompt_exit_code() {
+    [ $LAST_EXIT_CODE -ne 0 ] && echo -e $RED || echo -e $YELLOW
+}
+
+prompt_command() {
+    LAST_EXIT_CODE=$?
+}
+
+PROMPT_COMMAND=prompt_command
+
+PS1=""
+PS1+='\[$LIGHT_PURPLE\]\h'
+PS1+='$(prompt_zmx)'
+PS1+='$(prompt_shlvl)'
+PS1+='$(prompt_separator)'
+PS1+='\[$LIGHT_BLUE\]\W '
+PS1+='\[$(prompt_exit_code)\]\$'
+PS1+='\[$RESET\] '
+export PS1
+
+export MANPATH=$(xcode-select --show-manpaths | tr '\n' ':')
+
+# Ghostty shell integration
+if [ -n "$GHOSTTY_RESOURCES_DIR" ]; then
+    builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
+fi
+
+bash_completion_setup=/opt/homebrew/etc/profile.d/bash_completion.sh
+if [ -f "$bash_completion_setup" ]; then
+    builtin source "$bash_completion_setup"
+fi
+
+function t {
+    pushd $(mktemp -d -p /tmp -q "${1}.XXXXXX")
+}
+
+function q {
+    local dir="${1:-.}"
+    local bind="${QUICKSERVE_BIND:-127.0.0.1}"
+    local log pid tail_pid port url status
+
+    [[ -d "$dir" ]] || {
+      echo "quickserve: not a directory: $dir" >&2
+      return 2
+    }
+
+    log="$(mktemp "${TMPDIR:-/tmp}/quickserve.XXXXXX")" || return 1
+
+    python3 -u -m http.server 0 --bind "$bind" --directory "$dir" >"$log" 2>&1 &
+    pid=$!
+
+    cleanup() {
+      [[ -n "${tail_pid:-}" ]] && kill "$tail_pid" 2>/dev/null
+      [[ -n "${pid:-}" ]] && kill "$pid" 2>/dev/null
+      wait "$tail_pid" 2>/dev/null
+      wait "$pid" 2>/dev/null
+      rm -f "$log"
+      trap - INT TERM EXIT
+    }
+
+    trap cleanup INT TERM EXIT
+
+    while kill -0 "$pid" 2>/dev/null; do
+      port="$(sed -nE 's/.* port ([0-9]+) .*/\1/p' "$log" | tail -n 1)"
+      [[ -n "$port" ]] && break
+      sleep 0.05
+    done
+
+    if [[ -z "$port" ]]; then
+      cat "$log" >&2
+      cleanup
+      return 1
+    fi
+
+    url="http://127.0.0.1:$port/"
+
+    printf 'Serving %s at %s\n' "$dir" "$url"
+
+    if command -v open >/dev/null 2>&1; then
+      open "$url" >/dev/null 2>&1 &
+    elif command -v xdg-open >/dev/null 2>&1; then
+      xdg-open "$url" >/dev/null 2>&1 &
+    elif command -v wslview >/dev/null 2>&1; then
+      wslview "$url" >/dev/null 2>&1 &
+    fi
+
+    tail -f "$log" &
+    tail_pid=$!
+
+    wait "$pid"
+    status=$?
+
+    cleanup
+    return "$status"
+}
+
+# uv shell completion
+if command -v uv >/dev/null; then
+    eval "$(uv generate-shell-completion bash)"
+fi
+
+if command -v uvx >/dev/null; then
+    eval "$(uvx --generate-shell-completion bash)"
+fi
+
+google() {
+    claude --allowedTools=web_search -p "Search google for <query>$1</query> and summarize the results"
+}
+
+export EDITOR=nvim
+
+alias gau='git add -u'
+alias gc='git commit'
+alias gco='git checkout'
+alias gd='git diff'
+alias gdc='git diff --cached'
+alias gs='git status'
+alias ll='ls -l'
+alias ls='ls --color=auto'
+alias vi=nvim
+alias view='nvim -R'
+alias vim=nvim
+alias vimdiff='nvim -d'
+alias claude-yolo="claude --dangerously-skip-permissions"
+
+eval "$(direnv hook bash)"
+
+if command -v jj >/dev/null; then
+    source <(jj util completion bash)
+fi
+
+if command -v opam >/dev/null; then
+    eval $(opam env)
+fi
+
+if command -v op >/dev/null; then
+    source <(op completion bash)
+fi
+
+# pnpm
+export PNPM_HOME="$HOME/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end

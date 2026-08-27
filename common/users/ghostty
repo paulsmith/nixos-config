@@ -1,9 +1,0 @@
-font-family = IosevkaTerm Nerd Font
-font-size = 15
-macos-option-as-alt = true
-window-step-resize = true
-config-file = experimental
-copy-on-select = true
-shell-integration-features = sudo
-keybind = global:ctrl+grave_accent=toggle_quick_terminal
-keybind = shift+enter=text:\n

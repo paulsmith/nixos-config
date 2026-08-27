@@ -1,0 +1,6 @@
+"\C-xP": print-last-kbd-macro
+"\e\C-f": dump-functions
+"\e\C-o": dabbrev-expand
+set colored-stats on
+set colored-completion-prefix on
+set keyseq-timeout 1200

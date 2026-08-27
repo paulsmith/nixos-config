@@ -1,0 +1,24 @@
+font-family = IosevkaTerm Nerd Font
+font-size = 15
+macos-option-as-alt = true
+window-step-resize = true
+copy-on-select = true
+shell-integration-features = sudo,ssh-env,ssh-terminfo
+#font-feature = -calt
+#font-feature = -liga
+#font-feature = -dlig
+#font-family = 0xProto
+theme = tokyonight
+command = /run/current-system/sw/bin/bash --login -i
+mouse-hide-while-typing = true
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
+keybind = shift+enter=text:\n
+keybind = alt+h=goto_split:left
+keybind = alt+j=goto_split:down
+keybind = alt+k=goto_split:up
+keybind = alt+l=goto_split:right
+macos-titlebar-style = tabs
+minimum-contrast = 1.1
+window-inherit-working-directory = false
+tab-inherit-working-directory = true
+split-inherit-working-directory = true

@@ -1,0 +1,11 @@
+.DS_Store
+.idea
+.envrc
+.direnv/
+**/.claude/settings.local.json
+._*
+.Spotlight-V100
+.Trashes
+*.swp
+*.swo
+*~
