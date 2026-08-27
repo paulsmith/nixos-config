@@ -1474,15 +1474,31 @@ Expected: all PASS. Building `andon` as well proves the `isVibium` split evaluat
 
 - [ ] **Step 6: Verify the split and the non-destructive setting**
 
+`homebrew.casks` evaluates to a list of **attribute sets**
+(`{name, brewfileLine, args, …}`), not strings — so `jq 'index("ghostty")'`
+returns `null` whether or not ghostty is declared. That check can never fail.
+Map to `.name` first:
+
 ```bash
 cd /etc/nix-darwin
+q() { nix eval ".#darwinConfigurations.$1.config.homebrew.casks" --json | jq -r "map(.name) | $2"; }
+
 nix eval .#darwinConfigurations.io.config.homebrew.onActivation.cleanup --raw
-nix eval .#darwinConfigurations.io.config.homebrew.casks --json | jq 'length'
-nix eval .#darwinConfigurations.andon.config.homebrew.casks --json | jq 'length'
-nix eval .#darwinConfigurations.io.config.homebrew.casks --json | jq 'index("ghostty")'
+q io 'length'
+q andon 'length'
+q io 'index("ghostty")'
+q io 'index("codex")'
+q io 'index("codex-app")'
+q andon 'index("discord")'
 ```
 
-Expected: `none`; io has 31 casks; andon has 18; `null` for ghostty on io.
+Expected: `none`; io 31 casks; andon 18; `null` for ghostty; a **number** for
+`codex`; `null` for `codex-app`; `null` for `discord` on andon (personal app,
+correctly withheld from the work machine).
+
+`codex` and `codex-app` are different products, not a rename — `codex-app` is
+OpenAI's discontinued desktop app (deprecated upstream, disabled 2027-07-12);
+`codex` is the terminal coding agent. Declare `codex`.
 
 - [ ] **Step 7: Switch and confirm nothing was uninstalled**
 
