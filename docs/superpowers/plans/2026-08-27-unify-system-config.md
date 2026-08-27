@@ -256,7 +256,7 @@ jj new
 Pure file movement. No behaviour change — nothing imports these yet.
 
 **Files:**
-- Create: `home/dotfiles/**` (38 files)
+- Create: `home/dotfiles/**` (37 files)
 - Create: `~/.hammerspoon/private.lua` (outside the repo, deliberately unversioned)
 - Modify: `home/dotfiles/hammerspoon/init.lua` (parameterize site-local values)
 - Delete: `common/users/ghostty` (stale orphan, unreferenced)
@@ -292,7 +292,6 @@ cp "$SRC/empty_dot_tmux.conf"                   "$DST/tmux.conf"
 cp "$SRC/private_dot_npmrc"                     "$DST/npmrc"
 
 cp "$SRC/dot_claude/CLAUDE.md"                  "$DST/claude/CLAUDE.md"
-cp "$SRC/dot_claude/settings.json"              "$DST/claude/settings.json"
 cp "$SRC/dot_claude/commands/.keep"             "$DST/claude/commands/.keep"
 
 cp "$SRC/dot_config/bat/config"                 "$DST/config/bat/config"
@@ -448,14 +447,13 @@ rm -r common
 ```bash
 cd /etc/nix-darwin
 echo -n "landed files: "; find home/dotfiles -type f | wc -l
-jq empty home/dotfiles/claude/settings.json && echo "claude settings VALID"
 jq empty home/dotfiles/config/karabiner/karabiner.json && echo "karabiner VALID"
 jq empty home/dotfiles/config/nvim/lazy-lock.json && echo "lazy-lock VALID"
 bash -n home/dotfiles/bashrc && echo "bashrc OK"
 bash -n home/dotfiles/bash_profile && echo "bash_profile OK"
 ```
 
-Expected: `landed files: 38`, and all five validations pass.
+Expected: `landed files: 37`, and all four validations pass.
 
 Then re-run the audit's mechanical scan against the landed tree, since this is
 the content that actually becomes public:
@@ -622,7 +620,6 @@ in {
       ".npmrc".source = dotfile "npmrc";
 
       ".claude/CLAUDE.md".source = dotfile "claude/CLAUDE.md";
-      ".claude/settings.json".source = dotfile "claude/settings.json";
 
       ".config/bat/config".source = dotfile "config/bat/config";
       ".config/fontconfig/fonts.conf".source = dotfile "config/fontconfig/fonts.conf";

@@ -67,7 +67,7 @@ instantly, where `darwin-rebuild switch` does not. The costs have accumulated:
     dotfiles/                  # plain files, live-edited
       bashrc  bash_profile  inputrc  sqliterc
       gitattributes  gitignore_global  npmrc  tmux.conf
-      claude/{CLAUDE.md,settings.json}
+      claude/CLAUDE.md           # settings.json deliberately unmanaged
       config/git/config-body
       config/jj/50-main.toml
       config/nvim/{init.lua,lua/plugins/*.lua}
@@ -174,6 +174,19 @@ and the rest of the user *account* record remain system-level.
 
 This also retires an existing duplication — `agent-home.nix` re-declares the
 same shell aliases that `dot_bashrc` already defines.
+
+### Deliberately unmanaged
+
+`~/.claude/settings.json` is **not** part of the dotfile set. Claude Code writes
+runtime state into it (survey timestamps, plugin toggles), so delivering it as a
+live symlink would churn the repo on every write and auto-publish any future
+runtime key into a public repository. It stays a plain local file per machine.
+`~/.claude/CLAUDE.md` remains managed — it is durable configuration.
+
+`~/.hammerspoon/private.lua` is also unmanaged by design: it holds the home WiFi
+SSID and tailnet exit-node hostname that the secret audit found hardcoded in
+`hammerspoon/init.lua`. The published config reads both from it and stays inert
+when it is absent.
 
 ### File naming
 
