@@ -257,6 +257,8 @@ Pure file movement. No behaviour change — nothing imports these yet.
 
 **Files:**
 - Create: `home/dotfiles/**` (38 files)
+- Create: `~/.hammerspoon/private.lua` (outside the repo, deliberately unversioned)
+- Modify: `home/dotfiles/hammerspoon/init.lua` (parameterize site-local values)
 - Delete: `common/users/ghostty` (stale orphan, unreferenced)
 
 **Interfaces:**
@@ -367,14 +369,81 @@ nix-darwin populates from `users.users.paul.shell = pkgs.bashInteractive`.
 Task 5 leaves that setting in the system config, so the path stays valid after
 user packages move to `~/.nix-profile`.
 
-- [ ] **Step 6: Delete the stale ghostty orphan**
+- [ ] **Step 6: Parameterize the Hammerspoon site-local values**
+
+The WiFi watcher in `hammerspoon/init.lua` hardcodes the home WiFi SSID and the
+Tailscale exit-node hostname. Both must leave the repo before it becomes public
+— an SSID is geolocatable through public wardriving databases.
+
+**Do not write either value into any file under `/etc/nix-darwin`, including
+this plan.** Move them, do not copy them.
+
+In `home/dotfiles/hammerspoon/init.lua`, replace the two assignment lines
+(currently `homeSSID = "…"` and `exitNode = "…"`) so the values come from an
+unversioned file, and make the callback inert when it is absent:
+
+```lua
+-- Site-local values live in ~/.hammerspoon/private.lua, which is deliberately
+-- not version controlled. Without it the WiFi watcher stays inactive.
+local ok, priv = pcall(require, "private")
+if not ok then
+	priv = {}
+end
+
+homeSSID = priv.homeSSID
+exitNode = priv.exitNode
+```
+
+Add a guard as the first statement inside `ssidChangedCallback`:
+
+```lua
+	if not homeSSID or not exitNode then
+		return
+	end
+```
+
+Leave the `tailscale` binary path as-is — a path to the Tailscale binary is not
+sensitive.
+
+Now create the unversioned file on this machine, moving the two original values
+out of the chezmoi source and into it:
+
+```bash
+cat > ~/.hammerspoon/private.lua <<'LUA'
+return {
+	homeSSID = "REPLACE_WITH_VALUE_FROM_CHEZMOI_SOURCE",
+	exitNode = "REPLACE_WITH_VALUE_FROM_CHEZMOI_SOURCE",
+}
+LUA
+```
+
+Then edit that file to carry the real values, read from
+`/Users/paul/.local/share/chezmoi/dot_hammerspoon/init.lua` lines 47 and 51.
+
+Verify the values are gone from the repo copy and present in the private file:
+
+```bash
+cd /etc/nix-darwin
+grep -nE '^(homeSSID|exitNode) = "' home/dotfiles/hammerspoon/init.lua \
+  && echo "STILL HARDCODED - FAIL" || echo "PARAMETERIZED - PASS"
+lua -e 'local p = dofile(os.getenv("HOME").."/.hammerspoon/private.lua"); assert(p.homeSSID and p.exitNode); print("private.lua OK")' \
+  2>/dev/null || grep -c 'homeSSID' ~/.hammerspoon/private.lua
+```
+
+Expected: `PARAMETERIZED - PASS`, and the private file contains both keys.
+
+This creates a per-machine manual step: `oberon` and `andon` each need their own
+`~/.hammerspoon/private.lua`. Task 9 covers it for `oberon`; the `andon`
+checklist must include it.
+
+- [ ] **Step 7: Delete the stale ghostty orphan**
 
 ```bash
 cd /etc/nix-darwin
 rm -r common
 ```
 
-- [ ] **Step 7: Verify the landed tree**
+- [ ] **Step 8: Verify the landed tree**
 
 ```bash
 cd /etc/nix-darwin
@@ -388,7 +457,21 @@ bash -n home/dotfiles/bash_profile && echo "bash_profile OK"
 
 Expected: `landed files: 38`, and all five validations pass.
 
-- [ ] **Step 8: Commit**
+Then re-run the audit's mechanical scan against the landed tree, since this is
+the content that actually becomes public:
+
+```bash
+cd /etc/nix-darwin
+grep -rniE 'password|secret|api[_-]?key|token|BEGIN [A-Z ]*PRIVATE KEY|ghp_|AKIA[0-9A-Z]{16}' home/dotfiles/ \
+  || echo "NO MECHANICAL HITS"
+grep -rnE '^\s*(homeSSID|exitNode)\s*=\s*"' home/dotfiles/ \
+  && echo "SITE-LOCAL VALUE LEAKED - FAIL" || echo "NO SITE-LOCAL VALUES - PASS"
+```
+
+Expected: the two known-benign hits from the audit only, and
+`NO SITE-LOCAL VALUES - PASS`.
+
+- [ ] **Step 9: Commit**
 
 ```bash
 cd /etc/nix-darwin
@@ -1596,6 +1679,23 @@ jj new main
 ```bash
 mv ~/.config/jj/config.toml ~/.config/jj/config.toml.pre-hm
 ```
+
+- [ ] **Step 4b: Recreate the Hammerspoon private file**
+
+`~/.hammerspoon/private.lua` is deliberately not in the repo, so it does not
+arrive with the checkout. Without it the WiFi watcher stays inert — no error,
+just no exit-node switching. Copy the same two keys used on `io`:
+
+```bash
+cat > ~/.hammerspoon/private.lua <<'LUA'
+return {
+	homeSSID = "REPLACE",
+	exitNode = "REPLACE",
+}
+LUA
+```
+
+Fill in the real values by hand. Do not transfer this file through the repo.
 
 - [ ] **Step 5: Activate home, then system**
 
