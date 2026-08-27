@@ -1680,7 +1680,7 @@ jj new main
 mv ~/.config/jj/config.toml ~/.config/jj/config.toml.pre-hm
 ```
 
-- [ ] **Step 4b: Recreate the Hammerspoon private file**
+- [ ] **Step 5: Recreate the Hammerspoon private file**
 
 `~/.hammerspoon/private.lua` is deliberately not in the repo, so it does not
 arrive with the checkout. Without it the WiFi watcher stays inert — no error,
@@ -1697,7 +1697,7 @@ LUA
 
 Fill in the real values by hand. Do not transfer this file through the repo.
 
-- [ ] **Step 5: Activate home, then system**
+- [ ] **Step 6: Activate home, then system**
 
 ```bash
 cd /etc/nix-darwin
@@ -1705,7 +1705,7 @@ make home
 sudo darwin-rebuild switch --flake ".#$(hostname)"
 ```
 
-- [ ] **Step 6: Verify identity, liveness and packages**
+- [ ] **Step 7: Verify identity, liveness and packages**
 
 ```bash
 readlink ~/.bashrc
@@ -1717,7 +1717,7 @@ brew list --cask | head
 
 Expected on `oberon`: `paulsmith@pobox.com`. Expected on `andon`: `paul@vibium.com`, and a cask list without the personal apps.
 
-- [ ] **Step 7: Confirm nothing was uninstalled on either machine**
+- [ ] **Step 8: Confirm nothing was uninstalled on either machine**
 
 ```bash
 brew list --cask > /tmp/casks-after.txt
