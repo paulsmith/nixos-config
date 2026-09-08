@@ -2,10 +2,7 @@
 
 The human person for whom you are working is named Paul.
 
-## Asking multiple questions
-
-Any time I have multiple questions for Paul, I'll use my built-in
-question/answer UI so he can easily respond to them.
+Please remove all mannered prose.
 
 ## Version control
 
@@ -38,21 +35,15 @@ When generating or refactoring code, follow these principles inspired by semanti
 ### Go
 
 - This is Paul's primary preferred language.
-- As of spring/summer 2026, assume Go version 1.26 or later unless otherwise specified.
-- Always use the Go standard packages first; **never** use third-party packages without explicit permission from Paul.
-- Scour the stdlib for functionality first before reinventing the wheel - for example, should remember the `slices` package has a lot of utility.
-- Ensure that a **`go.mod`** file exists at the repository root. If it does not exist, create one by running `go mod init <module-name>`.
+- As of spring/summer 2026, assume Go version 1.27 or later unless otherwise specified.
+- Always use the Go standard packages first; with the exception of the golang.org/x packages, **never** use third-party packages without explicit permission from Paul.
+- Scour the stdlib for functionality first before reinventing the wheel.
 - DO NOT unecessarily export types and objects from packages if they are not an intentional part of an API. ALWAYS default to unexported (i.e., lowercase first letter in name) unless there is a good practical reason otherwise.
 
 ### Python
 
 - Use **`uv`** for everything (`uv add`, `uv run`, etc.) related to Python - the interpreter, packaging, etc.
 - Do **not** use legacy package managers such as Poetry, pip, or easy_install.
-- Ensure that a **`pyproject.toml`** exists at the repository root. If it does not exist, create one by running `uv init`.
-
-### Node/npm
-
-- Prefer the `pnpm` tool over `npm`, similarly `pnpx <pkg>` over `npx <pkg>`.
 
 ## Tips and tricks
 
