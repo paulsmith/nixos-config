@@ -196,6 +196,7 @@ alias view='nvim -R'
 alias vim=nvim
 alias vimdiff='nvim -d'
 alias claude-yolo="claude --dangerously-skip-permissions"
+alias ozs="ssh oberon ~/.local/bin/zmx list --short" # oberon zmx sessions
 
 eval "$(direnv hook bash)"
 
