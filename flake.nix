@@ -52,6 +52,7 @@
       inputs.go-overlay.overlays.default
       inputs.herdr.overlays.default
       inputs.jj.overlays.default
+      (import ./overlays/d2.nix)
     ];
 
     mkSystem = import ./lib/mksystem.nix {

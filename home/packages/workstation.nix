@@ -19,6 +19,7 @@ in {
       clang-tools # clang-format, clangd
       cmake
       coreutils-prefixed
+      d2
       difftastic
       direnv
       dtach
