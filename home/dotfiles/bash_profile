@@ -1,4 +1,5 @@
 export PATH="$HOME/.local/bin:$HOME/go/bin:/opt/homebrew/bin:$HOME/.cargo/bin:$PATH"
+export HOMEBREW_NO_AUTO_UPDATE=1
 [ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
 
 # Added by LM Studio CLI (lms)

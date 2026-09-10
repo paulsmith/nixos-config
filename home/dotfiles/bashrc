@@ -219,3 +219,6 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 # pnpm end
+
+# Optional per-machine extras; absent on hosts that do not use them.
+[ -f ~/.config/bash/diskspace.sh ] && . ~/.config/bash/diskspace.sh
