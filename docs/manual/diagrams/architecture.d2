@@ -1,0 +1,56 @@
+direction: right
+
+flake: flake.nix {
+  style.fill: "#eef0fb"
+  style.stroke: "#4c5fd7"
+  style.stroke-width: 2
+  style.font-color: "#1f2430"
+  style.border-radius: 4
+}
+
+sys: "System\n(needs sudo)" {
+  style.fill: "#f6f7fa"
+  style.stroke: "#4c5fd7"
+  style.font-color: "#1f2430"
+  style.border-radius: 4
+
+  darwin: darwinConfigurations {
+    style.fill: "#ffffff"
+    style.stroke: "#8891a8"
+    style.font-color: "#1f2430"
+  }
+  mods: "modules/darwin/*\nmodules/packages/core.nix" {
+    style.fill: "#ffffff"
+    style.stroke: "#8891a8"
+    style.font-color: "#4a5262"
+  }
+  darwin -> mods: imports {style.stroke: "#8891a8"; style.font-color: "#4a5262"}
+}
+
+home: "User\n(no sudo)" {
+  style.fill: "#fdf4e8"
+  style.stroke: "#b4650f"
+  style.font-color: "#1f2430"
+  style.border-radius: 4
+
+  hc: homeConfigurations {
+    style.fill: "#ffffff"
+    style.stroke: "#c98b3a"
+    style.font-color: "#1f2430"
+  }
+  hm: "home/common.nix\nhome/packages/*" {
+    style.fill: "#ffffff"
+    style.stroke: "#c98b3a"
+    style.font-color: "#4a5262"
+  }
+  df: "home/dotfiles/*" {
+    style.fill: "#ffffff"
+    style.stroke: "#c98b3a"
+    style.font-color: "#4a5262"
+  }
+  hc -> hm: imports {style.stroke: "#c98b3a"; style.font-color: "#4a5262"}
+  hm -> df: delivers {style.stroke: "#c98b3a"; style.font-color: "#4a5262"}
+}
+
+flake -> sys: "darwin-rebuild switch" {style.stroke: "#4c5fd7"; style.font-color: "#3a49ad"}
+flake -> home: "home-manager switch" {style.stroke: "#b4650f"; style.font-color: "#8f4f0c"}

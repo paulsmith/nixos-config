@@ -1,0 +1,52 @@
+direction: down
+
+q: "What did you change?" {
+  shape: diamond
+  style.fill: "#ffffff"
+  style.stroke: "#1f2430"
+  style.stroke-width: 2
+  style.font-color: "#1f2430"
+}
+
+body: "The BODY of a dotfile\nalready managed" {
+  style.fill: "#fdf4e8"
+  style.stroke: "#b4650f"
+  style.font-color: "#1f2430"
+}
+nothing: "Nothing. It is already live.\nJust commit it." {
+  style.fill: "#ffffff"
+  style.stroke: "#b4650f"
+  style.font-color: "#8f4f0c"
+  style.stroke-width: 2
+}
+
+user: "A package, or ADDING\na new dotfile" {
+  style.fill: "#fdf4e8"
+  style.stroke: "#b4650f"
+  style.font-color: "#1f2430"
+}
+mh: "make home\n(no sudo, seconds)" {
+  style.fill: "#ffffff"
+  style.stroke: "#b4650f"
+  style.font-color: "#8f4f0c"
+  style.stroke-width: 2
+}
+
+system: "Homebrew, macOS defaults,\nlaunchd, networking" {
+  style.fill: "#eef0fb"
+  style.stroke: "#4c5fd7"
+  style.font-color: "#1f2430"
+}
+mk: "make\n(sudo, slow)" {
+  style.fill: "#ffffff"
+  style.stroke: "#4c5fd7"
+  style.font-color: "#3a49ad"
+  style.stroke-width: 2
+}
+
+q -> body { style.stroke: "#b4650f" }
+q -> user { style.stroke: "#b4650f" }
+q -> system { style.stroke: "#4c5fd7" }
+body -> nothing { style.stroke: "#b4650f" }
+user -> mh { style.stroke: "#b4650f" }
+system -> mk { style.stroke: "#4c5fd7" }

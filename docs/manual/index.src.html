@@ -1,0 +1,595 @@
+<title>The Nix-Darwin Handbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap">
+
+<style>
+:root {
+  --paper:      #fbfcfd;
+  --paper-sunk: #f2f4f7;
+  --card:       #ffffff;
+  --ink:        #14181f;
+  --slate:      #5b6675;
+  --rule:       #dfe3ea;
+  --store:      #4c5fd7;
+  --store-soft: #eef0fb;
+  --live:       #a35c0d;
+  --live-soft:  #fdf3e6;
+  --shadow:     0 1px 2px rgba(20,24,31,.05), 0 8px 24px rgba(20,24,31,.05);
+
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+
+  --measure: 68ch;
+  --step-0: 1.0625rem;
+  --step-1: 1.3rem;
+  --step-2: 1.6rem;
+  --step-3: 2.1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #0e1116;
+    --paper-sunk: #141922;
+    --card:       #161b24;
+    --ink:        #e9edf4;
+    --slate:      #9aa5b5;
+    --rule:       #262d39;
+    --store:      #8fa0f8;
+    --store-soft: #1b2133;
+    --live:       #e0a05a;
+    --live-soft:  #241c11;
+    --shadow:     0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:      #0e1116;
+  --paper-sunk: #141922;
+  --card:       #161b24;
+  --ink:        #e9edf4;
+  --slate:      #9aa5b5;
+  --rule:       #262d39;
+  --store:      #8fa0f8;
+  --store-soft: #1b2133;
+  --live:       #e0a05a;
+  --live-soft:  #241c11;
+  --shadow:     0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: var(--step-0);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
+}
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  border-bottom: 1px solid var(--rule);
+  padding: clamp(3rem, 8vw, 5.5rem) 0 clamp(2rem, 4vw, 3rem);
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin: 0 0 1.25rem;
+}
+.masthead h1 {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: clamp(2rem, 5.5vw, var(--step-3));
+  line-height: 1.15;
+  letter-spacing: -.02em;
+  margin: 0 0 1rem;
+  text-wrap: balance;
+}
+.standfirst {
+  max-width: 56ch;
+  font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+  color: var(--slate);
+  margin: 0;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.75rem;
+  margin-top: 2rem;
+  font-family: var(--mono);
+  font-size: .8rem;
+  color: var(--slate);
+}
+.meta b { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+/* ---------- layout ---------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  padding: clamp(2.5rem, 5vw, 4rem) 0 6rem;
+}
+@media (min-width: 1000px) {
+  .shell { grid-template-columns: 210px minmax(0, 1fr); gap: 4rem; }
+  .rail { display: block; }
+}
+
+.rail { display: none; }
+.rail-inner { position: sticky; top: 2rem; }
+.rail p {
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin: 0 0 .9rem;
+}
+.rail ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .1rem; counter-reset: r; }
+.rail a {
+  display: flex;
+  gap: .6rem;
+  font-family: var(--mono);
+  font-size: .78rem;
+  line-height: 1.45;
+  color: var(--slate);
+  text-decoration: none;
+  padding: .3rem .5rem .3rem 0;
+  border-radius: 3px;
+}
+.rail a::before {
+  counter-increment: r;
+  content: counter(r);
+  color: var(--rule);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+.rail a:hover { color: var(--ink); }
+.rail a:focus-visible { outline: 2px solid var(--store); outline-offset: 2px; }
+
+article { min-width: 0; max-width: var(--measure); }
+article > * { max-width: var(--measure); }
+
+/* ---------- sections ---------- */
+
+section { padding-top: 1rem; margin-bottom: 4.5rem; scroll-margin-top: 1.5rem; }
+
+h2 {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: var(--step-2);
+  letter-spacing: -.015em;
+  line-height: 1.25;
+  margin: 0 0 1.5rem;
+  padding-bottom: .9rem;
+  border-bottom: 1px solid var(--rule);
+  text-wrap: balance;
+}
+h2 .n {
+  color: var(--slate);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  margin-right: .7rem;
+}
+h3 {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: var(--step-1);
+  letter-spacing: -.01em;
+  margin: 2.5rem 0 .75rem;
+  text-wrap: balance;
+}
+p { margin: 0 0 1.1rem; }
+strong { font-weight: 600; }
+
+blockquote {
+  margin: 1.75rem 0;
+  padding: 1.1rem 1.5rem;
+  border-left: 2px solid var(--ink);
+  background: var(--paper-sunk);
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+blockquote p { margin: 0; }
+
+ul, ol { margin: 0 0 1.1rem; padding-left: 1.3rem; }
+li { margin-bottom: .4rem; }
+li::marker { color: var(--slate); }
+
+a { color: var(--store); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--store); outline-offset: 2px; border-radius: 2px; }
+
+code {
+  font-family: var(--mono);
+  font-size: .88em;
+  background: var(--paper-sunk);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: .08em .34em;
+}
+pre {
+  font-family: var(--mono);
+  font-size: .84rem;
+  line-height: 1.65;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  margin: 0 0 1.4rem;
+  box-shadow: var(--shadow);
+}
+pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+.c { color: var(--slate); }
+
+/* ---------- tables ---------- */
+
+.tbl { overflow-x: auto; margin: 0 0 1.6rem; }
+table { border-collapse: collapse; width: 100%; font-size: .93rem; }
+th, td {
+  text-align: left;
+  padding: .6rem .9rem .6rem 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+th {
+  font-family: var(--mono);
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--slate);
+  border-bottom-color: var(--ink);
+  white-space: nowrap;
+}
+td code { white-space: nowrap; }
+
+/* ---------- tier callouts: the two semantic accents ---------- */
+
+.tier {
+  border: 1px solid var(--rule);
+  border-left-width: 3px;
+  border-radius: 0 6px 6px 0;
+  padding: 1.1rem 1.35rem;
+  margin: 0 0 1.3rem;
+  background: var(--card);
+}
+.tier .label {
+  font-family: var(--mono);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: .5rem;
+}
+.tier p:last-child { margin-bottom: 0; }
+.tier.live { border-left-color: var(--live); background: var(--live-soft); }
+.tier.live .label { color: var(--live); }
+.tier.store { border-left-color: var(--store); background: var(--store-soft); }
+.tier.store .label { color: var(--store); }
+
+/* ---------- figures break the measure ---------- */
+
+figure {
+  margin: 2rem 0 2.25rem;
+  max-width: none;
+  width: min(100%, 1000px);
+}
+.fig-frame {
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--card);
+  padding: 1.25rem;
+  overflow-x: auto;
+  box-shadow: var(--shadow);
+}
+.fig-frame img { display: block; width: 100%; height: auto; min-width: 460px; }
+figcaption {
+  font-family: var(--mono);
+  font-size: .74rem;
+  letter-spacing: .04em;
+  color: var(--slate);
+  margin-top: .8rem;
+}
+
+/* light/dark diagram swap, correct in all three theme states */
+.d-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .d-light { display: none; }
+  :root:not([data-theme="light"]) .d-dark  { display: block; }
+}
+:root[data-theme="dark"] .d-light { display: none; }
+:root[data-theme="dark"] .d-dark  { display: block; }
+:root[data-theme="light"] .d-light { display: block; }
+:root[data-theme="light"] .d-dark  { display: none; }
+
+/* ---------- closing ---------- */
+
+.close {
+  border-top: 1px solid var(--rule);
+  margin-top: 1rem;
+  padding: 2.5rem 0 4rem;
+  font-family: var(--mono);
+  font-size: .8rem;
+  color: var(--slate);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">Machine configuration &middot; /etc/nix-darwin</p>
+    <h1>The Nix-Darwin Handbook</h1>
+    <p class="standfirst">Every Mac and VM here is configured from one repository. This explains how it fits together, and which command to run when you change something.</p>
+    <div class="meta">
+      <span>Hosts <b>3 Macs, 2 VMs</b></span>
+      <span>Dotfiles <b>37</b></span>
+      <span>User packages <b>72</b></span>
+      <span>Assumes <b>no Nix experience</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap shell">
+  <nav class="rail" aria-label="Sections">
+    <div class="rail-inner">
+      <p>Contents</p>
+      <ol>
+        <li><a href="#s1">What this repo is</a></li>
+        <li><a href="#s2">Five things about Nix</a></li>
+        <li><a href="#s3">The machines</a></li>
+        <li><a href="#s4">Repo layout</a></li>
+        <li><a href="#s5">Two-tier dotfiles</a></li>
+        <li><a href="#s6">Which command</a></li>
+        <li><a href="#s7">Cookbook</a></li>
+        <li><a href="#s8">Rules that bite</a></li>
+        <li><a href="#s9">Troubleshooting</a></li>
+        <li><a href="#s10">Glossary</a></li>
+        <li><a href="#s11">Your first day</a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <article>
+
+    <section id="s1">
+      <h2><span class="n">01</span>What this repo is</h2>
+      <p>Every Mac and VM here is configured from this one repository. Installed packages, shell config, editor config, macOS settings, Homebrew apps &mdash; all of it is declared in files you can read, and applied by running a command.</p>
+      <p>The idea that makes Nix different from a pile of shell scripts:</p>
+      <blockquote><p>You describe the state you want. Nix works out how to get there.</p></blockquote>
+      <p>You never run <code>install this</code> or <code>set that</code>. You edit a file that says what should be true, then apply it. Delete the line and the thing goes away. Two machines reading the same files end up the same.</p>
+      <p>The practical payoff is that a broken change is <strong>undoable</strong>. Every apply creates a numbered generation, and the previous one is still on disk.</p>
+    </section>
+
+    <section id="s2">
+      <h2><span class="n">02</span>Five things to know about Nix</h2>
+      <p>You can be productive here without understanding Nix deeply. You do need these five.</p>
+      <h3>The store</h3>
+      <p>Everything Nix installs lives in <code>/nix/store</code> under a path like <code>/nix/store/vaxpw6gg…-bashrc</code>. That hash covers every input that produced it &mdash; change an input, get a different path. Store paths are read-only, always.</p>
+      <h3>Profiles are symlink farms</h3>
+      <p><code>~/.nix-profile/bin/bat</code> is a symlink into the store. &ldquo;Installing&rdquo; means building a new profile and repointing one symlink, which is why it's atomic and instant.</p>
+      <h3>Generations</h3>
+      <p>Each apply creates a new generation and keeps the old one. Rollback repoints a symlink rather than reinstalling anything.</p>
+      <h3>Flakes</h3>
+      <p><code>flake.nix</code> is the entry point; <code>flake.lock</code> pins the exact version of every input. The lock file is what makes a build reproducible, and why you must commit it.</p>
+      <h3>Derivations</h3>
+      <p>A build recipe. <code>nix eval</code> checks the recipe is well-formed; only <code>nix build</code> runs it. This distinction matters more than it looks: <strong>evaluation passing does not mean the thing builds.</strong></p>
+    </section>
+
+    <section id="s3">
+      <h2><span class="n">03</span>The machines</h2>
+      <figure>
+        <div class="fig-frame">
+          <img class="d-light" src="__HOSTS_LIGHT__" alt="One repository feeding three Macs and two Linux VMs">
+          <img class="d-dark" src="__HOSTS_DARK__" alt="One repository feeding three Macs and two Linux VMs">
+        </div>
+        <figcaption>One repository, five machines. Macs get both tiers; VMs are built through oberon.</figcaption>
+      </figure>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Host</th><th>What it is</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>io</code></td><td>Paul's laptop</td><td>Primary machine</td></tr>
+            <tr><td><code>oberon</code></td><td>Mac Studio</td><td>Also hosts the Linux builder for the VMs</td></tr>
+            <tr><td><code>andon</code></td><td>Work laptop</td><td><code>isVibium = true</code> &mdash; smaller app list</td></tr>
+            <tr><td><code>nixos-vm</code><br><code>agent-vm</code></td><td>Linux VMs</td><td>Built through <code>oberon</code>, not natively</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><code>andon</code> is the reason for the <code>isVibium</code> flag throughout the Nix files. Work machines don't get GarageBand and Steam Link. That's the only per-host divergence of any size &mdash; 30 casks on <code>io</code>, 18 on <code>andon</code>.</p>
+    </section>
+
+    <section id="s4">
+      <h2><span class="n">04</span>How the repo is laid out</h2>
+      <figure>
+        <div class="fig-frame">
+          <img class="d-light" src="__ARCH_LIGHT__" alt="flake.nix feeding a system tier requiring sudo and a user tier that does not">
+          <img class="d-dark" src="__ARCH_DARK__" alt="flake.nix feeding a system tier requiring sudo and a user tier that does not">
+        </div>
+        <figcaption>One entry point, two tiers. The sudo boundary is the important line.</figcaption>
+      </figure>
+      <pre><code>flake.nix              <span class="c">entry point; declares hosts and inputs</span>
+flake.lock             <span class="c">pinned input versions — always commit it</span>
+lib/
+  mksystem.nix         <span class="c">builds a darwinConfiguration (system tier)</span>
+  mkhome.nix           <span class="c">builds a homeConfiguration (user tier)</span>
+hosts/&lt;name&gt;/          <span class="c">per-machine system settings</span>
+modules/
+  darwin/              <span class="c">macOS system: homebrew.nix, runit.nix, common.nix</span>
+  packages/core.nix    <span class="c">system packages (root needs these)</span>
+home/
+  common.nix           <span class="c">user config shared by every host</span>
+  darwin.nix           <span class="c">macOS-only user config</span>
+  linux.nix            <span class="c">VM-only user config</span>
+  hosts/&lt;name&gt;.nix     <span class="c">per-machine user config</span>
+  packages/            <span class="c">user packages</span>
+  dotfiles/            <span class="c">37 plain files: bashrc, nvim, git, jj, ghostty…</span>
+overlays/              <span class="c">custom package definitions (e.g. d2)</span></code></pre>
+      <p>The split that matters: <strong><code>modules/</code> is the system tier, <code>home/</code> is the user tier.</strong> Everything else follows from that.</p>
+    </section>
+
+    <section id="s5">
+      <h2><span class="n">05</span>The two-tier dotfile system</h2>
+      <p>This is the genuinely unusual part of the setup. Read it twice.</p>
+      <p>Dotfiles live once, in <code>home/dotfiles/</code>. They are delivered two different ways depending on the machine.</p>
+      <figure>
+        <div class="fig-frame">
+          <img class="d-light" src="__TIERS_LIGHT__" alt="One source file delivered as a live symlink on macOS and a read-only store copy on Linux">
+          <img class="d-dark" src="__TIERS_DARK__" alt="One source file delivered as a live symlink on macOS and a read-only store copy on Linux">
+        </div>
+        <figcaption>Same source file, two delivery modes, selected by deliveryMode in the Nix code.</figcaption>
+      </figure>
+      <div class="tier live">
+        <span class="label">Live tier &middot; macOS</span>
+        <p><code>~/.bashrc</code> is a <em>symlink</em> back into the repo. Edit the file and it's live in the next shell &mdash; no rebuild, no command. This is deliberate; it's the whole reason the setup is arranged this way.</p>
+      </div>
+      <div class="tier store">
+        <span class="label">Store tier &middot; Linux VMs</span>
+        <p>The same file is <em>copied into the store</em> and is read-only. The VM has no checkout of this repo, so a symlink would dangle.</p>
+      </div>
+      <h3>The exception: generated files</h3>
+      <p>A few files aren't delivered whole, because part of them differs per machine. Git and jj identity are the examples &mdash; <code>andon</code> uses a work email.</p>
+      <p>For those, Nix generates a small file with the per-host part and layers it over the editable body:</p>
+      <ul>
+        <li><code>~/.config/git/config</code> &mdash; Nix writes the <code>[user]</code> block, then <code>[include]</code>s <code>config-body</code>, which you edit freely</li>
+        <li><code>~/.config/jj/conf.d/00-identity.toml</code> &mdash; Nix writes it; <code>50-main.toml</code> is the editable body</li>
+      </ul>
+      <p><strong>The identity is generated; the body is live.</strong> Change the body freely. Changing identity means editing Nix and re-applying.</p>
+    </section>
+
+    <section id="s6">
+      <h2><span class="n">06</span>Which command applies my change</h2>
+      <p>Two commands. Picking the wrong one wastes time but breaks nothing.</p>
+      <figure>
+        <div class="fig-frame">
+          <img class="d-light" src="__ACT_LIGHT__" alt="Decision tree from what you changed to which command to run">
+          <img class="d-dark" src="__ACT_DARK__" alt="Decision tree from what you changed to which command to run">
+        </div>
+        <figcaption>Most changes need no command at all.</figcaption>
+      </figure>
+      <pre><code>make home    <span class="c"># user tier: packages + dotfiles. No sudo. Seconds.</span>
+make         <span class="c"># system tier: Homebrew, macOS defaults, launchd. Sudo. Slow.</span></code></pre>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>You changed</th><th>Run</th></tr></thead>
+          <tbody>
+            <tr><td>Body of a managed dotfile</td><td>nothing &mdash; commit it</td></tr>
+            <tr><td>A package in <code>home/packages/</code></td><td><code>make home</code></td></tr>
+            <tr><td>Added a <em>new</em> dotfile</td><td><code>make home</code></td></tr>
+            <tr><td>Anything in <code>modules/</code> or <code>hosts/</code></td><td><code>make</code></td></tr>
+            <tr><td>Homebrew apps</td><td><code>make</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><code>make home</code> is safe to run whenever you're unsure. It's idempotent and needs no sudo.</p>
+    </section>
+
+    <section id="s7">
+      <h2><span class="n">07</span>Cookbook</h2>
+      <h3>Add a command-line tool</h3>
+      <pre><code><span class="c"># 1. find the attribute name</span>
+nix search nixpkgs ripgrep
+<span class="c"># 2. add it to the list in home/packages/workstation.nix</span>
+<span class="c"># 3. apply</span>
+make home</code></pre>
+      <h3>Change your shell config</h3>
+      <pre><code>$EDITOR /etc/nix-darwin/home/dotfiles/bashrc
+<span class="c"># already live in a new shell — nothing to run</span></code></pre>
+      <h3>Add a Mac app</h3>
+      <pre><code><span class="c"># add the cask to modules/darwin/homebrew.nix, then</span>
+make</code></pre>
+      <h3>Check a change before applying</h3>
+      <pre><code>nix flake check --no-build          <span class="c"># evaluates everything</span>
+darwin-rebuild build --flake .#io   <span class="c"># builds, doesn't apply</span></code></pre>
+      <h3>Undo</h3>
+      <pre><code>home-manager generations            <span class="c"># list, then run the shown path + /activate</span>
+sudo darwin-rebuild --rollback      <span class="c"># system tier</span></code></pre>
+    </section>
+
+    <section id="s8">
+      <h2><span class="n">08</span>Rules that will bite you</h2>
+      <h3>Use jj, never git</h3>
+      <p>This repo is managed with Jujutsu. <code>jj describe -m</code>, <code>jj new</code>, <code>jj log</code>. Always pass <code>-m</code> &mdash; jj opens an editor otherwise. <code>jj git push</code> and <code>jj git fetch</code> are fine; those are the interop layer.</p>
+      <h3>Always <code>--no-build</code> on flake check</h3>
+      <p>Bare <code>nix flake check</code> tries to <em>build</em> the Linux VM configurations, which needs a builder that isn't always reachable. It will fail for reasons unrelated to your change.</p>
+      <h3>Never <code>nix profile install</code></h3>
+      <p>It puts a package in the same profile Home Manager manages, and the next <code>make home</code> fails with a collision. Add it to <code>home/packages/</code> instead. The profile should stay empty.</p>
+      <h3>sudo needs Touch ID</h3>
+      <p>So <code>make</code> can't run unattended, and can't run over SSH.</p>
+      <h3>Homebrew never uninstalls</h3>
+      <p><code>cleanup = "none"</code> is set deliberately. Removing a cask from the Nix file stops it being <em>managed</em>; it does not remove it from the machine. Uninstall by hand if you mean it.</p>
+    </section>
+
+    <section id="s9">
+      <h2><span class="n">09</span>Troubleshooting</h2>
+      <h3><code>No such file or directory</code> for a tool that exists</h3>
+      <p>Stale path cached by your shell after a switch moved things. Run <code>hash -r</code>, or open a new shell.</p>
+      <h3><code>make home</code> &rarr; <code>home-manager: command not found</code></h3>
+      <p>The CLI comes from the profile it installs, so a first-time or post-failure run has to bootstrap:</p>
+      <pre><code>nix run home-manager -- switch --flake ".#paul@$(hostname)" -b hm-bak</code></pre>
+      <h3>&ldquo;Existing file is in the way&rdquo;</h3>
+      <p>Home Manager won't clobber a file it doesn't manage. <code>-b hm-bak</code> moves it aside as <code>&lt;name&gt;.hm-bak</code>. The <code>make home</code> target already passes this.</p>
+      <h3><code>brew bundle</code> fails partway</h3>
+      <p>Homebrew runs <em>last</em> in a system switch, so everything else already succeeded &mdash; the system is correctly configured and only Homebrew is incomplete. Re-run <code>make</code>; <code>brew bundle</code> is idempotent. A disabled or renamed cask needs fixing in <code>modules/darwin/homebrew.nix</code>.</p>
+      <h3>A build takes 15 minutes instead of 3 seconds</h3>
+      <p>A flake input moved and something is compiling from source &mdash; usually <code>jj</code>, which tracks its main branch. Expected after <code>make update</code>, not a fault.</p>
+    </section>
+
+    <section id="s10">
+      <h2><span class="n">10</span>Glossary</h2>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><strong>derivation</strong></td><td>A build recipe. Evaluating one is not the same as building it.</td></tr>
+            <tr><td><strong>store path</strong></td><td><code>/nix/store/&lt;hash&gt;-&lt;name&gt;</code>, read-only, content-addressed.</td></tr>
+            <tr><td><strong>profile</strong></td><td>A symlink farm of installed packages.</td></tr>
+            <tr><td><strong>generation</strong></td><td>One numbered version of a profile. The rollback target.</td></tr>
+            <tr><td><strong>flake</strong></td><td>A pinned, reproducible project definition.</td></tr>
+            <tr><td><strong>overlay</strong></td><td>A patch to the package set &mdash; adds or modifies a package.</td></tr>
+            <tr><td><strong>module</strong></td><td>A file contributing options to a configuration.</td></tr>
+            <tr><td><strong>darwinConfiguration</strong></td><td>The system tier for a Mac. Needs sudo.</td></tr>
+            <tr><td><strong>homeConfiguration</strong></td><td>The user tier. No sudo.</td></tr>
+            <tr><td><code>isVibium</code></td><td>Flag marking the work machine, gating personal apps.</td></tr>
+            <tr><td><code>deliveryMode</code></td><td><code>"symlink"</code> (Mac, live) or <code>"store"</code> (VM, frozen).</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s11">
+      <h2><span class="n">11</span>Your first day</h2>
+      <ol>
+        <li><code>cd /etc/nix-darwin &amp;&amp; ls</code> &mdash; read <code>flake.nix</code> top to bottom. It's short.</li>
+        <li>Open <code>home/packages/workstation.nix</code>. That's what's installed for the user.</li>
+        <li>Add a tool you like, run <code>make home</code>, confirm it's on <code>PATH</code>.</li>
+        <li>Edit <code>home/dotfiles/bashrc</code>, open a new shell, watch it already be there.</li>
+        <li>Commit both with <code>jj describe -m "..."</code> then <code>jj new</code>.</li>
+      </ol>
+      <p>If you understand why steps 3 and 4 need different amounts of work, you understand this repo.</p>
+    </section>
+
+  </article>
+</div>
+
+<footer class="close">
+  <div class="wrap">Source: <code>/etc/nix-darwin/docs/manual/</code> &middot; diagrams built with <code>d2</code> &middot; regenerate with <code>make -C docs/manual</code></div>
+</footer>

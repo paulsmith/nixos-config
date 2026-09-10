@@ -1,0 +1,47 @@
+direction: right
+
+src: "home/dotfiles/bashrc\n(one source file)" {
+  style.fill: "#12151d"
+  style.stroke: "#e7eaf2"
+  style.stroke-width: 2
+  style.font-color: "#e7eaf2"
+}
+
+mac: "macOS workstation" {
+  style.fill: "#2a2013"
+  style.stroke: "#e0a05a"
+  style.font-color: "#e7eaf2"
+
+  sym: "~/.bashrc\nSYMLINK -> the repo" {
+    style.fill: "#12151d"
+    style.stroke: "#d9a469"
+    style.font-color: "#e7eaf2"
+  }
+  edit: "Edit it. Live immediately.\nNo rebuild." {
+    style.fill: "#12151d"
+    style.stroke: "#d9a469"
+    style.font-color: "#eab887"
+  }
+  sym -> edit { style.stroke: "#d9a469" }
+}
+
+vm: "Linux VM" {
+  style.fill: "#1b2133"
+  style.stroke: "#8fa0f8"
+  style.font-color: "#e7eaf2"
+
+  copy: "~/.bashrc\nCOPY in /nix/store" {
+    style.fill: "#12151d"
+    style.stroke: "#7b859c"
+    style.font-color: "#e7eaf2"
+  }
+  frozen: "Read-only.\nNo checkout needed." {
+    style.fill: "#12151d"
+    style.stroke: "#7b859c"
+    style.font-color: "#a6b3fa"
+  }
+  copy -> frozen { style.stroke: "#7b859c" }
+}
+
+src -> mac: "deliveryMode =\n\"symlink\"" { style.stroke: "#e0a05a"; style.font-color: "#eab887" }
+src -> vm: "deliveryMode =\n\"store\"" { style.stroke: "#8fa0f8"; style.font-color: "#a6b3fa" }

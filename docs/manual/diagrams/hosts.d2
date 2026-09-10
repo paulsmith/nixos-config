@@ -1,0 +1,30 @@
+direction: right
+
+repo: "/etc/nix-darwin\none repo, all machines" {
+  style.fill: "#ffffff"
+  style.stroke: "#1f2430"
+  style.stroke-width: 2
+  style.font-color: "#1f2430"
+}
+
+macs: "Macs (darwinConfigurations + homeConfigurations)" {
+  style.fill: "#fdf4e8"
+  style.stroke: "#b4650f"
+  style.font-color: "#1f2430"
+
+  io: "io\nlaptop" { style.fill: "#ffffff"; style.stroke: "#c98b3a"; style.font-color: "#1f2430" }
+  ob: "oberon\nMac Studio, Linux builder" { style.fill: "#ffffff"; style.stroke: "#c98b3a"; style.font-color: "#1f2430" }
+  an: "andon\nwork, isVibium = true" { style.fill: "#ffffff"; style.stroke: "#c98b3a"; style.font-color: "#1f2430" }
+}
+
+vms: "NixOS VMs (nixosConfigurations)" {
+  style.fill: "#eef0fb"
+  style.stroke: "#4c5fd7"
+  style.font-color: "#1f2430"
+
+  nv: "nixos-vm" { style.fill: "#ffffff"; style.stroke: "#8891a8"; style.font-color: "#1f2430" }
+  av: "agent-vm" { style.fill: "#ffffff"; style.stroke: "#8891a8"; style.font-color: "#1f2430" }
+}
+
+repo -> macs { style.stroke: "#b4650f" }
+repo -> vms { style.stroke: "#4c5fd7" }
