@@ -10,10 +10,10 @@
     # installed by hand survives untouched.
     onActivation.cleanup = "none";
 
-    taps = [
-      "1password/tap"
-      "ngrok/ngrok"
-    ];
+    # No taps. 1password-cli and ngrok both live in homebrew-cask core, so
+    # tapping them added nothing and only triggered Homebrew's tap-trust
+    # warning.
+    taps = [];
 
     brews = [
       "cowsay"
@@ -53,7 +53,6 @@
         "kicad"
         "libreoffice"
         "musicbrainz-picard"
-        "rar"
         "selfcontrol"
         "slideshower"
       ];
