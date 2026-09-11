@@ -20,7 +20,9 @@
   --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --serif: "Newsreader", Georgia, "Times New Roman", serif;
 
-  --measure: 68ch;
+  /* absolute, not ch: ch is font-relative, so one token would resolve to a
+     different width for the serif body than for the mono headings and code */
+  --measure: 42rem;
   --step-0: 1.0625rem;
   --step-1: 1.3rem;
   --step-2: 1.6rem;
@@ -70,7 +72,7 @@ body {
 }
 
 .wrap {
-  max-width: 1160px;
+  max-width: 1220px;
   margin: 0 auto;
   padding: 0 clamp(1.25rem, 4vw, 3rem);
 }
@@ -120,16 +122,18 @@ body {
 
 .shell {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 3rem;
   padding: clamp(2.5rem, 5vw, 4rem) 0 6rem;
 }
+
+/* declared before the media query so the query wins at width */
+.rail { display: none; }
+
 @media (min-width: 1000px) {
-  .shell { grid-template-columns: 210px minmax(0, 1fr); gap: 4rem; }
+  .shell { grid-template-columns: 200px minmax(0, 1fr); gap: 4rem; }
   .rail { display: block; }
 }
-
-.rail { display: none; }
 .rail-inner { position: sticky; top: 2rem; }
 .rail p {
   font-family: var(--mono);
@@ -161,8 +165,14 @@ body {
 .rail a:hover { color: var(--ink); }
 .rail a:focus-visible { outline: 2px solid var(--store); outline-offset: 2px; }
 
-article { min-width: 0; max-width: var(--measure); }
-article > * { max-width: var(--measure); }
+article { min-width: 0; }
+
+/* The measure applies to text, not to the section wrappers. Figures and
+   tables use the full column. */
+section > h2, section > h3, section > p, section > ul, section > ol,
+section > blockquote, section > pre, section > .tier {
+  max-width: var(--measure);
+}
 
 /* ---------- sections ---------- */
 
@@ -288,7 +298,7 @@ td code { white-space: nowrap; }
 figure {
   margin: 2rem 0 2.25rem;
   max-width: none;
-  width: min(100%, 1000px);
+  width: 100%;
 }
 .fig-frame {
   border: 1px solid var(--rule);
