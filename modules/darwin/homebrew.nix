@@ -63,14 +63,13 @@
       "iMovie" = 408981434;
       "Ivory" = 6444602274;
       "Kagi Search" = 1622835804;
-      "Keynote" = 409183694;
+      "Keynote" = 361285480;
       "Microsoft Excel" = 462058435;
       "Nitro" = 1591292532;
       "OneTab" = 1540160809;
       "Prime Video" = 545519333;
       "Ruler" = 1563264206;
       "Steam Link" = 1246969117;
-      "StopTheMadness" = 1376402589;
       "Swift Playground" = 1496833156;
       "TestFlight" = 899247664;
       "Tomito" = 1526042938;
