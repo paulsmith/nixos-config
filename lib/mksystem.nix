@@ -6,7 +6,6 @@
 }: name: {
   system ? "aarch64-darwin",
   user,
-  isVibium ? false,
   nextdnsProfile ? null,
 }: let
   lib = nixpkgs.lib;
@@ -39,7 +38,6 @@ in
       inherit
         inputs
         configurationRevision
-        isVibium
         nextdnsProfile
         unstablePkgs
         ;

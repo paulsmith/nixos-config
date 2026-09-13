@@ -5,7 +5,7 @@ with nix-darwin, plus a small NixOS VM.
 
 Active flake outputs:
 
-- Darwin hosts: `andon`, `io`, `oberon`
+- Darwin hosts: `io`, `oberon`
 - NixOS hosts: `nixos-vm`
 
 This repository is managed with `jj` (Jujutsu). The remote is Git-backed, so a
@@ -46,7 +46,6 @@ Apply the configuration for a specific Darwin host:
 ```bash
 HOSTNAME=io make
 HOSTNAME=oberon make
-HOSTNAME=andon make
 ```
 
 Build without switching:
@@ -75,8 +74,8 @@ NixOS guest built from `hosts/nixos-vm/configuration.nix` with the `vm` package
 profile.
 
 On Apple Silicon macOS, building the VM requires an `aarch64-linux` builder.
-The `andon` host currently enables `nix-rosetta-builder.onDemand = true` for
-that purpose.
+The `oberon` host enables `nix-rosetta-builder.onDemand = true` for that
+purpose.
 
 Build the VM:
 

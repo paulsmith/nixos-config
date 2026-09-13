@@ -350,7 +350,7 @@ figcaption {
     <h1>The Nix-Darwin Handbook</h1>
     <p class="standfirst">Every Mac and VM here is configured from one repository. This explains how it fits together, and which command to run when you change something.</p>
     <div class="meta">
-      <span>Hosts <b>3 Macs, 2 VMs</b></span>
+      <span>Hosts <b>2 Macs, 2 VMs</b></span>
       <span>Dotfiles <b>37</b></span>
       <span>User packages <b>72</b></span>
       <span>Assumes <b>no Nix experience</b></span>
@@ -411,7 +411,7 @@ figcaption {
           <img class="d-light" src="__HOSTS_LIGHT__" alt="One repository feeding three Macs and two Linux VMs">
           <img class="d-dark" src="__HOSTS_DARK__" alt="One repository feeding three Macs and two Linux VMs">
         </div>
-        <figcaption>One repository, five machines. Macs get both tiers; VMs are built through oberon.</figcaption>
+        <figcaption>One repository, four machines. Macs get both tiers; VMs are built through oberon.</figcaption>
       </figure>
       <div class="tbl">
         <table>
@@ -419,12 +419,11 @@ figcaption {
           <tbody>
             <tr><td><code>io</code></td><td>Paul's laptop</td><td>Primary machine</td></tr>
             <tr><td><code>oberon</code></td><td>Mac Studio</td><td>Also hosts the Linux builder for the VMs</td></tr>
-            <tr><td><code>andon</code></td><td>Work laptop</td><td><code>isVibium = true</code> &mdash; smaller app list</td></tr>
             <tr><td><code>nixos-vm</code><br><code>agent-vm</code></td><td>Linux VMs</td><td>Built through <code>oberon</code>, not natively</td></tr>
           </tbody>
         </table>
       </div>
-      <p><code>andon</code> is the reason for the <code>isVibium</code> flag throughout the Nix files. Work machines don't get GarageBand and Steam Link. That's the only per-host divergence of any size &mdash; 30 casks on <code>io</code>, 18 on <code>andon</code>.</p>
+      <p>Per-host divergence is small. <code>hosts/&lt;name&gt;/configuration.nix</code> and <code>home/hosts/&lt;name&gt;.nix</code> hold whatever is specific to one machine &mdash; <code>io</code> pins a remote builder and one extra App Store app; <code>oberon</code> runs the Linux builder the VMs are built through.</p>
     </section>
 
     <section id="s4">
@@ -476,7 +475,7 @@ overlays/              <span class="c">custom package definitions (e.g. d2)</spa
         <p>The same file is <em>copied into the store</em> and is read-only. The VM has no checkout of this repo, so a symlink would dangle.</p>
       </div>
       <h3>The exception: generated files</h3>
-      <p>A few files aren't delivered whole, because part of them differs per machine. Git and jj identity are the examples &mdash; <code>andon</code> uses a work email.</p>
+      <p>A few files aren't delivered whole, because part of them differs per machine. Git and jj identity are the examples &mdash; the address is set per host in <code>flake.nix</code>.</p>
       <p>For those, Nix generates a small file with the per-host part and layers it over the editable body:</p>
       <ul>
         <li><code>~/.config/git/config</code> &mdash; Nix writes the <code>[user]</code> block, then <code>[include]</code>s <code>config-body</code>, which you edit freely</li>
@@ -578,7 +577,6 @@ sudo darwin-rebuild --rollback      <span class="c"># system tier</span></code><
             <tr><td><strong>module</strong></td><td>A file contributing options to a configuration.</td></tr>
             <tr><td><strong>darwinConfiguration</strong></td><td>The system tier for a Mac. Needs sudo.</td></tr>
             <tr><td><strong>homeConfiguration</strong></td><td>The user tier. No sudo.</td></tr>
-            <tr><td><code>isVibium</code></td><td>Flag marking the work machine, gating personal apps.</td></tr>
             <tr><td><code>deliveryMode</code></td><td><code>"symlink"</code> (Mac, live) or <code>"store"</code> (VM, frozen).</td></tr>
           </tbody>
         </table>

@@ -7,7 +7,6 @@
   email,
   system ? "aarch64-darwin",
   user ? "paul",
-  isVibium ? false,
   homeRepoRoot ? "/etc/nix-darwin",
   deliveryMode ? "symlink",
 }: let
@@ -38,7 +37,6 @@ in
         inputs
         unstablePkgs
         hostname
-        isVibium
         email
         homeRepoRoot
         deliveryMode

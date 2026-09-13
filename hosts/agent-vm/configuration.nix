@@ -183,7 +183,6 @@ in {
         hostname
         username
         ;
-      isVibium = false;
       email = "paulsmith@pobox.com";
       homeRepoRoot = "/etc/nix-darwin";
       # The guest has no checkout, so dotfiles are copied into the store.

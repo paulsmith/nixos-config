@@ -57,12 +57,12 @@ evaluation passing does **not** mean the thing builds.
 | --- | --- | --- |
 | `io` | Paul's laptop | Primary machine |
 | `oberon` | Mac Studio | Also hosts the Linux builder for the VMs |
-| `andon` | Work laptop | `isVibium = true` — gets a smaller app list |
 | `nixos-vm`, `agent-vm` | Linux VMs | Built via `oberon`, not natively |
 
-`andon` is the reason for the `isVibium` flag you'll see in the Nix files. Work
-machines don't get GarageBand and Steam Link. That's the only per-host
-divergence of any size.
+Per-host divergence is small. `hosts/<name>/configuration.nix` and
+`home/hosts/<name>.nix` hold whatever is specific to one machine — `io` pins a
+remote builder and one extra App Store app; `oberon` runs the Linux builder the
+VMs are built through.
 
 ---
 
@@ -122,7 +122,8 @@ One source, two delivery modes, selected by `deliveryMode` in the Nix code.
 ### The exception: generated files
 
 A few files aren't delivered whole, because part of them differs per machine.
-Git and jj identity are the examples — `andon` uses a work email.
+Git and jj identity are the examples — the address is set per host in
+`flake.nix`.
 
 For those, Nix generates a small file with the per-host part and layers it over
 the editable body:
@@ -282,7 +283,6 @@ which tracks its main branch. Expected after `make update`, not a fault.
 | **module** | A file contributing options to a configuration. |
 | **darwinConfiguration** | The system tier for a Mac. Needs sudo. |
 | **homeConfiguration** | The user tier. No sudo. |
-| **`isVibium`** | Flag marking the work machine, gating personal apps. |
 | **`deliveryMode`** | `"symlink"` (Mac, live) or `"store"` (VM, frozen). |
 
 ---

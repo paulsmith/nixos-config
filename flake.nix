@@ -74,12 +74,6 @@
       inherit nixpkgs overlays inputs;
     };
   in {
-    darwinConfigurations.andon = mkSystem "andon" {
-      user = "paul";
-      isVibium = true;
-      # nextdnsProfile = "8ce4cd"; # Wed Jun  3 12:12:24 CDT 2026 still debugging this
-    };
-
     darwinConfigurations.io = mkSystem "io" {
       user = "paul";
       nextdnsProfile = "d3b8fa";
@@ -103,12 +97,6 @@
       "paul@oberon" = mkHome {
         hostname = "oberon";
         email = "paulsmith@pobox.com";
-      };
-
-      "paul@andon" = mkHome {
-        hostname = "andon";
-        email = "paul@vibium.com";
-        isVibium = true;
       };
     };
 

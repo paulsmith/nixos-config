@@ -1,7 +1,6 @@
 {
   pkgs,
   unstablePkgs,
-  isVibium,
   config,
   ...
 }: let
@@ -18,7 +17,7 @@ in {
     home = "/Users/paul";
     shell = pkgs.bashInteractive;
     description = "Paul Smith";
-    openssh.authorizedKeys.keys = lib.optionals (!isVibium) config.local.sshPubKeys.allPersonalKeys;
+    openssh.authorizedKeys.keys = config.local.sshPubKeys.allPersonalKeys;
   };
 
   system.primaryUser = "paul";
