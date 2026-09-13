@@ -35,6 +35,7 @@
         "handy"
         "istat-menus"
         "karabiner-elements"
+        "muesli"
         "ngrok"
         "obsidian"
         "qlmarkdown"
@@ -62,8 +63,6 @@
         "Kagi Search" = 1622835804;
         "Keynote" = 409183694;
         "Microsoft Excel" = 462058435;
-        "Numbers" = 409203825;
-        "Pages" = 409201541;
         "Swift Playground" = 1496833156;
         "TestFlight" = 899247664;
         "Tomito" = 1526042938;
@@ -80,7 +79,6 @@
         "Hyperspace" = 6739505345;
         "iMovie" = 408981434;
         "Ivory" = 6444602274;
-        "Mimeo Photos" = 1282504627;
         "Nitro" = 1591292532;
         "OneTab" = 1540160809;
         "Prime Video" = 545519333;
