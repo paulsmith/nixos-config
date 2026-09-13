@@ -5,8 +5,13 @@ with nix-darwin, plus a small NixOS VM.
 
 Active flake outputs:
 
-- Darwin hosts: `io`, `oberon`
-- NixOS hosts: `nixos-vm`
+- Darwin hosts (system tier): `io`, `oberon`
+- Home Manager (user tier): `paul@io`, `paul@oberon`
+- NixOS hosts: `nixos-vm`, `agent-vm`
+
+Dotfiles live in `home/dotfiles/` and are symlinked into `$HOME` from this
+working tree, so editing one takes effect immediately with no rebuild. See
+`docs/manual/` for the full explanation.
 
 This repository is managed with `jj` (Jujutsu). The remote is Git-backed, so a
 plain `git clone` is still useful for bootstrapping a new machine, but use `jj`
@@ -33,19 +38,45 @@ for normal source control work inside the checkout.
    sudo nix run github:nix-darwin/nix-darwin/nix-darwin-26.05#darwin-rebuild -- switch --flake ".#$(hostname)"
    ```
 
+4. Bootstrap Home Manager. The `home-manager` CLI comes from the profile it
+   installs, so the first activation has to go through `nix run`:
+
+   ```bash
+   nix run home-manager -- switch --flake ".#$(id -un)@$(hostname)" -b hm-bak
+   ```
+
+   Order matters: the repo must exist at `/etc/nix-darwin` before this runs, or
+   the dotfile symlinks point at nothing.
+
+5. Site-local values that are deliberately not in the repo. The Hammerspoon
+   WiFi watcher reads them from `~/.hammerspoon/private.lua`, and stays inert
+   if the file is absent:
+
+   ```lua
+   return {
+     homeSSID = "...",
+     exitNode = "...",
+   }
+   ```
+
 ## Building and Applying
 
-Apply the configuration for the current hostname:
+Two tiers, two commands:
 
 ```bash
-make
+make home   # user: packages and dotfiles. No sudo. Seconds.
+make        # system: Homebrew, macOS defaults, launchd. Sudo. Slow.
 ```
 
-Apply the configuration for a specific Darwin host:
+Editing the body of a dotfile already under `home/dotfiles/` needs neither —
+it is live in the next shell. Run `make home` when adding a new file or
+changing packages.
+
+Target a specific host:
 
 ```bash
-HOSTNAME=io make
 HOSTNAME=oberon make
+HOME_TARGET=paul@oberon make home
 ```
 
 Build without switching:
@@ -59,19 +90,21 @@ darwin-rebuild build --flake .#io
 Run these checks after configuration changes:
 
 ```bash
-nix flake check
-nix flake show
+nix flake check --no-build
 darwin-rebuild build --flake .#<hostname>
 ```
 
-Use `darwin-rebuild build` before committing a Darwin configuration change, even
-when `nix flake check` succeeds.
+Use `--no-build`. Bare `nix flake check` tries to *build* the `aarch64-linux`
+VM configurations, which needs a Linux builder that is not always reachable, so
+it fails for reasons unrelated to your change.
+
+Run `darwin-rebuild build` before committing a Darwin configuration change,
+even when the flake check succeeds.
 
 ## NixOS VM
 
 The VM is exposed as `nixosConfigurations.nixos-vm`. It is an `aarch64-linux`
-NixOS guest built from `hosts/nixos-vm/configuration.nix` with the `vm` package
-profile.
+NixOS guest built from `hosts/nixos-vm/configuration.nix`.
 
 On Apple Silicon macOS, building the VM requires an `aarch64-linux` builder.
 The `oberon` host enables `nix-rosetta-builder.onDemand = true` for that
@@ -171,10 +204,28 @@ VM_REBUILD_SUDO='--sudo' make vm-deploy
 
 The VM currently gets `virtualisation.memorySize = 1024`,
 `virtualisation.cores = 2`, NetworkManager, OpenSSH, and a pared-down package
-set from `modules/packages/vm.nix`.
+set from `home/packages/vm.nix`.
+
+Unlike the Macs, the VMs receive dotfiles as read-only copies in the Nix store
+rather than symlinks, since they have no checkout of this repository.
+
+## Remotes
+
+`origin` (GitHub) is authoritative. `bunny` is a locally-reachable mirror on the
+NAS, kept in step manually and force-pushed when it diverges:
+
+```bash
+jj git push --remote origin -b main
+jj git push --remote bunny  -b main
+```
 
 ## Updating
 
 ```bash
 make update
 ```
+
+`make update` moves every flake input. Two of them — `jj`, which tracks its own
+main branch, and `herdr` — build from source with no binary cache, so an update
+that moves either costs roughly fifteen minutes of Rust compilation. A warm
+rebuild that moves nothing takes about two seconds.
