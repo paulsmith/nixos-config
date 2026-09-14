@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   homeRepoRoot,
   deliveryMode,
   ...
@@ -30,4 +31,29 @@ in {
         dotfile "ghostty/config";
     };
   };
+
+  # Homebrew 7.0 refuses to tap an untrusted third-party tap, so every tap in
+  # modules/darwin/homebrew.nix must be trusted or the Homebrew phase of a
+  # switch fails on a machine that has not tapped it before.
+  #
+  # This is written rather than symlinked: Homebrew updates its own trust store
+  # during installs and refuses one whose directory it does not own, which a
+  # Nix store symlink is not.
+  home.activation.homebrewTrustStore = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        trust_dir="$HOME/.homebrew"
+        run mkdir -p "$trust_dir"
+        run cat > "$trust_dir/trust.json" <<'TRUST'
+    ${builtins.toJSON {
+      trustedtaps = [
+        "cirruslabs/cli"
+        "llimllib/tap"
+        "openclaw/tap"
+        "paulsmith/tap"
+        "recursiveascent/tap"
+        "steipete/tap"
+      ];
+    }}
+    TRUST
+        run chmod 600 "$trust_dir/trust.json"
+  '';
 }

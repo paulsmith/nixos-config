@@ -6,15 +6,31 @@
     # installed by hand survives untouched.
     onActivation.cleanup = "none";
 
-    # No taps. 1password-cli and ngrok both live in homebrew-cask core, so
+    # Third-party taps, each the only source for a tool below. 1password-cli
+    # and ngrok are deliberately absent: both live in homebrew-cask core, so
     # tapping them added nothing and only triggered Homebrew's tap-trust
     # warning.
-    taps = [];
+    taps = [
+      "cirruslabs/cli"
+      "llimllib/tap"
+      "openclaw/tap"
+      "paulsmith/tap"
+      "recursiveascent/tap"
+      "steipete/tap"
+    ];
 
     brews = [
       "cowsay"
       "opam"
       "qemu"
+
+      # Tap-only tools, fully qualified so the source is unambiguous.
+      "cirruslabs/cli/sshpass"
+      "openclaw/tap/wacli"
+      "paulsmith/tap/jjq"
+      "recursiveascent/tap/litefind"
+      "recursiveascent/tap/roam"
+      "steipete/tap/remindctl"
     ];
 
     casks = [
@@ -39,6 +55,7 @@
       "karabiner-elements"
       "kicad"
       "libreoffice"
+      "llimllib/tap/mdriver"
       "muesli"
       "musicbrainz-picard"
       "ngrok"
