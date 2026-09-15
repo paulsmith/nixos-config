@@ -65,6 +65,7 @@
       "selfcontrol"
       "slack"
       "slideshower"
+      "tldraw"
       "utm"
     ];
 
